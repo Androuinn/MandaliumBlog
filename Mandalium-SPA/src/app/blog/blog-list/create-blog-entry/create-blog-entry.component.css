@@ -1,0 +1,19 @@
+option {
+    background-color: black;
+    color: white;
+}
+
+select{
+    background-color: black;
+    color: white;
+}
+
+input{
+    background-color: black;
+    color: white; 
+}
+
+textarea {
+    background-color: black;
+    color: white; 
+}

@@ -1,0 +1,32 @@
+<div class="row pl-5 pt-2 pb-2 text-white">
+  <h4 class="border-bottom border-white">KENDİME DÜŞÜNCELER</h4>
+</div>
+
+<div class="card mb-3 col-12 " *ngFor="let entry of blogEntries">
+<div class="row">
+  <div class="col-8">
+    <div class="card-body">
+      <a href="#" class="stretched-link" [routerLink]="['/blog', entry.id, entry.headline]"
+        routerLinkActive="router-link-active"> 
+        <strong class="d-inline-block mb-2 text-primary">{{entry.topicName}}</strong>
+        <h5 class="card-title">{{entry.headline}}</h5>
+        <p class="card-text">{{entry.createdDate | date}}</p>
+        <p class="card-text">{{entry.subHeadline}}</p>
+      </a>
+    </div>
+  </div>
+  <div class="col-4 p-2">
+    <img class="card-img" src={{entry.photoUrl}}
+      alt="Card image cap">
+  </div>
+</div>
+</div>
+
+<pagination [boundaryLinks]="true" 
+          [totalItems]="pagination.totalItems"
+          [itemsPerPage]="pagination.itemsPerPage"
+          [(ngModel)]="pagination.currentPage"
+          (pageChanged)="pageChanged($event)"
+previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+
+</pagination>

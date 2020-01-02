@@ -1,0 +1,46 @@
+
+<div class="block sidebar-block ">
+  <h5 class="sidebar-title border-bottom border-dark">KENDİME DÜŞÜNCELER</h5>
+  <ul class="clear" *ngFor="let entry of mostReadPersonalEntries">
+
+    <li class="border border-dark rounded">
+      <a [routerLink]="['/blog', entry.id, entry.headline]">
+        <div class="row">
+          <div class="image col-4">
+            <img class="" src={{entry.photoUrl}} alt="">
+          </div>
+          <div class="row col-8 p-2">
+            <h6 class="title col-12">{{entry.headline}}</h6>
+            <p class="col-12">{{entry.subHeadline |slice: 0:35}} ...</p>
+            <time class="col-12">{{entry.createdDate | date}}</time>
+          </div>
+        </div>
+      </a>
+
+    </li>
+  </ul>
+</div>
+<hr>
+
+<div class="block sidebar-block ">
+  <h5 class="sidebar-title border-bottom border-dark">EN ÇOK OKUNANLAR</h5>
+  <ul class="clear" *ngFor="let entry of mostReadBlogEntries">
+
+    <li class="border border-dark rounded">
+      <a [routerLink]="['/blog', entry.id, entry.headline]">
+        <div class="row">
+          <div class="image col-4">
+            <img class="" src={{entry.photoUrl}} alt="">
+          </div>
+          <div class="row col-8 p-2">
+            <h6 class="title col-12">{{entry.headline}}</h6>
+            <p class="col-12">{{entry.subHeadline |slice: 0:35}} ...</p>
+            <time class="col-12">{{entry.createdDate | date}}</time>
+          </div>
+        </div>
+      </a>
+
+    </li>
+  </ul>
+</div>
+<hr>
