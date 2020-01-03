@@ -30,6 +30,6 @@ namespace Mandalium.API.Dtos
         public string WriterSurname { get; set; }
         public string TopicName { get; set; }
 
-        public List<CommentDto> Comments { get; set; }
+        public ICollection<CommentDto> Comments { get; set; }
     }
 }

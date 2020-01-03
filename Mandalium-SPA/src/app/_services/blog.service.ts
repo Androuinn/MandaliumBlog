@@ -42,8 +42,28 @@ export class BlogService {
     );
   }
 
-  getBlogEntry(id): Observable<BlogEntry> {
-    return this.http.get<BlogEntry>(this.baseUrl + 'blogentry/' + id);
+  getBlogEntry(id, commentPage?, commentsPerPage?, userParams?): Observable<BlogEntry> {
+    let blogEntry: BlogEntry;
+
+    let params = new HttpParams();
+
+    if (commentPage != null && commentsPerPage != null) {
+      params = params.append('pageNumber', commentPage);
+      params = params.append('pageSize', commentsPerPage);
+    }
+    if (userParams != null) {
+      params = params.append('EntryAlreadyPicked', userParams);
+    }
+
+    return this.http.get<BlogEntry>(this.baseUrl + 'blogentry/' + id, {observe: 'response', params}).pipe(
+      map(response => {
+        blogEntry = response.body;
+        if (response.headers.get('Pagination') != null) {
+          response.body.comments.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return blogEntry;
+      })
+    );
   }
 
   getMostRead(): Observable<BlogEntry[]> {

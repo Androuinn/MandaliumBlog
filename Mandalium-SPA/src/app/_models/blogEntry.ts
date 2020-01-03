@@ -1,4 +1,5 @@
 import { Comment } from './Comment';
+import { PaginatedResult } from './pagination';
 
 export interface BlogEntry {
     id: number;
@@ -10,5 +11,5 @@ export interface BlogEntry {
     writerSurname: string;
     topicName: number;
     photoUrl: string;
-    comments: Comment[];
+    comments: PaginatedResult<Comment[]>;
 }

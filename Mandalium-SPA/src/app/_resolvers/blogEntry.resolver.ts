@@ -4,13 +4,22 @@ import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { BlogService } from '../_services/blog.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Pagination } from '../_models/pagination';
 
 @Injectable()
 export class BlogEntryResolver implements Resolve<BlogEntry> {
-    constructor(private blogService: BlogService, private router: Router) {}
+    pagination: Pagination;
+    constructor(private blogService: BlogService, private router: Router) {
+        this.pagination = {
+            currentPage: 1,
+            itemsPerPage: 10,
+            totalPages: 1,
+            totalItems: 1
+          };
+    }
 
     resolve(route: ActivatedRouteSnapshot): Observable<BlogEntry> {
-        return this.blogService.getBlogEntry(route.params.id).pipe(
+        return this.blogService.getBlogEntry(route.params.id, this.pagination.currentPage, this.pagination.itemsPerPage ).pipe(
             catchError(error => {
                 console.error('Veri alma hatası');
                 this.router.navigate(['/']);
@@ -18,4 +27,18 @@ export class BlogEntryResolver implements Resolve<BlogEntry> {
             })
         );
     }
+
+
+    // loadBlogEntry() {
+    // tslint:disable-next-line: max-line-length
+    //     this.blogService.getBlogEntry(this.route.snapshot.params.id, this.pagination.currentPage, this.pagination.itemsPerPage).subscribe(
+    //       (blogEntry: BlogEntry) => {
+    //         this.blogEntry = blogEntry;
+    //         this.pagination = blogEntry.comments.pagination;
+    //       },
+    //       error => {
+    //         console.error(error);
+    //       }
+    //     );
+    //   }
 }

@@ -23,16 +23,29 @@ namespace Mandalium.API.Data
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<BlogEntry> GetBlogEntry(int blogId)
+        public async Task<BlogEntry> GetBlogEntry(int blogId, UserParams userParams)
         {
-            var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.Writer).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
-             var comments =  await _context.Comments.AsNoTracking().Where(x=> x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).ToListAsync();
-             
-             Entry.Comments = comments;
-            Entry.TimesRead += 1;
-            _context.BlogEntries.Update(Entry);
-            await _context.SaveChangesAsync();
-            return Entry;
+            if (userParams.EntryAlreadyPicked == false)
+            {
+                var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.Writer).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
+                var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
+                Entry.TimesRead += 1;
+                _context.BlogEntries.Update(Entry);
+                await _context.SaveChangesAsync();
+                return Entry;
+            }
+            else
+            {
+                BlogEntry BlogEntry = new BlogEntry();
+                var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                BlogEntry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
+
+                return BlogEntry;
+            }
+
+
+
         }
 
         public async Task<IEnumerable<BlogEntry>> GetMostRead(bool writerEntry)
@@ -51,8 +64,8 @@ namespace Mandalium.API.Data
 
         public async Task<int> SaveComment(Comment comment)
         {
-           await _context.AddAsync(comment);
-           return await _context.SaveChangesAsync(); 
+            await _context.AddAsync(comment);
+            return await _context.SaveChangesAsync();
         }
         #endregion
 

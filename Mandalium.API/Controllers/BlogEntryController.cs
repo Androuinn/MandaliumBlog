@@ -37,6 +37,24 @@ namespace Mandalium.API.Controllers
             return Ok(returndto);
         }
 
+
+        [HttpGet("{id}", Name = "GetEntry")]
+        public async Task<IActionResult> GetEntry(int id, [FromQuery] UserParams userParams)
+        {
+
+            var blogEntry = await _repo.GetBlogEntry(id, userParams);
+
+            var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
+
+            Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
+
+            // if (userParams.EntryAlreadyPicked == true)
+            // {
+            //     return Ok(blogEntryDto.Comments);
+            // }
+            return Ok(blogEntryDto);
+        }
+
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetMostRead()
@@ -68,14 +86,7 @@ namespace Mandalium.API.Controllers
             });
         }
 
-        [HttpGet("{id}", Name = "GetEntry")]
-        public async Task<IActionResult> GetEntry(int id)
-        {
-            var blogEntry = await _repo.GetBlogEntry(id);
-            var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
 
-            return Ok(blogEntryDto);
-        }
 
 
         [HttpPost]

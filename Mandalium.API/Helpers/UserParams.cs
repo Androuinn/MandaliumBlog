@@ -12,6 +12,7 @@ namespace Mandalium.API.Helpers
         }
 
         public bool WriterEntry { get; set; } = false;
+        public bool EntryAlreadyPicked { get; set; } = false;
 
     }
 }

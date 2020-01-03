@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Mandalium.API.Helpers;
 
 namespace Mandalium.API.Models
 {
@@ -35,7 +36,7 @@ namespace Mandalium.API.Models
         public int? TopicId { get; set; }
         public Topic Topic { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        public PagedList<Comment> Comments { get; set; }
 
         public BlogEntry()
         {

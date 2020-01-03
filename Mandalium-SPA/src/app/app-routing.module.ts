@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { BlogDetailedComponent } from './blog/blog-list/blog-detailed/blog-detailed.component';
 import { BlogEntryResolver } from './_resolvers/blogEntry.resolver';
@@ -21,6 +21,8 @@ const routes: Routes = [
   {path: 'create', component: CreateBlogEntryComponent},
   {path: '**', redirectTo: 'home', pathMatch: 'full'}
  ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

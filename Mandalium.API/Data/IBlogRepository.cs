@@ -8,7 +8,7 @@ namespace Mandalium.API.Data
     public interface IBlogRepository<T>
     {
         Task<PagedList<T>> GetBlogEntries(UserParams userParams);
-        Task<T> GetBlogEntry(int blogId);
+        Task<T> GetBlogEntry(int blogId, UserParams userParams);
 
         Task<IEnumerable<T>> GetMostRead(bool writerEntry);
 
