@@ -9,6 +9,7 @@ import { AboutComponent } from './about/about.component';
 import { CreateBlogEntryComponent } from './blog/blog-list/create-blog-entry/create-blog-entry.component';
 import { BlogWriterEntryComponent } from './blog/blog-list/blog-writerEntry/blog-writerEntry.component';
 import { ContactComponent } from './contact/contact.component';
+import { AuthGuard } from './_guards/auth.guard';
 
 
 
@@ -18,7 +19,7 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent},
   {path: 'contact', component: ContactComponent},
   {path: 'blog/:id/:headline', component: BlogDetailedComponent, resolve: {blog: BlogEntryResolver}},
-  {path: 'create', component: CreateBlogEntryComponent},
+  {path: 'create', component: CreateBlogEntryComponent, runGuardsAndResolvers: 'always', canActivate: [AuthGuard]},
   {path: '**', redirectTo: 'home', pathMatch: 'full'}
  ];
 

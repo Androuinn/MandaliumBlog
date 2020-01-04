@@ -4,17 +4,25 @@
             <div class="col-4"><time><i class="fa fa-fw fa-fg fa-calendar"></i>{{date | date}}</time></div>
             <div class="col-8 d-flex justify-content-end">
                 <a [routerLink]="['/about']"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
-                <a [routerLink]="['/contact']" ><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
+                <a [routerLink]="['/contact']"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
+                <a *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
             </div>
         </div>
     </div>
     <div class="bg-light rounded">
         <div class="container">
             <div class="row">
-                <div class="d-flex justify-content-left pt-1 logo-a">
+                <div class="col-12 col-md-8 d-flex justify-content-left pt-1 logo-a">
                     <a href="" [routerLink]="['/']">
                         <img src="../../assets/çzgisiz logo.png" alt="">
                     </a>
+                </div>
+                <div class="col-12 col-md-4 p-5">
+                    <form ng *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+                        <input class="form-control mr-sm-2" type="text" name="username" placeholder="Username" required [(ngModel)]="model.username">
+                        <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" required [(ngModel)]="model.password">
+                        <button [disabled]="!loginForm.valid" class="btn btn-success  my-2 my-sm-0" type="submit">Giriş</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -25,9 +33,9 @@
 <nav class="blog-header">
     <div class="container">
         <div class="row flex-nowrap align-items-center">
-            <a [routerLink]="['/']" class="p-3" >ANA SAYFA</a>
-            <a [routerLink]="['/personalblog']" class="p-3" >KENDİME DÜŞÜNCELER</a>
-            <a [routerLink]="['/']" class="p-3" >MANDALIUMGAMES</a>
+            <a [routerLink]="['/']" class="p-3">ANA SAYFA</a>
+            <a [routerLink]="['/personalblog']" class="p-3">KENDİME DÜŞÜNCELER</a>
+            <a [routerLink]="['/']" class="p-3">MANDALIUMGAMES</a>
         </div>
     </div>
 </nav>

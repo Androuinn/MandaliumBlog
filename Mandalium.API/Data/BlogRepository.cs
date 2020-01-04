@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,19 @@ namespace Mandalium.API.Data
             var blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Where(x => x.WriterEntry == userParams.WriterEntry).OrderByDescending(x => x.CreatedDate).AsQueryable(); ;
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
         }
+
+         public async Task<PagedList<BlogEntry>> Search(string searchString, UserParams userParams)
+        {
+            var blogEntries = from e in _context.BlogEntries.AsNoTracking().Include(x => x.Topic).OrderByDescending(x => x.CreatedDate).AsQueryable() select e; 
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                blogEntries = blogEntries.Where(x=> x.Headline.Contains(searchString) || x.SubHeadline.Contains(searchString) || x.innerTextHtml.Contains(searchString));
+            }
+
+            return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
+        }
+
 
         public async Task<BlogEntry> GetBlogEntry(int blogId, UserParams userParams)
         {

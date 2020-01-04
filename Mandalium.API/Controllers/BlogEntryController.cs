@@ -7,6 +7,7 @@ using Mandalium.API.Data;
 using Mandalium.API.Dtos;
 using Mandalium.API.Helpers;
 using Mandalium.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,8 @@ namespace Mandalium.API.Controllers
             this._repo = repo;
         }
 
+
+        #region  get methods
         [HttpGet(Name = "GetEntries")]
         public async Task<IActionResult> GetEntries([FromQuery]UserParams userParams)
         {
@@ -86,9 +89,13 @@ namespace Mandalium.API.Controllers
             });
         }
 
+        #endregion
 
 
 
+        #region  save methods
+
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> SaveBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
         {
@@ -109,6 +116,20 @@ namespace Mandalium.API.Controllers
             return NoContent();
         }
 
+        #endregion
 
+
+        // [Route("[action]")]
+        // [HttpGet]
+        // public async Task<IActionResult> Search(string searchString, UserParams userParams)
+        // {
+        //     var entries = await _repo.Search(searchString, userParams);
+           
+        //      var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
+
+        //     Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
+
+        //     return Ok(returndto);
+        // }
     }
 }

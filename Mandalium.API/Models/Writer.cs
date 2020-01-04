@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mandalium.API.Models
 {
@@ -17,7 +18,16 @@ namespace Mandalium.API.Models
         public DateTime BirthDate { get; set; }
         public string Background { get; set; }
 
+        [Required]
+        [Column(TypeName= "varchar(50)")]
+        [MinLength(5)]
+        public string Username { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
 
-       
+
+
+
+
     }
 }

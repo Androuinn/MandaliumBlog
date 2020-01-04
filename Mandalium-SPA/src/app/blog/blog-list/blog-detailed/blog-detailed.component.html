@@ -8,65 +8,71 @@
           {{blogEntry.writerSurname}}</a></p>
       <div [innerHTML]=blogEntry.innerTextHtml></div>
     </div>
+  </div>
+</div>
 
-    <h4 id="yorum" class="p-2 border-bottom border-top">Yorumlar</h4>
+<div>
+  <h4 id="yorum" class="mt-3 p-2 border-bottom border-top">Yorumlar</h4>
 
     <h5 class="p-4" *ngIf="blogEntry.comments[0]== null">Henüz yorum yok. İlk Yorumu sen bırak.</h5>
 
-    <div class="mb-3">
-      <div class="border" *ngFor="let comment of blogEntry.comments">
-        <h6 class="d-inline pl-4 pt-2">{{comment.commenterName}}</h6>
-        <time class="pr-5 pt-2 float-right">{{comment.createdDate| date:'medium'}}</time>
-        <p class="pl-5 pt-2">{{comment.commentString}}</p>
+    <div class="card mb-1 col-12 " *ngFor="let comment of blogEntry.comments">
+      <div class="row">
+          <div class="card-body">
+            <h5 class="text-white d-inline pl-4 pt-2">{{comment.commenterName}}</h5>
+            <time class="text-white pr-5 pt-2 float-right">{{comment.createdDate| date:'medium'}}</time>
+            <p class="pl-5 pt-2">{{comment.commentString}}</p>
+          </div>
+        </div>
       </div>
-    </div>
-
+   
     <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
       [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
       nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
     </pagination>
 
+</div>
 
-    <h4 class="p-2 border-bottom">Yorum Yap</h4>
-
-
-
-    <div class="row">
-      <form class="p-4" [formGroup]="commentFormGroup" (ngSubmit)="writeComment()">
-        <div class="row form-group">
-          <label class="col-4" for="email">Email: </label>
-          <input maxlength="100"
-            [ngClass]="{'is-invalid': commentFormGroup.get('email').errors && commentFormGroup.get('email').touched}"
-            class="col-8 " type="email" formControlName="email" id="email">
-          <div class="invalid-feedback text-right pt-2">Lütfen mail adresinizi girin.</div>
-        </div>
-
-        <div class="row form-group">
-          <label class="col-4" for="commenterName">İsminiz:</label>
-          <input maxlength="100"
-            [ngClass]="{'is-invalid': commentFormGroup.get('commenterName').errors && commentFormGroup.get('commenterName').touched}"
-            class="col-8 " type="text" formControlName="commenterName" id="commenterName">
-          <div class="invalid-feedback text-right pt-2">Lütfen isminizi girin.</div>
-        </div>
+<div>
+  <h4 class="p-2 border-bottom">Yorum Yap</h4>
 
 
-        <div class="row justify-content-center form-group">
-          <label class="col-4">Yorumunuz:</label>
-          <textarea maxlength="500"
-            [ngClass]="{'is-invalid': commentFormGroup.get('commentString').errors && commentFormGroup.get('commentString').touched}"
-            formControlName="commentString" class="col-8" name="commentString" id="commentString" cols="120"
-            rows="5"></textarea>
-          <div class="invalid-feedback text-right pt-2">Lütfen yorumunuzu girin.</div>
-        </div>
 
-        <div class="row justify-content-end form-submit">
-          <button class="btn btn-success" type="submit" [disabled]="!commentFormGroup.valid">
-            Kaydet
-          </button>
-        </div>
+  <div class="row">
+    <form class="p-4" [formGroup]="commentFormGroup" (ngSubmit)="writeComment()">
+      <div class="row form-group">
+        <label class="col-4" for="email">Email: </label>
+        <input maxlength="100"
+          [ngClass]="{'is-invalid': commentFormGroup.get('email').errors && commentFormGroup.get('email').touched}"
+          class="col-8 " type="email" formControlName="email" id="email">
+        <div class="invalid-feedback text-right pt-2">Lütfen mail adresinizi girin.</div>
+      </div>
 
-      </form>
-    </div>
+      <div class="row form-group">
+        <label class="col-4" for="commenterName">İsminiz:</label>
+        <input maxlength="100"
+          [ngClass]="{'is-invalid': commentFormGroup.get('commenterName').errors && commentFormGroup.get('commenterName').touched}"
+          class="col-8 " type="text" formControlName="commenterName" id="commenterName">
+        <div class="invalid-feedback text-right pt-2">Lütfen isminizi girin.</div>
+      </div>
 
+
+      <div class="row justify-content-center form-group">
+        <label class="col-4">Yorumunuz:</label>
+        <textarea maxlength="500"
+          [ngClass]="{'is-invalid': commentFormGroup.get('commentString').errors && commentFormGroup.get('commentString').touched}"
+          formControlName="commentString" class="col-8" name="commentString" id="commentString" cols="120"
+          rows="5"></textarea>
+        <div class="invalid-feedback text-right pt-2">Lütfen yorumunuzu girin.</div>
+      </div>
+
+      <div class="row justify-content-end form-submit">
+        <button class="btn btn-success" type="submit" [disabled]="!commentFormGroup.valid">
+          Kaydet
+        </button>
+      </div>
+
+    </form>
   </div>
 </div>
+   

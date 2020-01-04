@@ -28,6 +28,8 @@ namespace Mandalium.API.Helpers
 
             CreateMap<Comment,CommentDto>();
 
+            CreateMap<WriterForRegisterDto, Writer>();
+
            
         }
     }
