@@ -1,41 +1,93 @@
-<header>
-    <div class="container p-1">
-        <div class="row text-light">
-            <div class="col-4"><time><i class="fa fa-fw fa-fg fa-calendar"></i>{{date | date}}</time></div>
-            <div class="col-8 d-flex justify-content-end">
-                <a [routerLink]="['/about']"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
-                <a [routerLink]="['/contact']"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
-                <a *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
-            </div>
-        </div>
-    </div>
-    <div class="bg-light rounded">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-8 d-flex justify-content-left pt-1 logo-a">
-                    <a href="" [routerLink]="['/']">
-                        <img src="../../assets/çzgisiz logo.png" alt="">
-                    </a>
-                </div>
-                <div class="col-12 col-md-4 p-5">
-                    <form ng *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
-                        <input class="form-control mr-sm-2" type="text" name="username" placeholder="Username" required [(ngModel)]="model.username">
-                        <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" required [(ngModel)]="model.password">
-                        <button [disabled]="!loginForm.valid" class="btn btn-success  my-2 my-sm-0" type="submit">Giriş</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
+
+
+
+
+<header>
+
+    <nav class="d-block d-sm-none">
+        <div  style="background-color: black;" class="row d-flex">
+            <a id="mobile-a" class="col-10 pl-5 justify-content-center" href="" [routerLink]="['/']">
+                <img style="height: 50px;" src="../../assets/çzgisiz logo.png" alt="">
+            </a>
+            <button class="" id="btn-show" type="button" style="border: 2px black; background-color: black; color:white;" (click)="isHeaderCollapsed = !isHeaderCollapsed"
+                          [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"><i class="fa fa-bars"></i>
+            </button>
+        </div>
+    
+      
+            <div class="text-light p-2" [collapse]="isHeaderCollapsed" [isAnimated]="true">
+                    <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed" ><i class="fa fa-fw fa-fg fa-location-arrow"></i>Ana Sayfa</a>
+                    <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-fw fa-fg fa-location-arrow"></i>Kendime Düşünceler</a>
+                    <a class="row" [routerLink]="['/about']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
+                    <a class="row" [routerLink]="['/contact']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
+                    <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
+                    <a class="row" *ngIf="!loggedIn()"   style="cursor: pointer;" role="button" (click)="isCollapsed = !isCollapsed"
+                    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"><i class="fa fa-sign-out fa-fw fa-fg"></i>Kullanıcı Girişi</a>
+                    <div class="col-12 col-md-4 justify-content-center align-self-center">
+                        <form ng *ngIf="!loggedIn()" #loginForm="ngForm" [collapse]="isCollapsed" [isAnimated]="true" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+                            <input class="form-control mr-sm-2" type="text" name="username" placeholder="Kullanıcı Adı" required [(ngModel)]="model.username">
+                            <input class="form-control mr-sm-2" type="password" name="password" placeholder="Şifre" required [(ngModel)]="model.password">
+                            <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Giriş</button>
+                        </form>
+                    </div>
+            </div>
+    </nav>
+
+
+    <div class="d-none d-sm-block">
+        <div class="container p-1">
+            <div class="row text-light">
+                <div class="col-4"><time><i class="fa fa-fw fa-fg fa-calendar"></i>{{date | date}}</time></div>
+                <div class="col-8 d-flex justify-content-end">
+                    <a [routerLink]="['/about']"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
+                    <a [routerLink]="['/contact']"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
+                    <a *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
+                    <a *ngIf="!loggedIn()"   style="cursor: pointer;" role="button" (click)="isCollapsed = !isCollapsed"
+                    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"><i class="fa fa-sign-out fa-fw fa-fg"></i>Kullanıcı Girişi</a>
+                </div>
+            </div>
+        </div>
+        <div class="bg-light rounded">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12  col-md-8 d-flex  justify-content-center justify-content-lg-start pt-1 logo-a">
+                        <a href="" [routerLink]="['/']">
+                            <img src="../../assets/çzgisiz logo.png" alt="">
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-4 justify-content-center align-self-center">
+                        <form ng *ngIf="!loggedIn()" #loginForm="ngForm" [collapse]="isCollapsed" [isAnimated]="true" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+                            <input class="form-control mr-sm-2" type="text" name="username" placeholder="Kullanıcı Adı" required [(ngModel)]="model.username">
+                            <input class="form-control mr-sm-2" type="password" name="password" placeholder="Şifre" required [(ngModel)]="model.password">
+                            <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Giriş</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+       
 </header>
 
-<nav class="blog-header">
+
+<nav class="blog-header" class="d-none d-sm-block" [collapse]="isHeaderCollapsed" [isAnimated]="true">
     <div class="container">
-        <div class="row flex-nowrap align-items-center">
-            <a [routerLink]="['/']" class="p-3">ANA SAYFA</a>
-            <a [routerLink]="['/personalblog']" class="p-3">KENDİME DÜŞÜNCELER</a>
-            <a [routerLink]="['/']" class="p-3">MANDALIUMGAMES</a>
+        <div class="row d-flex align-items-center">
+            <a  [routerLink]="['/']" class="col-12 col-lg-auto  p-3">ANA SAYFA</a>
+            <a [routerLink]="['/personalblog']" class="col-12 col-lg-auto p-3">KENDİME DÜŞÜNCELER</a>
+            <!-- <a [routerLink]="['/']" class="p-3">MANDALIUMGAMES</a> -->
         </div>
     </div>
 </nav>
+
+
+
+<!-- 
+<button type="button" class="btn btn-primary" (click)="isCollapsed = !isCollapsed"
+       [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic">Toggle collapse
+</button>
+<hr>
+<div id="collapseBasic" >
+  <div class="well well-lg card card-block card-header">Some content</div>
+</div> -->

@@ -10,7 +10,10 @@ import { Router } from '@angular/router';
 })
 export class NavComponent implements OnInit {
   model: any = {};
-date: Date;
+  date: Date;
+  isHeaderCollapsed = true;
+  isCollapsed = true;
+
   constructor(public authService: AuthService, private router: Router) { }
 
   ngOnInit() {

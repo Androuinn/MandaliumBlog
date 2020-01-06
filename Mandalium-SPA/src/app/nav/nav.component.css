@@ -2,7 +2,6 @@ nav {
     background-color:black;
     color: white;
     font-size: 20px;
-    border-radius: 0px 0px 10px 10px;
 }
 
 header time{
@@ -14,6 +13,10 @@ header a {
     color: blanchedalmond;
     text-decoration: none;
 }
+
+header img {
+    height: 100px;
+}
 header a:hover{
     background-color: blanchedalmond;
     color: black;
@@ -24,6 +27,9 @@ header a:hover{
     background-color: inherit;
 } 
 
+#mobile-a:hover {
+    background-color: inherit;
+}
 
 
 nav a {
@@ -35,3 +41,4 @@ nav a:hover{
     background-color: blanchedalmond;
     color: black;
 }
+

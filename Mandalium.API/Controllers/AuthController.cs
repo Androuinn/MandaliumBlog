@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mandalium.API.Dtos;
 using System.Text;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Mandalium.API.Controllers
 {
@@ -27,6 +28,7 @@ namespace Mandalium.API.Controllers
             this._repo = repo;
         }
 
+        [Authorize]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]WriterForRegisterDto writerForRegisterDto)
         {

@@ -17,10 +17,10 @@
     <h5 class="p-4" *ngIf="blogEntry.comments[0]== null">Henüz yorum yok. İlk Yorumu sen bırak.</h5>
 
     <div class="card mb-1 col-12 " *ngFor="let comment of blogEntry.comments">
-      <div class="row">
+      <div class="row d-flex">
           <div class="card-body">
-            <h5 class="text-white d-inline pl-4 pt-2">{{comment.commenterName}}</h5>
-            <time class="text-white pr-5 pt-2 float-right">{{comment.createdDate| date:'medium'}}</time>
+            <h6 class="col-6 text-white d-inline pl-1 pt-2">{{comment.commenterName}}</h6>
+            <time class="col-6 text-white text-right pr-2 pt-2 ">{{comment.createdDate| date:'medium'}}</time>
             <p class="pl-5 pt-2">{{comment.commentString}}</p>
           </div>
         </div>
@@ -39,7 +39,7 @@
 
 
   <div class="row">
-    <form class="p-4" [formGroup]="commentFormGroup" (ngSubmit)="writeComment()">
+    <form class="p-4 mr-3" [formGroup]="commentFormGroup" (ngSubmit)="writeComment()">
       <div class="row form-group">
         <label class="col-4" for="email">Email: </label>
         <input maxlength="100"
