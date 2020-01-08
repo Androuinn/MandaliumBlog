@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {formatDate} from '@angular/common';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
   selector: 'app-nav',
@@ -14,7 +15,7 @@ export class NavComponent implements OnInit {
   isHeaderCollapsed = true;
   isCollapsed = true;
 
-  constructor(public authService: AuthService, private router: Router) { }
+  constructor(public authService: AuthService, private router: Router, private alertify: AlertifyService) { }
 
   ngOnInit() {
     this.date = new Date();
@@ -23,10 +24,10 @@ export class NavComponent implements OnInit {
   login() {
     this.authService.login(this.model).subscribe(
       next => {
-        console.log('Logged in successfully');
+        this.alertify.success('Giriş başarılı');
       },
       error => {
-        console.log(error);
+        this.alertify.error('Kullanıcı adı veya şifre hatalı');
       }, () => {
         this.router.navigate(['/']);
       }
@@ -41,7 +42,7 @@ export class NavComponent implements OnInit {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.authService.decodedToken = null;
-    console.log('logged out');
+    this.alertify.message('Çıkış yapıldı');
     this.router.navigate(['/']);
   }
 

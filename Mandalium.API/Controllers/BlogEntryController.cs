@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace Mandalium.API.Controllers
 {
@@ -20,20 +23,37 @@ namespace Mandalium.API.Controllers
     {
         private readonly IBlogRepository<BlogEntry> _repo;
         private readonly IMapper _mapper;
-        public BlogEntryController(IBlogRepository<BlogEntry> repo, IMapper mapper)
+        private readonly IOptions<CloudinarySettings> cloudinaryConfig;
+        private Cloudinary _cloudinary;
+        public BlogEntryController(IBlogRepository<BlogEntry> repo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig)
         {
+            this.cloudinaryConfig = _cloudinaryConfig;
             this._mapper = mapper;
             this._repo = repo;
+
+            Account acc = new Account(
+                 _cloudinaryConfig.Value.CloudName,
+                _cloudinaryConfig.Value.ApiKey,
+                _cloudinaryConfig.Value.ApiSecret
+            );
+            _cloudinary = new Cloudinary(acc);
         }
 
 
         #region  get methods
+
+
         [HttpGet(Name = "GetEntries")]
         public async Task<IActionResult> GetEntries([FromQuery]UserParams userParams)
         {
             var entries = await _repo.GetBlogEntries(userParams);
 
             var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
+
+            foreach (var item in returndto)
+            {
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(500).Height(500).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First()+ ".jpg");
+            }
 
             Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
 
@@ -64,6 +84,15 @@ namespace Mandalium.API.Controllers
         {
             var personalEntries = await _repo.GetMostRead(true);
             var blogEntries = await _repo.GetMostRead(false);
+
+            foreach (var item in personalEntries)
+            {
+                  item.PhotoUrl = _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(500).Height(500).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First()+ ".jpg");
+            }
+            foreach (var item in blogEntries)
+            {
+                 item.PhotoUrl = _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(500).Height(500).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First()+ ".jpg");
+            }
 
             var mostReadPersonalEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(personalEntries);
             var mostReadEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(blogEntries);
@@ -124,7 +153,7 @@ namespace Mandalium.API.Controllers
         // public async Task<IActionResult> Search(string searchString, UserParams userParams)
         // {
         //     var entries = await _repo.Search(searchString, userParams);
-           
+
         //      var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
 
         //     Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);

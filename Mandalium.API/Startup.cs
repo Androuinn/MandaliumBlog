@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using Mandalium.API.Helpers;
 
 namespace Mandalium.API
 {
@@ -35,6 +36,8 @@ namespace Mandalium.API
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IBlogRepository<BlogEntry>,BlogRepository>();
             services.AddScoped<IAuthRepository<Writer>, AuthRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper(typeof(BlogRepository).Assembly);
             services.AddControllers().AddNewtonsoftJson(opt => {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -51,6 +54,9 @@ namespace Mandalium.API
                 };
             });
             services.AddCors();
+            // services.AddMvc().ConfigureApiBehaviorOptions( options => {
+            //     options.SuppressModelStateInvalidFilter = true;
+            // });
         
         }
 

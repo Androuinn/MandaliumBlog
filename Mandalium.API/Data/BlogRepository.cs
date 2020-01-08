@@ -24,19 +24,6 @@ namespace Mandalium.API.Data
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
         }
 
-         public async Task<PagedList<BlogEntry>> Search(string searchString, UserParams userParams)
-        {
-            var blogEntries = from e in _context.BlogEntries.AsNoTracking().Include(x => x.Topic).OrderByDescending(x => x.CreatedDate).AsQueryable() select e; 
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                blogEntries = blogEntries.Where(x=> x.Headline.Contains(searchString) || x.SubHeadline.Contains(searchString) || x.innerTextHtml.Contains(searchString));
-            }
-
-            return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
-        }
-
-
         public async Task<BlogEntry> GetBlogEntry(int blogId, UserParams userParams)
         {
             if (userParams.EntryAlreadyPicked == false)
@@ -57,15 +44,24 @@ namespace Mandalium.API.Data
 
                 return BlogEntry;
             }
-
-
-
         }
 
         public async Task<IEnumerable<BlogEntry>> GetMostRead(bool writerEntry)
         {
             var Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => x.WriterEntry == writerEntry).Take(5).ToListAsync();
             return Entries;
+        }
+
+        public async Task<PagedList<BlogEntry>> Search(string searchString, UserParams userParams)
+        {
+            var blogEntries = from e in _context.BlogEntries.AsNoTracking().Include(x => x.Topic).OrderByDescending(x => x.CreatedDate).AsQueryable() select e;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                blogEntries = blogEntries.Where(x => x.Headline.Contains(searchString) || x.SubHeadline.Contains(searchString) || x.innerTextHtml.Contains(searchString));
+            }
+
+            return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
         }
 
 

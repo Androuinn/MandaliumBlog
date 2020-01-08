@@ -1,4 +1,3 @@
-
 <div class="block sidebar-block mb-3">
   <h5 class="sidebar-title border-bottom border-dark">KENDİME DÜŞÜNCELER</h5>
   <ul class="clear" *ngFor="let entry of mostReadPersonalEntries">
@@ -6,11 +5,11 @@
     <li class="border border-dark rounded">
       <a [routerLink]="['/blog', entry.id, entry.headline]">
         <div class="row">
-          <div class="image col-5">
+          <div class="col-5">
             <img class="" src={{entry.photoUrl}} alt="">
           </div>
           <div class="row col-7 p-2">
-            <h6 class="title col-12">{{entry.headline}}</h6>
+            <h6 class="col-12">{{entry.headline}}</h6>
             <p class="col-12">{{entry.subHeadline |slice: 0:35}} ...</p>
             <time class="col-12">{{entry.createdDate | date}}</time>
           </div>
@@ -29,11 +28,11 @@
     <li class="border border-dark rounded">
       <a [routerLink]="['/blog', entry.id, entry.headline]">
         <div class="row">
-          <div class="image col-5">
+          <div class="col-5">
             <img class="" src={{entry.photoUrl}} alt="">
           </div>
           <div class="row col-7 p-2">
-            <h6 class="title col-12">{{entry.headline}}</h6>
+            <h6 class="col-12">{{entry.headline}}</h6>
             <p class="col-12">{{entry.subHeadline |slice: 0:35}} ...</p>
             <time class="col-12">{{entry.createdDate | date}}</time>
           </div>
