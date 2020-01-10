@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,12 @@ namespace Mandalium.API.Data
                 var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.Writer).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
                 var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
                 Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
+
+
+                Counter.Add(DateTime.Now.Date, blogId, Entry.WriterEntry);
+
+
+
                 Entry.TimesRead += 1;
                 _context.BlogEntries.Update(Entry);
                 await _context.SaveChangesAsync();
@@ -48,7 +55,19 @@ namespace Mandalium.API.Data
 
         public async Task<IEnumerable<BlogEntry>> GetMostRead(bool writerEntry)
         {
-            var Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => x.WriterEntry == writerEntry).Take(5).ToListAsync();
+
+            List<BlogEntry> Entries;
+            var a = Counter.GetMostRead().SelectMany(x => x.Value).OrderByDescending(x => x.Count).Where(x=>x.WriterEntry == writerEntry).Take(5).ToList();
+            //order by hallet
+            if (a.Count !=0)
+            {
+                Entries = await _context.BlogEntries.Where(x => a.Select(c => c.Id).Contains(x.Id)).ToListAsync();
+            }
+            else
+            {
+                Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => x.WriterEntry == writerEntry).Take(5).ToListAsync();
+            }
+
             return Entries;
         }
 

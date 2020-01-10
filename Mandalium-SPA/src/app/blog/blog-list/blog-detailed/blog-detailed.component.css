@@ -7,3 +7,10 @@ textarea {
     background-color: black;
     color: white;
 }
+
+img {
+    background-position: center;
+    background-size: cover;
+    object-fit: cover;
+    padding: 0px;
+}

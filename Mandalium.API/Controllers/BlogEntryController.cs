@@ -9,8 +9,6 @@ using Mandalium.API.Helpers;
 using Mandalium.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -52,7 +50,7 @@ namespace Mandalium.API.Controllers
 
             foreach (var item in returndto)
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(500).Height(500).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First()+ ".jpg");
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Width(350).Height(350).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".jpg");
             }
 
             Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
@@ -68,6 +66,9 @@ namespace Mandalium.API.Controllers
             var blogEntry = await _repo.GetBlogEntry(id, userParams);
 
             var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
+
+            blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl.Split("/").Last().Split(".").First() + ".jpg");
+
 
             Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
 
@@ -87,11 +88,11 @@ namespace Mandalium.API.Controllers
 
             foreach (var item in personalEntries)
             {
-                  item.PhotoUrl = _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(500).Height(500).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First()+ ".jpg");
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Width(250).Height(250).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".jpg");
             }
             foreach (var item in blogEntries)
             {
-                 item.PhotoUrl = _cloudinary.Api.UrlImgUp.Transform(new Transformation().Width(500).Height(500).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First()+ ".jpg");
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Width(250).Height(250).Crop("fill")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".jpg");
             }
 
             var mostReadPersonalEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(personalEntries);
