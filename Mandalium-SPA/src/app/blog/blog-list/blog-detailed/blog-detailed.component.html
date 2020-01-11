@@ -6,8 +6,8 @@
       <p class="blog-post-meta">{{blogEntry.createdDate | date}} by <a [routerLink]="['/about']"
           routerLinkActive="router-link-active">{{blogEntry.writerName}}
           {{blogEntry.writerSurname}}</a></p>
-          <div class="row ">
-            <img class="col-12 rounded" src="{{blogEntry.photoUrl}}" alt="">
+          <div class="row mb-3">
+          <img class="col-12 rounded" src="{{blogEntry.photoUrl}}" alt="{{blogEntry.headline}}">
           </div>
          
       

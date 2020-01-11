@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { PaginationModule, BsDropdownModule, CollapseModule } from 'ngx-bootstrap';
 import { JwtModule} from '@auth0/angular-jwt';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,8 @@ import { CreateBlogEntryComponent } from './blog/blog-list/create-blog-entry/cre
 import { BlogWriterEntryComponent } from './blog/blog-list/blog-writerEntry/blog-writerEntry.component';
 import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { RequestCacheService } from './_services/requestCache.service';
+import { CachingInterceptor } from './_services/cachingInterceptor.interceptor';
 
 
 export function tokenGetter() {
@@ -60,7 +62,9 @@ export function tokenGetter() {
    ],
    providers: [
       BlogEntryResolver,
-      AuthGuard
+      AuthGuard,
+      RequestCacheService,
+      {provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true}
    ],
    bootstrap: [
       AppComponent

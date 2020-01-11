@@ -29,7 +29,7 @@
       <a [routerLink]="['/blog', entry.id, entry.headline]">
         <div class="row">
           <div class="col-5">
-            <img class="" src={{entry.photoUrl}} alt="">
+          <img class="" src={{entry.photoUrl}} alt="{{entry.headline}}">
           </div>
           <div class="row col-7 p-2">
             <h6 class="col-12">{{entry.headline}}</h6>
