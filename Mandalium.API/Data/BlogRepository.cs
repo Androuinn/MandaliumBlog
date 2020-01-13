@@ -57,9 +57,9 @@ namespace Mandalium.API.Data
         {
 
             List<BlogEntry> Entries;
-            var a = Counter.GetMostRead().SelectMany(x => x.Value).OrderByDescending(x => x.Count).Where(x=>x.WriterEntry == writerEntry).Take(5).ToList();
+            var a = Counter.GetMostRead().SelectMany(x => x.Value).OrderByDescending(x => x.Count).Where(x => x.WriterEntry == writerEntry).Take(5).ToList();
             //order by hallet
-            if (a.Count !=0)
+            if (a.Count != 0)
             {
                 Entries = await _context.BlogEntries.Where(x => a.Select(c => c.Id).Contains(x.Id)).ToListAsync();
             }
@@ -67,6 +67,8 @@ namespace Mandalium.API.Data
             {
                 Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => x.WriterEntry == writerEntry).Take(5).ToListAsync();
             }
+
+
 
             return Entries;
         }

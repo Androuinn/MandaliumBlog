@@ -67,15 +67,14 @@ namespace Mandalium.API.Controllers
 
             var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
 
-            blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+            if (userParams.EntryAlreadyPicked == false)
+            {
+                blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+            }
 
 
             Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
 
-            // if (userParams.EntryAlreadyPicked == true)
-            // {
-            //     return Ok(blogEntryDto.Comments);
-            // }
             return Ok(blogEntryDto);
         }
 
