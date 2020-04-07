@@ -3,7 +3,7 @@
     <div class="blog-post">
       <h2 class="blog-post-title">{{blogEntry.headline}}</h2>
       <h5 class="text-dark">{{blogEntry.subHeadline}}</h5>
-      <p class="blog-post-meta">{{blogEntry.createdDate | date}} by <a [routerLink]="['/about']"
+      <p class="blog-post-meta">{{blogEntry.createdDate | date:('mediumDate')}}, Yazar: <a [routerLink]="['/about']"
           routerLinkActive="router-link-active">{{blogEntry.writerName}}
           {{blogEntry.writerSurname}}</a></p>
           <div class="row mb-3">

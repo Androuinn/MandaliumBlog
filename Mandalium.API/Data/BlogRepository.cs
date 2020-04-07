@@ -22,6 +22,7 @@ namespace Mandalium.API.Data
         public async Task<PagedList<BlogEntry>> GetBlogEntries(UserParams userParams)
         {
             var blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Where(x => x.WriterEntry == userParams.WriterEntry).OrderByDescending(x => x.CreatedDate).AsQueryable(); ;
+
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
         }
 
