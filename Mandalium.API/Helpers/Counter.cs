@@ -72,10 +72,21 @@ namespace Mandalium.API.Helpers
             }
 
             //TODO bu sildiği datayı başka bir dosyaya yazdır.
-            if (WeeklyCounter.ContainsKey(DateTime.Now.Date.AddDays(-8)))
+            foreach (var key in WeeklyCounter.Keys)
             {
-                WeeklyCounter.Remove(DateTime.Now.Date.AddDays(-8));
+                if (key <= DateTime.Now.Date.AddDays(-8))
+                {
+                    var wholeData = JsonConvert.DeserializeObject<Dictionary<DateTime, List<CountOfEntry>>>(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"Helpers\\wholeData.json")));
+                    wholeData.Add(key, WeeklyCounter[key]);
+                     OrganizeData(wholeData);
+                    var wholeDataJson = JsonConvert.SerializeObject(wholeData);
+                    File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"Helpers\\wholeData.json"), wholeDataJson);
+                  
+                    WeeklyCounter.Remove(key);
+                }
             }
+
+
 
             OrganizeData(WeeklyCounter);
 
@@ -89,9 +100,9 @@ namespace Mandalium.API.Helpers
         {
 
             Dictionary<DateTime, List<CountOfEntry>> newWeeklyCounter = new Dictionary<DateTime, List<CountOfEntry>>();
-            foreach (var key in WeeklyCounter.Keys)
+            foreach (var key in dict.Keys)
             {
-                WeeklyCounter.TryGetValue(key, out var list);
+                dict.TryGetValue(key, out var list);
                 if (list != null)
                 {
                     CountOfEntry blogEntry;
@@ -124,7 +135,7 @@ namespace Mandalium.API.Helpers
                     newWeeklyCounter.Add(key, centry);
                 }
             }
-            WeeklyCounter = newWeeklyCounter;
+            dict = newWeeklyCounter;
         }
 
         public static Dictionary<DateTime, List<CountOfEntry>> GetMostRead()

@@ -19,5 +19,7 @@ namespace Mandalium.API.Data
         Task<IEnumerable<Topic>> GetTopics();
 
         Task<int> SaveComment(Comment comment);
+
+        Task<int> SaveTopic(Topic topic);
     }
 }

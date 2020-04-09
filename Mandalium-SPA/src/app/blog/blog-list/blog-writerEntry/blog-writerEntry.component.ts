@@ -17,7 +17,7 @@ export class BlogWriterEntryComponent implements OnInit {
   ngOnInit() {
     this.pagination = {
       currentPage: 1,
-      itemsPerPage: 5,
+      itemsPerPage: 7,
       totalPages: 1,
       totalItems: 1
     };

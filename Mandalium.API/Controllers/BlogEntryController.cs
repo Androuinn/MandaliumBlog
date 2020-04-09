@@ -118,6 +118,21 @@ namespace Mandalium.API.Controllers
             });
         }
 
+        [Route("[action]")]
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> SaveTopic(TopicDto topicDto)
+        {
+           
+            var topic =  _mapper.Map<Topic>(topicDto);
+            var number = await _repo.SaveTopic(topic);
+            if ( number != 0)
+            {
+                 return StatusCode(200);
+            }    
+            return StatusCode(400);
+        }
+
         #endregion
 
 
@@ -148,17 +163,6 @@ namespace Mandalium.API.Controllers
         #endregion
 
 
-        // [Route("[action]")]
-        // [HttpGet]
-        // public async Task<IActionResult> Search(string searchString, UserParams userParams)
-        // {
-        //     var entries = await _repo.Search(searchString, userParams);
-
-        //      var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
-
-        //     Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
-
-        //     return Ok(returndto);
-        // }
+       
     }
 }

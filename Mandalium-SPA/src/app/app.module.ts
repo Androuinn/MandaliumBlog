@@ -24,6 +24,7 @@ import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { RequestCacheService } from './_services/requestCache.service';
 import { CachingInterceptor } from './_services/cachingInterceptor.interceptor';
+import { UserComponent } from './user/user.component';
 
 
 registerLocaleData(localeTr, 'tr-TR');
@@ -45,6 +46,7 @@ export function tokenGetter() {
       CreateBlogEntryComponent,
       BlogWriterEntryComponent,
       ContactComponent,
+      UserComponent
    ],
    imports: [
       BrowserModule,

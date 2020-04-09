@@ -10,4 +10,6 @@ namespace Mandalium.API.Models
         [MaxLength(100)]
         public string TopicName { get; set; }
     }
+
+   
 }

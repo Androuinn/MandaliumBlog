@@ -1,4 +1,25 @@
-<div class="pr-3">
+<div class="container mt-3" *ngIf="!createNewTopic">
+  <button class="btn btn-primary" (click)="createNewTopic = !createNewTopic">Yeni Topic Ekle</button>
+</div>
+
+<div class="container mt-3 pr-3"  [collapse]="!createNewTopic" [isAnimated]="true">
+  <form #topicRegisterForm (ngSubmit)="createTopic()">
+
+    <div class="row form-group ">
+      <label for="newtopicname" class="col-12 col-md-4 pt-1"> Yeni Başlık(Topic) ekle:</label>
+      <input type="text" id="newtopicname" class="form-control col-12 col-md-8" required name="topicname"
+        [(ngModel)]="newTopic.topicName" placeholder="yeni topic başlığını buraya girin">
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-success" type="submit">Topic Kaydet</button>
+      <button class="btn btn-primary" type="button" (click)="createNewTopic =!createNewTopic"> İptal</button>
+    </div>
+  </form>
+</div>
+
+
+<div class="container mt-3 pr-3">
   <form id="photoForm" enctype="multipart/form-data" (ngSubmit)="postPhoto()"></form>
   <form [formGroup]="createBlogPost" (ngSubmit)="createPost()">
     <h4>Create Blog Post</h4>
@@ -6,27 +27,28 @@
       <label class="col-4" for="headline">Headline: </label>
       <input class="col-8 " type="text" formControlName="headline" id="headline" required>
     </div>
-  
+
     <div class="row form-group">
       <label class="col-4" for="subHeadline">SubHeadline:</label>
       <input class="col-8 " type="text" formControlName="subHeadline" id="subHeadline" required>
     </div>
-  
+
     <div class="row form-group ">
-      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h1></h1>'" >h1</button>
-      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h2></h2>'" >h2</button>
-      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h3></h3>'" >h3</button>
-      
+      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h1></h1>'">h1</button>
+      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h2></h2>'">h2</button>
+      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h3></h3>'">h3</button>
+
     </div>
-  
+
     <div class="row form-group">
       <h5 class="col-12">Inner Text HTML:</h5>
-      <textarea formControlName="innerTextHtml" [(ngModel)]="innerTextHtml"  (ngform)="getInnerHtml($event)" class="col-12"   name="" id="textarea" cols="120" rows="10" required></textarea>
+      <textarea formControlName="innerTextHtml" [(ngModel)]="innerTextHtml" (ngform)="getInnerHtml($event)"
+        class="col-12" name="" id="textarea" cols="120" rows="10" required></textarea>
     </div>
 
     <div class="row form-group">
       <label class="col-4" for="file">Fotoğraf seçin ya da aşağıya url adresi girin.</label>
-      <input class="col-8" type="file"  form="photoForm" (change)="onFileChanged($event)" name="file" id="file">
+      <input class="col-8" type="file" form="photoForm" (change)="onFileChanged($event)" name="file" id="file">
       <!-- <input type="hidden" name="writerId" form="photoForm" id="writerId" value="{{authService.decodedToken.id}}"> -->
     </div>
 
@@ -36,46 +58,46 @@
         Kaydet
       </button>
     </div>
-  
+
     <div class="row form-group">
       <label class="col-4" for="photoUrl">PhotoUrl:</label>
       <input class="col-8 " type="text" formControlName="photoUrl" id="photoUrl" required>
     </div>
-  
+
     <div class="row d-flex justify-content-between form-group">
       <label class="col-4" for="writerId">Writer:</label>
       <select class="col-4 " formControlName="writerId" id="writerId" required>
-      <option *ngFor="let writer of writers" value="{{writer.id}}">{{writer.name}} {{writer.surname}}</option>
+        <option *ngFor="let writer of writers" value="{{writer.id}}">{{writer.name}} {{writer.surname}}</option>
       </select>
     </div>
-  
+
     <div class="row d-flex justify-content-between form-group">
       <label class="col-4" for="topicId">Topic:</label>
       <select class="col-4" formControlName="topicId" id="topicId" required>
-      <option *ngFor="let topic of topics" value="{{topic.id}}" >{{topic.topicName}}</option>
+        <option *ngFor="let topic of topics" value="{{topic.id}}">{{topic.topicName}}</option>
       </select>
     </div>
-  
+
     <div class="row d-flex justify-content-between form-group">
       <label class="col-4" for="topicId">Writer Content:</label>
       <select class="col-4" formControlName="writerEntry" id="writerEntry" required>
-      <option  value="true" >True</option>
-      <option  value="false" >False</option>
+        <option value="true">True</option>
+        <option value="false">False</option>
       </select>
     </div>
-    
-    
-    
+
+
+
     <div class="row justify-content-end form-submit">
       <button class="btn btn-success" type="submit" [disabled]="!createBlogPost.valid">
         Kaydet
       </button>
     </div>
-  
+
   </form>
-  
+
   <h5>Inner Text</h5>
   <div class="row border border-dark" [innerHTML]="innerTextHtml">
   </div>
-  
+
 </div>

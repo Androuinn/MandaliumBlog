@@ -12,42 +12,50 @@
                     aria-controls="collapseBasic"><i class="fa fa-bars"></i>
                 </button>
             </div>
-    
-    
+
+
             <div class="text-light p-2" [collapse]="isHeaderCollapsed" [isAnimated]="true">
-                <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-fw fa-fg fa-location-arrow"></i>Ana Sayfa</a>
-                <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-fw fa-fg fa-location-arrow"></i>Kendime Düşünceler</a>
-                <a class="row" [routerLink]="['/about']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
+                <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
+                        class="fa fa-fw fa-fg fa-location-arrow"></i>Ana Sayfa</a>
+                <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
+                        class="fa fa-fw fa-fg fa-location-arrow"></i>Kendime Düşünceler</a>
+                <a class="row" [routerLink]="['/about']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
+                        class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
                 <a class="row" [routerLink]="['/contact']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
                         class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
-                <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/create']"><i class="fa fa-sign-out fa-fw fa-fg"></i>Yeni Post</a>
+                <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/create']"><i
+                        class="fa fa-sign-out fa-fw fa-fg"></i>Yeni Post</a>
                 <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i
                         class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
                 <a class="row" *ngIf="!loggedIn()" style="cursor: pointer;" role="button"
                     (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
                     aria-controls="collapseBasic"><i class="fa fa-sign-out fa-fw fa-fg"></i>Kullanıcı Girişi</a>
                 <div class="col-12 col-md-4 justify-content-center align-self-center">
-                    <form ng *ngIf="!loggedIn()" #loginForm="ngForm" [collapse]="isCollapsed" [isAnimated]="true" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
-                        <input class="form-control mr-sm-2" type="text" name="username" placeholder="Kullanıcı Adı" required [(ngModel)]="model.username">
-                        <input class="form-control mr-sm-2" type="password" name="password" placeholder="Şifre" required [(ngModel)]="model.password">
-                        <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Giriş</button>
+                    <form ng *ngIf="!loggedIn()" #loginForm="ngForm" [collapse]="isCollapsed" [isAnimated]="true"
+                        class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+                        <input class="form-control mr-sm-2" type="text" name="username" placeholder="Kullanıcı Adı"
+                            required [(ngModel)]="model.username">
+                        <input class="form-control mr-sm-2" type="password" name="password" placeholder="Şifre" required
+                            [(ngModel)]="model.password">
+                        <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0"
+                            type="submit">Giriş</button>
                     </form>
                 </div>
             </div>
         </div>
-       
+
     </nav>
 
 
     <div class="d-none d-sm-block">
         <div class="container p-1">
             <div class="row text-light">
-                <div class="col-4"><time><i class="fa fa-fw fa-fg fa-calendar"></i>{{date | date}}</time></div>
+                <div class="col-4 pt-1"><time><i class="fa fa-calendar fa-fw fa-fg "></i>{{date | date}}</time></div>
                 <div class="col-8 d-flex justify-content-end">
                     <a [routerLink]="['/about']"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
                     <a [routerLink]="['/contact']"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
                     <a *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/create']"><i
-                        class="fa fa-sign-out fa-fw fa-fg"></i>Yeni Post</a>
+                            class="fa fa-sign-out fa-fw fa-fg"></i>Yeni Post</a>
                     <a *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i
                             class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
                     <a *ngIf="!loggedIn()" style="cursor: pointer;" role="button" (click)="isCollapsed = !isCollapsed"

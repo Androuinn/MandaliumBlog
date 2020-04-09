@@ -18,9 +18,12 @@ import { environment } from 'src/environments/environment';
 export class CreateBlogEntryComponent implements OnInit {
   writers: Writer[];
   topics: Topic[];
+  newTopic: Topic = {};
   innerTextHtml: string;
   createBlogPost: FormGroup;
   file: File;
+  createNewTopic = false;
+
 
   constructor(
     private blogService: BlogService,
@@ -104,5 +107,16 @@ export class CreateBlogEntryComponent implements OnInit {
 
   getInnerHtml(newValue: string) {
     this.innerTextHtml = newValue;
+  }
+
+  createTopic() {
+    this.blogService.saveTopic(this.newTopic).subscribe(res => {
+      this.createNewTopic = !this.createNewTopic;
+      this.getTopicsAndWriters();
+      this.alertify.success(this.newTopic.topicName + ' Başarıyla eklendi');
+    }, error => {
+      this.alertify.error(error);
+      console.log(error);
+    });
   }
 }

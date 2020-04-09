@@ -99,6 +99,11 @@ namespace Mandalium.API.Data
             await _context.AddAsync(comment);
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> SaveTopic(Topic topic){
+            await _context.AddAsync(topic);
+            return await _context.SaveChangesAsync();
+        }
         #endregion
 
         #region Topic and Writer

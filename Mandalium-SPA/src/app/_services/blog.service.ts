@@ -7,13 +7,13 @@ import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { WriterTopic } from '../_models/WriterTopic';
 import { Comment } from '../_models/Comment';
+import { Topic } from '../_models/Topic';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlogService {
   baseUrl = environment.apiUrl;
-
   constructor(private http: HttpClient) {}
 
   getBlogEntries(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<BlogEntry[]>> {
@@ -79,6 +79,10 @@ export class BlogService {
   }
   saveComment(comment: Comment) {
     return this.http.post(this.baseUrl + 'blogentry/writecomment', comment);
+  }
+
+  saveTopic(Topic: Topic) {
+    return this.http.post(this.baseUrl + 'blogentry/savetopic', Topic);
   }
 
 }
