@@ -14,6 +14,7 @@ namespace Mandalium.API.Data
         Task<IEnumerable<T>> GetMostRead(bool writerEntry);
 
         Task<int> SaveBlogEntry(BlogEntry blogEntry);
+        Task<int> UpdateBlogEntry(BlogEntry blogEntry);
 
         Task<IEnumerable<Writer>> GetWriters();
         Task<IEnumerable<Topic>> GetTopics();

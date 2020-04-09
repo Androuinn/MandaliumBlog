@@ -7,24 +7,24 @@
     <h4 class="border-bottom border-white">EN SON HABERLER</h4>
   </div>
   
-  <div class="card mb-3 col-12 " *ngFor="let entry of blogEntries">
+  <article class="card mb-3 col-12 " *ngFor="let entry of blogEntries">
     <div class="row">
       <div class="col-7">
         <div class="card-body">
           <a href="#" class="stretched-link" [routerLink]="['/blog', entry.id, entry.headline]"
             routerLinkActive="router-link-active">
-            <strong class="d-inline-block mb-2 text-primary">{{entry.topicName}}</strong>
+            <strong class="d-inline-block mb-2 text-primary">{{entry.topicName |uppercase}}</strong> <span class="ml-5 font-italic">{{entry.writerName}} {{entry.writerSurname}}</span>
             <h5 class="card-title">{{entry.headline}}</h5>
             <p class="card-text">{{entry.createdDate | date}}</p>
             <p class="card-text">{{entry.subHeadline }}</p>
-          </a>
+        </a>
         </div>
       </div>
       <div class="col-5 p-2">
         <img class="card-img" src={{entry.photoUrl}} alt="{{entry.headline}}">
       </div>
     </div>
-  </div>
+  </article>
   
   <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
     [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"

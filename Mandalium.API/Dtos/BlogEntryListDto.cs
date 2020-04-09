@@ -26,5 +26,8 @@ namespace Mandalium.API.Dtos
         // public string WriterSurname { get; set; }
 
         public string TopicName { get; set; }
+
+        public string WriterName { get; set; }
+        public string WriterSurname { get; set; }
     }
 }

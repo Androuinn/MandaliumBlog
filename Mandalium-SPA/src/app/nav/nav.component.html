@@ -23,8 +23,8 @@
                         class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
                 <a class="row" [routerLink]="['/contact']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
                         class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
-                <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/create']"><i
-                        class="fa fa-sign-out fa-fw fa-fg"></i>Yeni Post</a>
+                <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/profile']"
+                    (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-id-badge fa-fw fa-fg"></i>Hesap</a>
                 <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i
                         class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
                 <a class="row" *ngIf="!loggedIn()" style="cursor: pointer;" role="button"
@@ -54,8 +54,8 @@
                 <div class="col-8 d-flex justify-content-end">
                     <a [routerLink]="['/about']"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
                     <a [routerLink]="['/contact']"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
-                    <a *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/create']"><i
-                            class="fa fa-sign-out fa-fw fa-fg"></i>Yeni Post</a>
+                    <a *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/profile']"><i
+                            class="fa fa-id-badge fa-fw fa-fg"></i>Hesap</a>
                     <a *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i
                             class="fa fa-sign-out fa-fw fa-fg"></i>Çıkış</a>
                     <a *ngIf="!loggedIn()" style="cursor: pointer;" role="button" (click)="isCollapsed = !isCollapsed"

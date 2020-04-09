@@ -1,0 +1,59 @@
+<div class="container mt-3" *ngIf="!createNewTopic">
+  <button class="btn btn-primary" (click)="createNewTopic = !createNewTopic">Yeni Başlık(Topic) Ekle</button>
+  <a class="ml-1 btn btn-success" style="cursor: pointer;" [routerLink]="['/create']"><i
+      class="fa fa-plus-square fa-fw fa-fg text-light "></i>YENİ YAZI</a>
+  <button type="button" class="ml-1 btn btn-danger" (click)="openPosts()"><i
+      class="fa fa-clipboard fa-fw fa-fg text-light "></i>YAZILARIMI GÖSTER</button>
+
+</div>
+
+<div class="container mt-3 pr-3" [collapse]="!createNewTopic" [isAnimated]="true">
+  <form #topicRegisterForm (ngSubmit)="createTopic()">
+
+    <div class="row form-group ">
+      <label for="newtopicname" class="col-12 col-md-4 pt-1"> Yeni Başlık(Topic) ekle:</label>
+      <input type="text" id="newtopicname" class="form-control col-12 col-md-8" required name="topicname"
+        [(ngModel)]="newTopic.topicName" placeholder="yeni topic başlığını buraya girin">
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-success" type="submit">Topic Kaydet</button>
+      <button class="btn btn-primary" type="button" (click)="createNewTopic =!createNewTopic"> İptal</button>
+    </div>
+  </form>
+</div>
+
+
+<div class="container" [collapse]="!postsOpen" [isAnimated]="true">
+  <div class=" pl-3 mt-3 pb-2 text-white">
+    <h4 class="border-bottom border-white">YAZILARIM</h4>
+  </div>
+
+  <article class="card mb-3 col-12 " *ngFor="let entry of blogEntries">
+    <div class="row">
+      <div class="col-6">
+        <div class="card-body">
+          <a href="#" class="stretched-link" [routerLink]="['/blog', entry.id, entry.headline]"
+            routerLinkActive="router-link-active">
+            <strong class="d-inline-block mb-2 text-primary">{{entry.topicName |uppercase}}</strong> <span class="ml-5 font-italic">{{entry.writerName}} {{entry.writerSurname}}</span>
+            <h5 class="card-title">{{entry.headline}}</h5>
+            <p class="card-text">{{entry.createdDate | date}}</p>
+            <p class="card-text">{{entry.subHeadline }}</p>
+        </a>
+        </div>
+      </div>
+      <div class="col-5 p-2">
+        <img class="card-img" src={{entry.photoUrl}} alt="{{entry.headline}}">
+      </div>
+      <div class="col-1 p-1 d-flex">
+        <a class="btn btn-success" (click)="changeEntry(entry.id)">DEĞİŞTİR</a>
+      </div>
+    </div>
+  </article>
+
+  <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"
+    firstText="&laquo;" lastText="&raquo;">
+
+  </pagination>
+</div>

@@ -18,13 +18,14 @@ import { BlogMostReadComponent } from './blog/blog-list/blog-most-read/blog-most
 import { FooterComponent } from './footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AboutComponent } from './about/about.component';
-import { CreateBlogEntryComponent } from './blog/blog-list/create-blog-entry/create-blog-entry.component';
+import { CreateBlogEntryComponent } from './user/create-blog-entry/create-blog-entry.component';
 import { BlogWriterEntryComponent } from './blog/blog-list/blog-writerEntry/blog-writerEntry.component';
 import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { RequestCacheService } from './_services/requestCache.service';
 import { CachingInterceptor } from './_services/cachingInterceptor.interceptor';
-import { UserComponent } from './user/user.component';
+import { UsermenuComponent } from './user/usermenu/usermenu.component';
+
 
 
 registerLocaleData(localeTr, 'tr-TR');
@@ -46,7 +47,7 @@ export function tokenGetter() {
       CreateBlogEntryComponent,
       BlogWriterEntryComponent,
       ContactComponent,
-      UserComponent
+      UsermenuComponent
    ],
    imports: [
       BrowserModule,

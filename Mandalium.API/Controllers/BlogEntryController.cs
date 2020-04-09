@@ -118,26 +118,30 @@ namespace Mandalium.API.Controllers
             });
         }
 
-        [Route("[action]")]
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> SaveTopic(TopicDto topicDto)
-        {
-           
-            var topic =  _mapper.Map<Topic>(topicDto);
-            var number = await _repo.SaveTopic(topic);
-            if ( number != 0)
-            {
-                 return StatusCode(200);
-            }    
-            return StatusCode(400);
-        }
+
 
         #endregion
 
 
 
         #region  save methods
+
+        [Route("[action]")]
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> SaveTopic(TopicDto topicDto)
+        {
+            var topic = _mapper.Map<Topic>(topicDto);
+            var number = await _repo.SaveTopic(topic);
+            if (number != 0)
+            {
+                return StatusCode(200);
+            }
+            return StatusCode(400);
+        }
+
+
+
 
         [Authorize]
         [HttpPost]
@@ -148,6 +152,18 @@ namespace Mandalium.API.Controllers
 
             return RedirectToRoute("GetEntries");
         }
+        [Route("[action]")]
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
+        {
+            var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
+            await _repo.UpdateBlogEntry(blogEntry);
+
+            return StatusCode(200);
+        }
+
+
 
         [Route("[action]")]
         [HttpPost]
@@ -163,6 +179,6 @@ namespace Mandalium.API.Controllers
         #endregion
 
 
-       
+
     }
 }

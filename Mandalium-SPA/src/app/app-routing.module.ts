@@ -6,10 +6,11 @@ import { BlogEntryResolver } from './_resolvers/blogEntry.resolver';
 
 import { BlogListComponent } from './blog/blog-list/blog-list.component';
 import { AboutComponent } from './about/about.component';
-import { CreateBlogEntryComponent } from './blog/blog-list/create-blog-entry/create-blog-entry.component';
+import { CreateBlogEntryComponent } from './user/create-blog-entry/create-blog-entry.component';
 import { BlogWriterEntryComponent } from './blog/blog-list/blog-writerEntry/blog-writerEntry.component';
 import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { UsermenuComponent } from './user/usermenu/usermenu.component';
 
 
 
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent},
   {path: 'contact', component: ContactComponent},
   {path: 'blog/:id/:headline', component: BlogDetailedComponent, resolve: {blog: BlogEntryResolver}},
+  {path: 'profile', component: UsermenuComponent, runGuardsAndResolvers: 'always', canActivate: [AuthGuard]},
   {path: 'create', component: CreateBlogEntryComponent, runGuardsAndResolvers: 'always', canActivate: [AuthGuard]},
   {path: '**', redirectTo: 'home', pathMatch: 'full'}
  ];

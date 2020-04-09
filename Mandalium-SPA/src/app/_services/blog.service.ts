@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { BlogEntry } from '../_models/blogEntry';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
@@ -14,9 +14,15 @@ import { Topic } from '../_models/Topic';
 })
 export class BlogService {
   baseUrl = environment.apiUrl;
+  blogEntry: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  currentBlogEntry = this.blogEntry.asObservable();
   constructor(private http: HttpClient) {}
 
-  getBlogEntries(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<BlogEntry[]>> {
+  changeBlogEntry(entry: number) {
+    this.blogEntry.next(entry);
+  }
+
+  getBlogEntries(page?, itemsPerPage?, userParams?, writerId?): Observable<PaginatedResult<BlogEntry[]>> {
     const paginatedResult: PaginatedResult<BlogEntry []> = new PaginatedResult<BlogEntry []>();
 
     let params = new HttpParams();
@@ -28,6 +34,10 @@ export class BlogService {
 
     if (userParams != null) {
       params = params.append('writerEntry', userParams);
+    }
+
+    if (writerId >= 1) {
+      params = params.append('writerId', writerId);
     }
 
 
@@ -77,12 +87,17 @@ export class BlogService {
   saveBlogEntry(blogEntry: BlogEntry) {
     return this.http.post(this.baseUrl + 'blogentry', blogEntry);
   }
+
+  updateBlogEntry(blogentry: BlogEntry) {
+    return this.http.put(this.baseUrl + 'blogentry/UpdateBlogEntry', blogentry);
+  }
+
   saveComment(comment: Comment) {
     return this.http.post(this.baseUrl + 'blogentry/writecomment', comment);
   }
 
-  saveTopic(Topic: Topic) {
-    return this.http.post(this.baseUrl + 'blogentry/savetopic', Topic);
+  saveTopic(topic: Topic) {
+    return this.http.post(this.baseUrl + 'blogentry/savetopic', topic);
   }
 
 }

@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using CloudinaryDotNet;
 using Mandalium.API.Dtos;
 using Mandalium.API.Helpers;
 using Mandalium.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Mandalium.API.Data
 {
@@ -19,9 +21,18 @@ namespace Mandalium.API.Data
             this._context = context;
         }
 
+        #region  Get methods
         public async Task<PagedList<BlogEntry>> GetBlogEntries(UserParams userParams)
         {
-            var blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Where(x => x.WriterEntry == userParams.WriterEntry).OrderByDescending(x => x.CreatedDate).AsQueryable(); ;
+            IQueryable<BlogEntry> blogEntries;
+            if (userParams.WriterId >= 1)
+            {
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterId == userParams.WriterId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+            }
+            else
+            {
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterEntry == userParams.WriterEntry).OrderByDescending(x => x.CreatedDate).AsQueryable();
+            }
 
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
         }
@@ -36,8 +47,6 @@ namespace Mandalium.API.Data
 
 
                 Counter.Add(DateTime.Now.Date, blogId, Entry.WriterEntry);
-
-
 
                 Entry.TimesRead += 1;
                 _context.BlogEntries.Update(Entry);
@@ -69,10 +78,10 @@ namespace Mandalium.API.Data
                 Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => x.WriterEntry == writerEntry).Take(5).ToListAsync();
             }
 
-
-
             return Entries;
         }
+
+        #endregion
 
         public async Task<PagedList<BlogEntry>> Search(string searchString, UserParams userParams)
         {
@@ -94,13 +103,20 @@ namespace Mandalium.API.Data
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> UpdateBlogEntry(BlogEntry blogEntry)
+        {
+            _context.Update(blogEntry);
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<int> SaveComment(Comment comment)
         {
             await _context.AddAsync(comment);
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> SaveTopic(Topic topic){
+        public async Task<int> SaveTopic(Topic topic)
+        {
             await _context.AddAsync(topic);
             return await _context.SaveChangesAsync();
         }
