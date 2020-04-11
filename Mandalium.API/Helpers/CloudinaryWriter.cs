@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CloudinaryDotNet;
@@ -22,13 +23,14 @@ namespace Mandalium.API.Helpers
             _cloudinary = new Cloudinary(acc);
         }
 
-        // public static List<T> CloudinaryImageConvert<T>(List<T> list, int height)
+        // public static IEnumerable<T> CloudinaryImageConvert<T>(IEnumerable<T> list, int height)
         // {
-        //     foreach (BlogEntry item in list)
+        //     foreach (T item in list)
         //     {
-        //          item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+        //         Type.GetType("item").GetProperty("PhotoUrl").SetValue(_cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(height).Crop("scale")).BuildUrl(Type.GetType("T").GetProperty("PhotoUrl").GetValue().Split("/").Last().Split(".").First() + ".webp"));
           
         //     }
+        //     return list;
         // }
 
     }

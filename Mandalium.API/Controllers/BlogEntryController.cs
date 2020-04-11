@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using System.Security.Claims;
 
 namespace Mandalium.API.Controllers
 {
@@ -19,6 +20,8 @@ namespace Mandalium.API.Controllers
     [Route("api/[controller]")]
     public class BlogEntryController : ControllerBase
     {
+
+        #region field and constructor
         private readonly IBlogRepository<BlogEntry> _repo;
         private readonly IMapper _mapper;
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
@@ -36,6 +39,7 @@ namespace Mandalium.API.Controllers
             );
             _cloudinary = new Cloudinary(acc);
         }
+    #endregion
 
 
         #region  get methods
@@ -50,7 +54,8 @@ namespace Mandalium.API.Controllers
 
             foreach (var item in returndto)
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+                // item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
             }
 
             Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
@@ -69,7 +74,7 @@ namespace Mandalium.API.Controllers
 
             if (userParams.EntryAlreadyPicked == false)
             {
-                blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+                blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl + ".webp");
             }
 
 
@@ -87,11 +92,11 @@ namespace Mandalium.API.Controllers
 
             foreach (var item in personalEntries)
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
             }
             foreach (var item in blogEntries)
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
             }
 
             var mostReadPersonalEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(personalEntries);
@@ -131,6 +136,11 @@ namespace Mandalium.API.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveTopic(TopicDto topicDto)
         {
+            if (User.FindFirst(ClaimTypes.Role).Value != "1")
+            {
+              return  Unauthorized();
+            }
+
             var topic = _mapper.Map<Topic>(topicDto);
             var number = await _repo.SaveTopic(topic);
             if (number != 0)
@@ -147,16 +157,29 @@ namespace Mandalium.API.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
         {
+            if (blogEntryForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            {
+                return Unauthorized();
+            }
+
             var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
             await _repo.SaveBlogEntry(blogEntry);
 
-            return RedirectToRoute("GetEntries");
+            return StatusCode(200);
         }
+
+
         [Route("[action]")]
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
         {
+            if (blogEntryForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            {
+                return Unauthorized();
+            }
+
+
             var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
             await _repo.UpdateBlogEntry(blogEntry);
 
@@ -179,6 +202,8 @@ namespace Mandalium.API.Controllers
         #endregion
 
 
+        
+        
 
     }
 }

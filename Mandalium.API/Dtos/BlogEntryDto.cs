@@ -29,6 +29,8 @@ namespace Mandalium.API.Dtos
         public string WriterName { get; set; }
         public string WriterSurname { get; set; }
         public string TopicName { get; set; }
+        public int TopicId { get; set; }
+        public bool WriterEntry { get; set; }
 
         public ICollection<CommentDto> Comments { get; set; }
     }

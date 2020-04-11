@@ -61,7 +61,8 @@ namespace Mandalium.API.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, writerFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, writerFromRepo.Username)
+                new Claim(ClaimTypes.Name, writerFromRepo.Username),
+                new Claim(ClaimTypes.Role, Convert.ToSingle(writerFromRepo.Role).ToString())
              };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));

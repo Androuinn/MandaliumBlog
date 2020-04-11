@@ -10,6 +10,9 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
 import { BlogEntry } from 'src/app/_models/blogEntry';
+import { PhotoService } from 'src/app/_services/photo.service';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
+import { Photo } from 'src/app/_models/Photo';
 
 @Component({
   selector: 'app-create-blog-entry',
@@ -25,7 +28,11 @@ export class CreateBlogEntryComponent implements OnInit {
   file: File;
   createNewTopic = false;
   blogEntry: BlogEntry;
-  id: number;
+  entryId: number;
+  photos: Photo[];
+  addPhotos = false;
+  choosePhotos = false;
+  pagination: Pagination;
 
   constructor(
     private blogService: BlogService,
@@ -33,7 +40,8 @@ export class CreateBlogEntryComponent implements OnInit {
     private router: Router,
     private alertify: AlertifyService,
     private http: HttpClient,
-    public authService: AuthService
+    public authService: AuthService,
+    private photoService: PhotoService
   ) {
     this.createBlogPost = formBuilder.group({
       id: Number,
@@ -48,11 +56,18 @@ export class CreateBlogEntryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 5,
+      totalItems: 1,
+      totalPages: 1
+    };
+    this.getPhotos();
     this.getTopicsAndWriters();
-    this.blogService.currentBlogEntry.subscribe((entry) => (this.id = entry));
+    this.blogService.currentBlogEntry.subscribe((entry) => (this.entryId = entry));
 
-    if (this.id !== 0) {
-      this.blogService.getBlogEntry(this.id).subscribe((entry: BlogEntry) => {
+    if (this.entryId !== 0) {
+      this.blogService.getBlogEntry(this.entryId).subscribe((entry: BlogEntry) => {
         this.blogEntry = entry;
         console.log(this.blogEntry);
         this.createBlogPost.setValue({
@@ -60,10 +75,10 @@ export class CreateBlogEntryComponent implements OnInit {
           headline: this.blogEntry.headline,
           subHeadline: this.blogEntry.subHeadline,
           innerTextHtml: this.blogEntry.innerTextHtml,
-          photoUrl: this.blogEntry.photoUrl,
+          photoUrl: this.blogEntry.photoUrl.split('/').reverse().slice(0, 3).reverse().join('/').split('.').slice(0, 1).join(''),
           writerId: this.authService.decodedToken.nameid,
-          topicId: Number,
-          writerEntry: Boolean,
+          topicId: this.blogEntry.topicId,
+          writerEntry: this.blogEntry.writerEntry,
         });
       });
     }
@@ -72,18 +87,20 @@ export class CreateBlogEntryComponent implements OnInit {
   onFileChanged(event: any) {
     this.file = event.target.files[0];
   }
-
+//#region photos
   postPhoto() {
     const formData: FormData = new FormData();
     formData.append('file', this.file, this.file.name);
+    formData.append('writerId', this.authService.decodedToken.nameid);
     console.log(formData);
     if (this.file != null) {
-      return this.http.post(environment.apiUrl + 'photos', formData).subscribe(
+      return this.photoService.postPhoto(formData).subscribe(
         (res) => {
           let url = JSON.stringify(res);
-          url = url.replace('"', '');
+          url = url.split('"').join('');
           this.alertify.success('fotoğraf yükleme başarılı');
-          this.createBlogPost.controls.photoUrl.setValue(url);
+          this.createBlogPost.patchValue({photoUrl: res});
+          this.getPhotos();
         },
         (error) => {
           console.error(error);
@@ -92,6 +109,21 @@ export class CreateBlogEntryComponent implements OnInit {
       );
     }
   }
+
+
+  getPhotos() {
+    this.photoService.getPhotos(this.pagination.currentPage, this.pagination.itemsPerPage, false, this.authService.decodedToken.nameid)
+    .subscribe((res: PaginatedResult<Photo[]>) => {
+      this.photos = (res.result);
+      this.pagination = res.pagination;
+    },
+    error => {
+      this.alertify.error(error);
+      console.log(error);
+    });
+   }
+
+   //#endregion
 
   getTopicsAndWriters() {
     this.blogService.getTopicsAndWriters().subscribe(
@@ -115,7 +147,7 @@ export class CreateBlogEntryComponent implements OnInit {
             this.router.navigate(['/']);
           },
           (error) => {
-            console.error(error);
+            this.alertify.error(error);
           }
         );
       } else {
@@ -126,7 +158,8 @@ export class CreateBlogEntryComponent implements OnInit {
             this.router.navigate(['/']);
           },
           (error) => {
-            console.error(error);
+            this.alertify.error(error);
+            console.log(error);
           }
         );
       }
@@ -140,5 +173,25 @@ export class CreateBlogEntryComponent implements OnInit {
 
   getInnerHtml(newValue: string) {
     this.innerTextHtml = newValue;
+  }
+
+
+  createTopic() {
+    this.blogService.saveTopic(this.newTopic).subscribe(
+      (res) => {
+        this.createNewTopic = !this.createNewTopic;
+        this.alertify.success(this.newTopic.topicName + ' Başarıyla eklendi');
+        this.getTopicsAndWriters();
+      },
+      (error) => {
+        this.alertify.error(error);
+        console.log(error);
+      }
+    );
+  }
+
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.getPhotos();
   }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -41,6 +42,11 @@ namespace Mandalium.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPhoto([FromForm]PhotoForCreationDto photoForCreationDto)
         {
+            if (photoForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            {
+                return Unauthorized();
+            }
+
             var uploadResult = new ImageUploadResult();
             if (photoForCreationDto.File.Length > 0)
             {
@@ -49,7 +55,8 @@ namespace Mandalium.API.Controllers
                 {
                     var uploadParams = new ImageUploadParams()
                     {
-                        File = new FileDescription(photoForCreationDto.File.Name, stream)
+                        File = new FileDescription(photoForCreationDto.File.Name, stream),
+                        Folder = "Writers/" + photoForCreationDto.WriterId
                     };
                     uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
@@ -62,44 +69,34 @@ namespace Mandalium.API.Controllers
                 photoForCreationDto.PhotoUrl = uploadResult.Uri.ToString();
                 photoForCreationDto.PublicId = uploadResult.PublicId;
 
-                await _repo.AddPhoto( _mapper.Map<Photo>(photoForCreationDto));
+                await _repo.AddPhoto(_mapper.Map<Photo>(photoForCreationDto));
 
-                return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photoForCreationDto.PhotoUrl));
+                return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photoForCreationDto.PublicId));
             }
             return BadRequest();
         }
 
 
-         [Authorize]
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetPhoto([FromForm]PhotoForCreationDto photoForCreationDto)
+        public async Task<IActionResult> GetPhoto([FromQuery]UserParams userParams)
         {
-            var uploadResult = new ImageUploadResult();
-            if (photoForCreationDto.File.Length > 0)
+            if (userParams.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
             {
-
-                using (var stream = photoForCreationDto.File.OpenReadStream())
-                {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(photoForCreationDto.File.Name, stream)
-                    };
-                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-                }
+                return Unauthorized();
             }
 
-            if (uploadResult != null)
+            var photos = await _repo.GetPhotos(userParams);
+            var dtos = _mapper.Map<IEnumerable<PhotoDto>>(photos);
+
+            foreach (var item in dtos)
             {
-                photoForCreationDto.WriterId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                photoForCreationDto.PhotoUrl = uploadResult.Uri.ToString();
-                photoForCreationDto.PublicId = uploadResult.PublicId;
-
-                await _repo.AddPhoto( _mapper.Map<Photo>(photoForCreationDto));
-
-                return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photoForCreationDto.PhotoUrl));
+                item.PublicId = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PublicId + ".webp");
             }
-            return BadRequest();
+
+            Response.AddPagination(photos.CurrentPage, photos.PageSize, photos.TotalCount, photos.TotalPages);
+
+            return Ok(dtos);
         }
 
     }

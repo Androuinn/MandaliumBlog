@@ -1,6 +1,9 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Mandalium.API.Dtos;
+using Mandalium.API.Helpers;
 using Mandalium.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mandalium.API.Data
 {
@@ -16,6 +19,13 @@ namespace Mandalium.API.Data
         {
             await _context.Photos.AddAsync(photo);
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<PagedList<Photo>> GetPhotos(UserParams userParams)
+        {
+            var photos =  _context.Photos.AsNoTracking().Where(x=> x.WriterId == userParams.WriterId).AsQueryable();
+
+            return await PagedList<Photo>.CreateAsync(photos, userParams.PageNumber, userParams.PageSize);
         }
     }
 }

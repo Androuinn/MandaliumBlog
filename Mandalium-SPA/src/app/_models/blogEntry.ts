@@ -11,5 +11,7 @@ export interface BlogEntry {
     writerSurname: string;
     topicName: number;
     photoUrl: string;
+    topicId: number;
+    writerEntry: boolean;
     comments: PaginatedResult<Comment[]>;
 }

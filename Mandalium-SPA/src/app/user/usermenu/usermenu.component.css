@@ -23,3 +23,8 @@ article a {
     color: inherit;
 }
 
+input{
+    background-color: black;
+    color: white; 
+}
+

@@ -6,6 +6,10 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { PhotoService } from 'src/app/_services/photo.service';
+import { Photo } from 'src/app/_models/Photo';
 
 @Component({
   selector: 'app-usermenu',
@@ -13,15 +17,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./usermenu.component.css'],
 })
 export class UsermenuComponent implements OnInit {
-  createNewTopic = false;
-  newTopic: Topic = {};
+
   blogEntries: BlogEntry[];
   pagination: Pagination;
   postsOpen = false;
-  
+
+
   constructor(
     private router: Router,
-    private authService: AuthService,
+    public authService: AuthService,
     private blogService: BlogService,
     private alertify: AlertifyService
   ) {}
@@ -33,6 +37,7 @@ export class UsermenuComponent implements OnInit {
       totalPages: 1,
       totalItems: 1,
     };
+
   }
 
   openPosts() {
@@ -40,18 +45,6 @@ export class UsermenuComponent implements OnInit {
     this.postsOpen = !this.postsOpen;
   }
 
-  createTopic() {
-    this.blogService.saveTopic(this.newTopic).subscribe(
-      (res) => {
-        this.createNewTopic = !this.createNewTopic;
-        this.alertify.success(this.newTopic.topicName + ' Başarıyla eklendi');
-      },
-      (error) => {
-        this.alertify.error(error);
-        console.log(error);
-      }
-    );
-  }
 
   loadBlogEntries() {
     this.blogService
@@ -77,8 +70,13 @@ export class UsermenuComponent implements OnInit {
     this.loadBlogEntries();
   }
 
+  // post numarasını sıfıra çekiyor eğer değiştirme yaptıysa 1 de kalıyor
   changeEntry(entry: number) {
     this.blogService.changeBlogEntry(entry);
     this.router.navigate(['/create']);
   }
+
+
+
+
 }

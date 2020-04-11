@@ -1,4 +1,13 @@
+<div class="container mt-3" *ngIf="!createNewTopic && authService.decodedToken.role == 1">
+
+</div>
+
+
+
+
+<!-- New Post -->
 <div class="container mt-3 pr-3">
+  <form id="topicRegisterForm" (ngSubmit)="createTopic()"></form>
   <form id="photoForm" enctype="multipart/form-data" (ngSubmit)="postPhoto()"></form>
   <form [formGroup]="createBlogPost" (ngSubmit)="createOrUpdatePost()">
     <h4>Create Blog Post</h4>
@@ -12,11 +21,10 @@
       <input class="col-8 " type="text" formControlName="subHeadline" id="subHeadline" required>
     </div>
 
-    <div class="row form-group ">
+    <div class="row form-group">
       <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h1></h1>'">h1</button>
       <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h2></h2>'">h2</button>
       <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h3></h3>'">h3</button>
-
     </div>
 
     <div class="row form-group">
@@ -25,34 +33,84 @@
         class="col-12" name="" id="textarea" cols="120" rows="10" required></textarea>
     </div>
 
-    <div class="row form-group">
-      <label class="col-4" for="file">Fotoğraf seçin ya da aşağıya url adresi girin.</label>
-      <input class="col-8" type="file" form="photoForm" (change)="onFileChanged($event)" name="file" id="file">
-      <!-- <input type="hidden" name="writerId" form="photoForm" id="writerId" value="{{authService.decodedToken.id}}"> -->
+    <!-- post photo -->
+    <div class="row justify-content-end form-submit">
+      <button type="button" class="ml-1 btn btn-primary" (click)="choosePhotos = !choosePhotos">Fotoğraf
+        Seç</button>
+      <button type="button" class="ml-1 btn btn-danger" (click)="addPhotos = !addPhotos"><i
+          class="fa fa-clipboard fa-fw fa-fg text-light"></i>Fotoğraf Ekle</button>
+    </div>
+
+    <div class="container mt-2" [collapse]="!addPhotos" [isAnimated]="true">
+      <div class="row form-group">
+        <label class="col-12 col-md-4" for="file">Fotoğraf seçin ya da aşağıya url adresi girin.</label>
+        <input class="col-12 col-md-8 btn btn-primary" type="file" form="photoForm" (change)="onFileChanged($event)"
+          name="file" id="file">
+      </div>
+
+      <div class="row justify-content-end form-submit mb-2">
+        <button class="btn btn-success" type="submit" form="photoForm">
+          Kaydet
+        </button>
+      </div>
+    </div>
+
+    <!-- choose photo -->
+    <div class="container mt-2" [collapse]="!choosePhotos" [isAnimated]="true">
+      <div class="row">
+        <div class="mb-2" *ngFor="let item of photos">
+          <a   (click)="createBlogPost.patchValue({photoUrl: item.publicId.split('/').reverse().slice(0,3).reverse().join('/').split('.').slice(0,1).join('')})">
+            <img class="img-fluid rounded float-right"    src="{{item.publicId}}"
+            alt="{{item.publicId}}">
+          </a>
+        </div>
+      </div>
+      <pagination class="justify-content-end"  [boundaryLinks]="true" [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
+        (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
     </div>
 
 
-    <div class="row justify-content-end form-submit mb-2">
-      <button class="btn btn-success" type="submit" form="photoForm">
-        Kaydet
-      </button>
-    </div>
 
-    <div class="row form-group">
+
+    <!-- continued new post -->
+
+    <div class="row form-group mt-3">
       <label class="col-4" for="photoUrl">PhotoUrl:</label>
       <input class="col-8 " type="text" formControlName="photoUrl" id="photoUrl" required>
     </div>
+    <!--  -->
 
-    <!-- <div class="row d-flex justify-content-between form-group">
-      <label class="col-4" for="writerId">Writer:</label>
-      <select class="col-4 " formControlName="writerId" id="writerId" required>
-        <option *ngFor="let writer of writers" value="{{writer.id}}">{{writer.name}} {{writer.surname}}</option>
-      </select>
-    </div> -->
 
-    <div class="row d-flex justify-content-between form-group">
+    <!-- add topic -->
+    <div class="row justify-content-end form-submit">
+      <button class="btn btn-primary" (click)="createNewTopic = !createNewTopic">Yeni Konu(Topic) Ekle</button>
+    </div>
+
+    <div class="container mt-3 pr-3" [collapse]="!createNewTopic" [isAnimated]="true">
+      <div class="row form-group ">
+        <label for="newtopicname" class="col-12 col-md-4 pt-1"> Yeni Başlık(Topic) ekle:</label>
+        <input type="text" id="newtopicname" form="topicRegisterForm" class="form-control col-12 col-md-8" required
+          name="topicname" [value]="null" (input)="newTopic.topicName = $event.target.value"
+          placeholder="yeni konu başlığını buraya girin">
+      </div>
+      <!-- [(ngModel)]="newTopic.topicName" -->
+      <div class="row form-group justify-content-end form-submit">
+        <button class="btn btn-success" form="topicRegisterForm" type="submit">Topic Kaydet</button>
+        <button class="btn btn-primary" type="button" (click)="createNewTopic =!createNewTopic"> İptal</button>
+      </div>
+    </div>
+
+
+    <!--  -->
+
+    <!-- continued new post -->
+    <div class="row d-flex justify-content-between form-group mt-3">
       <label class="col-4" for="topicId">Konu:</label>
       <select class="col-4" formControlName="topicId" id="topicId" required>
+        <option value="0" selected>Konu seçin</option>
         <option *ngFor="let topic of topics" value="{{topic.id}}">{{topic.topicName}}</option>
       </select>
     </div>
@@ -75,8 +133,8 @@
 
   </form>
 
-  <h5>Inner Text</h5>
+  <!-- <h5>Inner Text</h5>
   <div class="row border border-dark" [innerHTML]="innerTextHtml">
-  </div>
+  </div> -->
 
 </div>

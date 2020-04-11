@@ -15,5 +15,6 @@ namespace Mandalium.API.Dtos
         public string Surname { get; set; }
         public DateTime BirthDate { get; set; }
         public string Background { get; set; }
+        public string PhotoUrl {get; set;}
     }
 }

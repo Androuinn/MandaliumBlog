@@ -22,6 +22,8 @@ export class BlogService {
     this.blogEntry.next(entry);
   }
 
+
+  //#region get methods
   getBlogEntries(page?, itemsPerPage?, userParams?, writerId?): Observable<PaginatedResult<BlogEntry[]>> {
     const paginatedResult: PaginatedResult<BlogEntry []> = new PaginatedResult<BlogEntry []>();
 
@@ -84,6 +86,9 @@ export class BlogService {
     return this.http.get<WriterTopic>(this.baseUrl + 'blogentry/gettopicandwriter');
   }
 
+  //#endregion
+
+  //#region save methods
   saveBlogEntry(blogEntry: BlogEntry) {
     return this.http.post(this.baseUrl + 'blogentry', blogEntry);
   }
@@ -99,5 +104,6 @@ export class BlogService {
   saveTopic(topic: Topic) {
     return this.http.post(this.baseUrl + 'blogentry/savetopic', topic);
   }
+  //#endregion
 
 }

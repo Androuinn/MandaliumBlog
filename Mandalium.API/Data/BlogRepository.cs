@@ -1,15 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AutoMapper;
-using CloudinaryDotNet;
-using Mandalium.API.Dtos;
 using Mandalium.API.Helpers;
 using Mandalium.API.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+
 
 namespace Mandalium.API.Data
 {
@@ -22,6 +19,7 @@ namespace Mandalium.API.Data
         }
 
         #region  Get methods
+        
         public async Task<PagedList<BlogEntry>> GetBlogEntries(UserParams userParams)
         {
             IQueryable<BlogEntry> blogEntries;
