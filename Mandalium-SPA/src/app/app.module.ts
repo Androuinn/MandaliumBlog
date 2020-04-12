@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
-import { PaginationModule, BsDropdownModule, CollapseModule } from 'ngx-bootstrap';
+import { PaginationModule, BsDropdownModule, CollapseModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { JwtModule} from '@auth0/angular-jwt';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
@@ -25,6 +25,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { RequestCacheService } from './_services/requestCache.service';
 import { CachingInterceptor } from './_services/cachingInterceptor.interceptor';
 import { UsermenuComponent } from './user/usermenu/usermenu.component';
+
 
 
 
@@ -59,6 +60,7 @@ export function tokenGetter() {
       CollapseModule.forRoot(),
       PaginationModule.forRoot(),
       BsDropdownModule.forRoot(),
+      BsDatepickerModule.forRoot(),
       JwtModule.forRoot({
          config: {
             tokenGetter,

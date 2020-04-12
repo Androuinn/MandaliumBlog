@@ -13,10 +13,13 @@ namespace Mandalium.API.Data
 
         Task<IEnumerable<T>> GetMostRead(bool writerEntry);
 
+        //TODO writer olanları user controller adı altında topla ve repo aç
         Task<int> SaveBlogEntry(BlogEntry blogEntry);
         Task<int> UpdateBlogEntry(BlogEntry blogEntry);
+        Task<int> UpdateWriter(Writer writer);
 
         Task<IEnumerable<Writer>> GetWriters();
+        Task<Writer> GetWriter(int id);
         Task<IEnumerable<Topic>> GetTopics();
 
         Task<int> SaveComment(Comment comment);

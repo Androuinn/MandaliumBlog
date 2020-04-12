@@ -38,7 +38,8 @@ constructor(private http: HttpClient) { }
     }
 
 
-    return this.http.get<Photo[]>(this.baseUrl + 'photos', { observe: 'response', params, headers: {'Content-Type': 'application/json'}}).pipe(
+    return this.http.get<Photo[]>(this.baseUrl + 'photos',
+    { observe: 'response', params, headers: {'Content-Type': 'application/json'}}).pipe(
       map(response => {
         paginatedResult.result = response.body;
         if (response.headers.get('Pagination') != null) {

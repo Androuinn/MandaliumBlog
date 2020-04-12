@@ -63,7 +63,7 @@ export class CreateBlogEntryComponent implements OnInit {
       totalPages: 1
     };
     this.getPhotos();
-    this.getTopicsAndWriters();
+    this.getTopics();
     this.blogService.currentBlogEntry.subscribe((entry) => (this.entryId = entry));
 
     if (this.entryId !== 0) {
@@ -125,11 +125,10 @@ export class CreateBlogEntryComponent implements OnInit {
 
    //#endregion
 
-  getTopicsAndWriters() {
-    this.blogService.getTopicsAndWriters().subscribe(
-      (res: WriterTopic) => {
-        this.writers = res.writers;
-        this.topics = res.topics;
+  getTopics() {
+    this.blogService.getTopics().subscribe(
+      (res: Topic[]) => {
+        this.topics = res;
       },
       (error) => {
         console.error(error);
@@ -181,7 +180,7 @@ export class CreateBlogEntryComponent implements OnInit {
       (res) => {
         this.createNewTopic = !this.createNewTopic;
         this.alertify.success(this.newTopic.topicName + ' Başarıyla eklendi');
-        this.getTopicsAndWriters();
+        this.getTopics();
       },
       (error) => {
         this.alertify.error(error);

@@ -1,10 +1,68 @@
+
+
+<div class="container mt-3 border rounded">
+  <div class="row ">
+    <div class=" col-12 col-md-4 p-2 d-flex justify-content-center justify-content-md-start ">
+      <img src="http://thetransformedmale.files.wordpress.com/2011/06/bruce-wayne-armani.jpg"  alt="" class="img-rounded">
+    </div>
+    <div class=" col-12 col-md-8">
+      <div>
+        <h4 class="d-flex justify-content-center justify-content-md-end font-italic pt-2">{{writer.name |uppercase}} {{writer.surname |uppercase}}</h4>
+        <small class="font-italic d-flex justify-content-center justify-content-md-end  pr-2"> <i class="fa fa-birthday-cake fa-fw fa-fg"></i> {{writer.birthDate | date}}</small>
+   
+        <p><cite title="Source Title">{{writer.background}} <i class="icon-map-marker"></i></cite></p>
+      </div>
+        <p >
+        <i class="icon-envelope"></i> masterwayne@batman.com <br>
+        <i class="icon-globe"></i> www.bootsnipp.com <br>
+      </p>
+    </div>
+ 
+  </div>
+</div>
+
+
+<div class="container mt-3" [collapse]='!writerUpdateOpen' [isAnimated]="true">
+  <form [formGroup]="writerForm" (ngSubmit)="updateWriter()">
+    <h4>Profili Güncelle</h4>
+    <div class="row form-group">
+      <label class="col-4" for="name">İsim: </label>
+      <input class="col-8 " type="text" formControlName="name" id="name" required>
+    </div>
+
+    <div class="row form-group">
+      <label class="col-4" for="surname">Soyisim: </label>
+      <input class="col-8 form-control" type="text" formControlName="surname" id="surname" required>
+    </div>
+
+    <div class="row form-group">
+      <label class="col-4" for="birthdate">Doğum Tarihi: </label>
+      <input class="col-8 form-control" placeholder="Doğum Tarihi" [bsConfig]="{dateInputFormat: 'YYYY-MM-DD'}" bsDatepicker type="date" formControlName="birthdate" id="birthdate" required>
+    </div>
+
+    <div class="row form-group">
+      <label class="col-12 col-md-4" for="birthdate">Hakkında: </label>
+      <textarea class="col-12 col-md-8 " type="textarea" formControlName="background" id="birthdate" cols="120" rows="10"></textarea>
+    </div>
+
+    <div class="row justify-content-end form-submit">
+      <button class="btn btn-success" type="submit" [disabled]="!writerForm.valid">
+        Kaydet
+      </button>
+    </div>
+
+
+  </form>
+</div>
+
+
 <div class="container mt-3" *ngIf="authService.decodedToken.role == 1">
   <a class="ml-1 btn btn-success" style="cursor: pointer;" [routerLink]="['/create']" (click)="changeEntry(0)"><i
       class="fa fa-plus-square fa-fw fa-fg text-light "></i>YENİ YAZI</a>
   <button type="button" class="ml-1 btn btn-danger" (click)="openPosts()"><i
       class="fa fa-clipboard fa-fw fa-fg text-light "></i>YAZILARIMI GÖSTER</button>
+      <button type="button" class="ml-1 btn btn-primary" (click)="openUpdateProfile()">Profili Güncelle</button>
 </div>
-
 
 
 
@@ -42,4 +100,6 @@
     firstText="&laquo;" lastText="&raquo;">
 
   </pagination>
+
+ 
 </div>

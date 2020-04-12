@@ -22,6 +22,8 @@ namespace Mandalium.API.Helpers
 
             CreateMap<BlogEntryForCreationDto, BlogEntry>();
             CreateMap<Writer,WriterDto>();
+            CreateMap<Writer,Writer>();
+            CreateMap<WriterDto,Writer>();
             CreateMap<Topic,TopicDto>();
             CreateMap<TopicDto,Topic>();
 

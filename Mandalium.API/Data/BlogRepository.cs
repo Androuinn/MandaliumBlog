@@ -107,6 +107,16 @@ namespace Mandalium.API.Data
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> UpdateWriter(Writer writer)
+        {
+            _context.Entry(writer).Property(x=> x.Name).IsModified = true;
+            _context.Entry(writer).Property(x=> x.Surname).IsModified = true;
+            _context.Entry(writer).Property(x=> x.Background).IsModified = true;
+            _context.Entry(writer).Property(x=> x.BirthDate).IsModified = true;
+            _context.Entry(writer).Property(x=> x.PhotoUrl).IsModified = true;
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<int> SaveComment(Comment comment)
         {
             await _context.AddAsync(comment);
@@ -129,6 +139,11 @@ namespace Mandalium.API.Data
         public async Task<IEnumerable<Writer>> GetWriters()
         {
             return await _context.Writers.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Writer> GetWriter(int id)
+        {
+            return await _context.Writers.AsNoTracking().Where(x=> x.Id == id).FirstOrDefaultAsync();
         }
 
         #endregion

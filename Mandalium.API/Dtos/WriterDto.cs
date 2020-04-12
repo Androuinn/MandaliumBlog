@@ -13,7 +13,7 @@ namespace Mandalium.API.Dtos
         [Required]
         [MaxLength(100)]
         public string Surname { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public string Background { get; set; }
         public string PhotoUrl {get; set;}
     }

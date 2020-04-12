@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { WriterTopic } from '../_models/WriterTopic';
 import { Comment } from '../_models/Comment';
 import { Topic } from '../_models/Topic';
+import { Writer } from '../_models/Writer';
 
 @Injectable({
   providedIn: 'root'
@@ -82,8 +83,16 @@ export class BlogService {
    return this.http.get<BlogEntry[]>(this.baseUrl + 'blogentry/getmostread');
   }
 
-  getTopicsAndWriters(): Observable<WriterTopic> {
-    return this.http.get<WriterTopic>(this.baseUrl + 'blogentry/gettopicandwriter');
+  getTopics(): Observable<Topic[]> {
+    return this.http.get<Topic[]>(this.baseUrl + 'blogentry/gettopics');
+  }
+
+  getWriter(): Observable<Writer> {
+    return this.http.get<Writer>(this.baseUrl + 'blogentry/getwriter');
+  }
+
+  updateWriter(writer: Writer) {
+    return this.http.put(this.baseUrl + 'blogentry/updatewriter', writer);
   }
 
   //#endregion

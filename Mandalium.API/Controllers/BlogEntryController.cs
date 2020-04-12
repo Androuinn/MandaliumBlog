@@ -39,7 +39,7 @@ namespace Mandalium.API.Controllers
             );
             _cloudinary = new Cloudinary(acc);
         }
-    #endregion
+        #endregion
 
 
         #region  get methods
@@ -110,17 +110,37 @@ namespace Mandalium.API.Controllers
         }
 
         [Route("[action]")]
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetTopicAndWriter()
+        public async Task<IActionResult> GetTopics()
         {
-            var topics = _mapper.Map<IEnumerable<TopicDto>>(await _repo.GetTopics());
-            var writers = _mapper.Map<IEnumerable<WriterDto>>(await _repo.GetWriters());
-
-            return Ok(new
+            if (User.FindFirst(ClaimTypes.Role).Value != "1")
             {
-                topics,
-                writers
-            });
+                return Unauthorized();
+            }
+
+            var topics = _mapper.Map<IEnumerable<TopicDto>>(await _repo.GetTopics());
+            
+
+            return Ok(topics);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> GetWriters()
+        {
+            var writers = _mapper.Map<IEnumerable<WriterDto>>(await _repo.GetWriters());
+            return Ok(writers);
+        }
+
+
+        [Route("[action]")]
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetWriter()
+        {
+            var writer = _mapper.Map<WriterDto>(await _repo.GetWriter(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+            return Ok(writer);
         }
 
 
@@ -133,12 +153,33 @@ namespace Mandalium.API.Controllers
 
         [Route("[action]")]
         [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateWriter([FromBody]WriterDto writerDto)
+        {
+            if (int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) != writerDto.Id)
+            {
+                return Unauthorized();
+            }
+
+            
+            var writer = _mapper.Map<Writer>(writerDto);
+
+            await _repo.UpdateWriter(writer);
+
+            return StatusCode(200);
+
+
+        }
+
+
+        [Route("[action]")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> SaveTopic(TopicDto topicDto)
         {
             if (User.FindFirst(ClaimTypes.Role).Value != "1")
             {
-              return  Unauthorized();
+                return Unauthorized();
             }
 
             var topic = _mapper.Map<Topic>(topicDto);
@@ -202,8 +243,8 @@ namespace Mandalium.API.Controllers
         #endregion
 
 
-        
-        
+
+
 
     }
 }

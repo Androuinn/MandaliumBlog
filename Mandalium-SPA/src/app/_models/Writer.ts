@@ -4,4 +4,5 @@ export interface Writer {
     surname: string;
     birthDate: number;
     background: string;
+    photoUrl: string;
 }
