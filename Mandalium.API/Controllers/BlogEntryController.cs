@@ -140,6 +140,8 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> GetWriter()
         {
             var writer = _mapper.Map<WriterDto>(await _repo.GetWriter(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+
+             writer.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(writer.PhotoUrl + ".webp");
             return Ok(writer);
         }
 
@@ -161,7 +163,7 @@ namespace Mandalium.API.Controllers
                 return Unauthorized();
             }
 
-            
+           
             var writer = _mapper.Map<Writer>(writerDto);
 
             await _repo.UpdateWriter(writer);

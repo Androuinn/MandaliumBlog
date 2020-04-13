@@ -12,11 +12,13 @@
             <div class="card-body">
               <a href="#" class="stretched-link" [routerLink]="['/blog', entry.id, entry.headline]"
                 routerLinkActive="router-link-active">
-                <strong class="d-inline-block mb-2 text-primary">{{entry.topicName |uppercase}}</strong> <span class="ml-5 font-italic">{{entry.writerName}} {{entry.writerSurname}}</span>
+                <strong class="d-inline-block mb-2 text-primary col-12 col-md-5">{{entry.topicName |uppercase}}</strong>
+                <span class="ml-md-7 mb-2 font-italic col-12 col-md-9">{{entry.writerName}}
+                  {{entry.writerSurname}}</span>
                 <h5 class="card-title">{{entry.headline}}</h5>
                 <p class="card-text">{{entry.createdDate | date}}</p>
                 <p class="card-text">{{entry.subHeadline }}</p>
-            </a>
+              </a>
             </div>
           </div>
           <div class="col-5 p-2">
@@ -24,7 +26,7 @@
           </div>
         </div>
       </article>
-      
+
 
       <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
         [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"

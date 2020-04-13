@@ -19,6 +19,10 @@ constructor(private http: HttpClient) { }
     return this.http.post(this.baseUrl + 'photos', formData);
   }
 
+  updateProfilePhoto(formData: FormData) {
+    return this.http.put(this.baseUrl + 'photos', formData);
+  }
+
   getPhotos(page?, itemsPerPage?, userParams?, writerId?): Observable<PaginatedResult<Photo[]>> {
     const paginatedResult: PaginatedResult<Photo[]> = new PaginatedResult<Photo[]>();
 
@@ -49,6 +53,8 @@ constructor(private http: HttpClient) { }
       })
     );
   }
+
+
 
 
 }

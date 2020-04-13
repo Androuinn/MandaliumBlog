@@ -109,6 +109,7 @@ namespace Mandalium.API.Data
 
         public async Task<int> UpdateWriter(Writer writer)
         {
+            writer.PhotoUrl = writer.PhotoUrl.Split(".webp").First();
             _context.Entry(writer).Property(x=> x.Name).IsModified = true;
             _context.Entry(writer).Property(x=> x.Surname).IsModified = true;
             _context.Entry(writer).Property(x=> x.Background).IsModified = true;

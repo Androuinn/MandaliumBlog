@@ -30,13 +30,16 @@ export class UsermenuComponent implements OnInit {
   };
   writerForm: FormGroup;
   writerUpdateOpen = false;
+  writerProfilePhotoUpdate = false;
+  file: File;
 
   constructor(
     private router: Router,
     public authService: AuthService,
     private blogService: BlogService,
     private alertify: AlertifyService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private photoService: PhotoService
   ) {
     this.writerForm = this.formBuilder.group({
       id: Number,
@@ -125,5 +128,31 @@ export class UsermenuComponent implements OnInit {
         console.log(this.writerForm);
       }
     );
+  }
+
+  onFileChanged(event: any) {
+    this.file = event.target.files[0];
+  }
+
+  updateProfilePhoto() {
+    const formData: FormData = new FormData();
+    formData.append('file', this.file, this.file.name);
+    formData.append('writerId', this.authService.decodedToken.nameid);
+    console.log(formData);
+    if (this.file != null) {
+      return this.photoService.updateProfilePhoto(formData).subscribe(
+        (res) => {
+          this.alertify.success('fotoğraf yükleme başarılı');
+          this.writer.photoUrl = res.toString();
+          this.router.navigate(['/profile']);
+          this.file = null;
+          this.writerProfilePhotoUpdate = !this.writerProfilePhotoUpdate;
+        },
+        (error) => {
+          console.error(error);
+          this.alertify.error(error);
+        }
+      );
+    }
   }
 }

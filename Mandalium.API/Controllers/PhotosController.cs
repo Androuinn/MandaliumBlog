@@ -22,13 +22,16 @@ namespace Mandalium.API.Controllers
 
         private readonly IMapper _mapper;
         private readonly IPhotoRepository _repo;
+        private readonly IBlogRepository<BlogEntry> _blrepo;
 
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary _cloudinary;
-        public PhotosController(IOptions<CloudinarySettings> _cloudinaryConfig, IMapper mapper, IPhotoRepository repo)
+        public PhotosController(IOptions<CloudinarySettings> _cloudinaryConfig, IMapper mapper, IPhotoRepository repo, IBlogRepository<BlogEntry> blrepo)
         {
+            this._blrepo = blrepo;
             this._repo = repo;
             this._mapper = mapper;
+
             this.cloudinaryConfig = _cloudinaryConfig;
             Account acc = new Account(
                 _cloudinaryConfig.Value.CloudName,
@@ -97,6 +100,64 @@ namespace Mandalium.API.Controllers
             Response.AddPagination(photos.CurrentPage, photos.PageSize, photos.TotalCount, photos.TotalPages);
 
             return Ok(dtos);
+        }
+
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateProfilePhoto([FromForm]PhotoForCreationDto photoForCreationDto)
+        {
+            if (photoForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var userProfile = await _blrepo.GetWriter(photoForCreationDto.WriterId);
+
+            if (userProfile.PhotoUrl != null)
+            {
+                
+                var deletionParams = new DeletionParams(userProfile.PhotoUrl)
+                {
+                    PublicId = userProfile.PhotoUrl.ToString()
+                };
+
+                if (deletionParams.PublicId != "" && deletionParams.PublicId != null)
+                {
+                     var deletionResult = _cloudinary.DestroyAsync(deletionParams);
+                }
+               
+            }
+
+
+            var uploadResult = new ImageUploadResult();
+            if (photoForCreationDto.File.Length > 0)
+            {
+
+                using (var stream = photoForCreationDto.File.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(photoForCreationDto.File.Name, stream),
+                        Folder = "Writers/" + photoForCreationDto.WriterId
+                    };
+                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                }
+            }
+
+            if (uploadResult != null)
+            {
+                photoForCreationDto.WriterId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                photoForCreationDto.PhotoUrl = uploadResult.Uri.ToString();
+                photoForCreationDto.PublicId = uploadResult.PublicId;
+
+                userProfile.PhotoUrl = uploadResult.PublicId;
+                await _blrepo.UpdateWriter(userProfile);
+                photoForCreationDto.PublicId = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(uploadResult.PublicId + ".webp");
+                return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photoForCreationDto.PublicId));
+            }
+            return BadRequest();
         }
 
     }
