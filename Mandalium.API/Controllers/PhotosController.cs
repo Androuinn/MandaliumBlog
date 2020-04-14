@@ -154,7 +154,7 @@ namespace Mandalium.API.Controllers
 
                 userProfile.PhotoUrl = uploadResult.PublicId;
                 await _blrepo.UpdateWriter(userProfile);
-                photoForCreationDto.PublicId = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(uploadResult.PublicId + ".webp");
+                photoForCreationDto.PublicId = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(uploadResult.PublicId + ".webp");
                 return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photoForCreationDto.PublicId));
             }
             return BadRequest();
