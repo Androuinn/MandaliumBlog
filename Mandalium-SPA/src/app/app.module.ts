@@ -28,6 +28,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { RequestCacheService } from './_services/requestCache.service';
 import { CachingInterceptor } from './_services/cachingInterceptor.interceptor';
 import { UsermenuComponent } from './user/usermenu/usermenu.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 
@@ -70,7 +72,8 @@ export function tokenGetter() {
             whitelistedDomains: ['localhost:5000'],
             blacklistedRoutes: ['localhost:5000/api/auth']
          }
-      })
+      }),
+      ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
    ],
    providers: [
       BlogEntryResolver,
