@@ -6,28 +6,27 @@
       <small class="font-italic d-flex justify-content-center justify-content-md-end  mr-3 col-12"> <i
           class="fa fa-birthday-cake fa-fw fa-fg"></i> {{writer.birthDate | date}}</small>
       <img src="{{writer.photoUrl}}" alt="writer photo" class="img-thumbnail rounded col-11">
-      <div class="container mt-3 text-center" *ngIf="authService.decodedToken.role == 1">
+      <div class="container mt-3 text-center" >
         <button type="button" class="ml-1 btn btn-dark col-7 mt-1 text-light"
           (click)="writerProfilePhotoUpdate = !writerProfilePhotoUpdate"><i class="fa fa-image fa-fw fa-fg"></i>
           Fotoğrafı Güncelle</button>
         <button type="button" class="ml-1 btn btn-primary col-7 mt-1" (click)="openUpdateProfile()"><i
             class="fa fa-id-badge fa-fw fa-fg"></i>Profili Güncelle</button>
-        <a class="ml-1 btn btn-success col-7 mt-1" style="cursor: pointer;" [routerLink]="['/create']"
+        <a class="ml-1 btn btn-success col-7 mt-1" style="cursor: pointer;" *ngIf="authService.decodedToken.role == 1" [routerLink]="['/create']"
           (click)="changeEntry(0)"><i class="fa fa-plus-square fa-fw fa-fg text-light "></i>YENİ YAZI</a>
-        <button type="button" class="ml-1 btn btn-danger col-7 mt-1" (click)="openPosts()"><i
+        <button type="button" class="ml-1 btn btn-danger col-7 mt-1" *ngIf="authService.decodedToken.role == 1" (click)="openPosts()"><i
             class="fa fa-clipboard fa-fw fa-fg text-light "></i>YAZILARIMI GÖSTER</button>
       </div>
 
     </div>
-    <div class=" col-12 col-md-8 mt-5">
+    <div class=" col-12 col-md-8 mt-5 align-self-center">
       <div>
-        <p>{{writer.background}} <i class="icon-map-marker"></i></p>
+        <p>{{writer.background}}</p>
       </div>
     </div>
 
   </div>
 </div>
-
 <form (ngSubmit)="updateProfilePhoto()" [collapse]="!writerProfilePhotoUpdate" [isAnimated]="true">
   <div class="container mt-2">
     <div class="row form-group">
@@ -108,8 +107,9 @@
       <div class="col-6 col-lg-5 p-2">
         <img class="card-img" src={{entry.photoUrl}} alt="{{entry.headline}}">
       </div>
-      <div class="col-12 col-lg-1 p-1 d-flex ">
-        <a class="btn btn-warning text-light btn-block " (click)="changeEntry(entry.id)">DEĞİŞTİR</a>
+      <div class="col-12 col-lg-1 p-1 align-self-center">
+        <a class="col-12 btn btn-warning text-light btn-block " (click)="changeEntry(entry.id)">DEĞİŞTİR</a>
+        <a class="col-12 btn btn-primary text-light btn-block " (click)="deleteBlogEntry(entry.id)">Sil</a>
       </div>
     </div>
   </article>

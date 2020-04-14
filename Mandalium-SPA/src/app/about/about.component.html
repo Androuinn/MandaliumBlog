@@ -41,3 +41,28 @@
     </div><!-- /.blog-post -->
   </div>
 </div>
+
+
+<div *ngFor="let item of writers">
+  <div class="container mt-3 border rounded " id="profile">
+    <div class="row">
+      <div class="row col-12 col-md-4 p-2 d-flex justify-content-center align-self-center ">
+        <h4 class="d-flex justify-content-center font-italic pt-2 col-12">{{item.name |uppercase}}
+          {{item.surname |uppercase}}</h4>
+        <small class="font-italic d-flex justify-content-center justify-content-md-end  mr-3 col-12"> <i
+            class="fa fa-birthday-cake fa-fw fa-fg"></i> {{item.birthDate | date}}</small>
+        <img src="{{item.photoUrl}}" alt="writer photo" class="img-thumbnail rounded col-11">
+      </div>
+      <div class=" col-12 col-md-8 mt-5 align-self-center">
+        <div>
+          <p [collapse]="!openFullBackground" [isAnimated]="true">{{item.background}} </p>
+          <p [collapse]="openFullBackground" [isAnimated]="true">{{item.background | slice: 0:1000}} </p>
+        </div>
+        <div class="col-12 text-right">
+          <button class="btn btn-warning mb-3" (click)="openFullBackground = !openFullBackground">Devamını Okuyayım</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

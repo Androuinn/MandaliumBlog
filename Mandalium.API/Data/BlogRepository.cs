@@ -19,17 +19,17 @@ namespace Mandalium.API.Data
         }
 
         #region  Get methods
-        
+
         public async Task<PagedList<BlogEntry>> GetBlogEntries(UserParams userParams)
         {
             IQueryable<BlogEntry> blogEntries;
             if (userParams.WriterId >= 1)
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterId == userParams.WriterId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterId == userParams.WriterId).Where(x=> x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
             }
             else
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterEntry == userParams.WriterEntry).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterEntry == userParams.WriterEntry).Where(x=> x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
             }
 
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
@@ -110,11 +110,11 @@ namespace Mandalium.API.Data
         public async Task<int> UpdateWriter(Writer writer)
         {
             writer.PhotoUrl = writer.PhotoUrl.Split(".webp").First();
-            _context.Entry(writer).Property(x=> x.Name).IsModified = true;
-            _context.Entry(writer).Property(x=> x.Surname).IsModified = true;
-            _context.Entry(writer).Property(x=> x.Background).IsModified = true;
-            _context.Entry(writer).Property(x=> x.BirthDate).IsModified = true;
-            _context.Entry(writer).Property(x=> x.PhotoUrl).IsModified = true;
+            _context.Entry(writer).Property(x => x.Name).IsModified = true;
+            _context.Entry(writer).Property(x => x.Surname).IsModified = true;
+            _context.Entry(writer).Property(x => x.Background).IsModified = true;
+            _context.Entry(writer).Property(x => x.BirthDate).IsModified = true;
+            _context.Entry(writer).Property(x => x.PhotoUrl).IsModified = true;
             return await _context.SaveChangesAsync();
         }
 
@@ -139,12 +139,20 @@ namespace Mandalium.API.Data
 
         public async Task<IEnumerable<Writer>> GetWriters()
         {
-            return await _context.Writers.AsNoTracking().ToListAsync();
+            return await _context.Writers.AsNoTracking().Where(x=> x.Role == true).ToListAsync();
         }
 
         public async Task<Writer> GetWriter(int id)
         {
-            return await _context.Writers.AsNoTracking().Where(x=> x.Id == id).FirstOrDefaultAsync();
+            return await _context.Writers.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> DeleteBlogEntry(int id)
+        {
+            var entry = await _context.BlogEntries.FirstOrDefaultAsync(x => x.Id == id);
+            entry.isDeleted = true;
+            _context.BlogEntries.Update(entry);
+            return await _context.SaveChangesAsync();
         }
 
         #endregion

@@ -35,6 +35,7 @@ namespace Mandalium.API.Models
 
         public int? TopicId { get; set; }
         public Topic Topic { get; set; }
+        public bool isDeleted {get; set;}
 
         public PagedList<Comment> Comments { get; set; }
 

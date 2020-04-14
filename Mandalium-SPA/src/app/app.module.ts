@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { HttpClientModule} from '@angular/common/http';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -25,8 +25,6 @@ import { CreateBlogEntryComponent } from './user/create-blog-entry/create-blog-e
 import { BlogWriterEntryComponent } from './blog/blog-list/blog-writerEntry/blog-writerEntry.component';
 import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
-import { RequestCacheService } from './_services/requestCache.service';
-import { CachingInterceptor } from './_services/cachingInterceptor.interceptor';
 import { UsermenuComponent } from './user/usermenu/usermenu.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
@@ -78,8 +76,6 @@ export function tokenGetter() {
    providers: [
       BlogEntryResolver,
       AuthGuard,
-      RequestCacheService,
-      {provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true},
       {provide: LOCALE_ID, useValue: 'tr-TR'}
    ],
    bootstrap: [

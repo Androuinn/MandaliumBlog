@@ -130,6 +130,11 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> GetWriters()
         {
             var writers = _mapper.Map<IEnumerable<WriterDto>>(await _repo.GetWriters());
+
+            foreach (var item in writers)
+            {
+                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+            }
             return Ok(writers);
         }
 
@@ -169,8 +174,23 @@ namespace Mandalium.API.Controllers
             await _repo.UpdateWriter(writer);
 
             return StatusCode(200);
+        }
 
+        [Route("[action]")]
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> DeleteBlogEntry([FromBody]int id)
+        {
+            if (User.FindFirst(ClaimTypes.Role).Value != "1" )
+            {
+                return Unauthorized();
+            }
 
+            if (await _repo.DeleteBlogEntry(id) != 0)
+            {
+                return StatusCode(200);
+            }
+            return BadRequest();
         }
 
 

@@ -91,6 +91,10 @@ export class BlogService {
     return this.http.get<Writer>(this.baseUrl + 'blogentry/getwriter');
   }
 
+  getWriters(): Observable<Writer[]> {
+    return this.http.get<Writer[]>(this.baseUrl + 'blogentry/getwriters');
+  }
+
   updateWriter(writer: Writer) {
     return this.http.put(this.baseUrl + 'blogentry/updatewriter', writer);
   }
@@ -104,6 +108,10 @@ export class BlogService {
 
   updateBlogEntry(blogentry: BlogEntry) {
     return this.http.put(this.baseUrl + 'blogentry/UpdateBlogEntry', blogentry);
+  }
+
+  deleteBlogEntry(id: number) {
+    return this.http.put(this.baseUrl + 'blogentry/deleteblogentry', id);
   }
 
   saveComment(comment: Comment) {

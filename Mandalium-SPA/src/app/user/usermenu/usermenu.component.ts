@@ -10,7 +10,6 @@ import { Photo } from 'src/app/_models/Photo';
 import { Writer } from 'src/app/_models/Writer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
 @Component({
   selector: 'app-usermenu',
   templateUrl: './usermenu.component.html',
@@ -111,7 +110,6 @@ export class UsermenuComponent implements OnInit {
   getWriter() {
     this.blogService.getWriter().subscribe((res: Writer) => {
       this.writer = res;
-      console.log(this.writer);
     });
   }
 
@@ -123,15 +121,27 @@ export class UsermenuComponent implements OnInit {
         this.writerUpdateOpen = !this.writerUpdateOpen;
       },
       (error) => {
-        this.alertify.error(error);
-        console.log(error);
-        console.log(this.writerForm);
+        this.alertify.error('Güncelleme Başarısız');
       }
     );
   }
 
   onFileChanged(event: any) {
     this.file = event.target.files[0];
+  }
+
+  deleteBlogEntry(id: number) {
+    console.log(id);
+    return this.blogService.deleteBlogEntry(id).subscribe(
+      () => {
+        this.loadBlogEntries();
+        this.alertify.success('Silme işlemi Başarılı');
+      },
+      (error) => {
+        this.alertify.error('Silme işlemi Başarısız');
+        console.log(error);
+      }
+    );
   }
 
   updateProfilePhoto() {

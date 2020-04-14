@@ -1,34 +1,55 @@
 import { Component, OnInit } from '@angular/core';
-import {formatDate} from '@angular/common';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.css'],
 })
 export class NavComponent implements OnInit {
-  model: any = {};
+  loginModel: any = {};
   date: Date;
   isHeaderCollapsed = true;
   isCollapsed = true;
+  registerForm: FormGroup;
+  isRegisterFormCollapsed = true;
 
-  constructor(public authService: AuthService, private router: Router, private alertify: AlertifyService) { }
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    private alertify: AlertifyService,
+    private formBuilder: FormBuilder
+  ) {
+    this.registerForm = formBuilder.group({
+      username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50) ]],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(16) ]],
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      surname: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+      birthdate: Date
+    });
+  }
 
   ngOnInit() {
     this.date = new Date();
   }
 
   login() {
-    this.authService.login(this.model).subscribe(
-      next => {
+    this.authService.login(this.loginModel).subscribe(
+      (next) => {
         this.alertify.success('Giriş başarılı');
+        this.isRegisterFormCollapsed = true;
+        this.loginModel = {};
       },
-      error => {
+      (error) => {
         this.alertify.error('Kullanıcı adı veya şifre hatalı');
-      }, () => {
+      },
+      () => {
         this.router.navigate(['/']);
       }
     );
@@ -47,4 +68,16 @@ export class NavComponent implements OnInit {
   }
 
 
+
+  register() {
+      return this.authService.register(this.registerForm.value).subscribe(() => {
+      this.loginModel.password = this.registerForm.get('password').value;
+      this.loginModel.username = this.registerForm.get('username').value;
+      this.login();
+      }, error => {
+        console.log(error);
+      });
+
+
+  }
 }

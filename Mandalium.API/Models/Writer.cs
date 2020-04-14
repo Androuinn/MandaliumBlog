@@ -21,11 +21,14 @@ namespace Mandalium.API.Models
 
 
         [Required]
-        [MaxLength(100)]
+        [Column(TypeName = "varchar(50)")]
         public string Name { get; set; }
         [Required]
-        [MaxLength(100)]
+        [Column(TypeName = "varchar(50)")]
         public string Surname { get; set; }
+        [Required]
+        [Column(TypeName = "varchar(100)")]
+        public string Email { get; set; }
         public DateTime? BirthDate { get; set; }
         public string Background { get; set; }
 

@@ -17,6 +17,7 @@ namespace Mandalium.API.Data
         Task<int> SaveBlogEntry(BlogEntry blogEntry);
         Task<int> UpdateBlogEntry(BlogEntry blogEntry);
         Task<int> UpdateWriter(Writer writer);
+        Task<int> DeleteBlogEntry(int id);
 
         Task<IEnumerable<Writer>> GetWriters();
         Task<Writer> GetWriter(int id);

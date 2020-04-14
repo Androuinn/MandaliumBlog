@@ -28,7 +28,7 @@ namespace Mandalium.API.Controllers
             this._repo = repo;
         }
 
-        [Authorize]
+       
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]WriterForRegisterDto writerForRegisterDto)
         {

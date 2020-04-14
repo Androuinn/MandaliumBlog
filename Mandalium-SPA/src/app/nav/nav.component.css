@@ -42,3 +42,8 @@ nav a:hover{
     color: black;
 }
 
+#registerForm input{
+    color: white;
+    background-color: black;
+}
+
