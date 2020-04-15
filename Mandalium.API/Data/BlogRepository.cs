@@ -8,6 +8,7 @@ using Mandalium.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 
+//TODO writer ile ilgili olanları user repo ve controller altında topla
 namespace Mandalium.API.Data
 {
     public class BlogRepository : IBlogRepository<BlogEntry>
