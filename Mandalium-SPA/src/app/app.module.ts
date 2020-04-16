@@ -28,6 +28,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { UsermenuComponent } from './user/usermenu/usermenu.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { BlogEntriesResolver } from './_resolvers/blogEntries.resolver';
 
 
 
@@ -75,6 +76,7 @@ export function tokenGetter() {
    ],
    providers: [
       BlogEntryResolver,
+      BlogEntriesResolver,
       AuthGuard,
       {provide: LOCALE_ID, useValue: 'tr-TR'}
    ],

@@ -15,9 +15,9 @@
 
 
             <div class="text-light p-2" [collapse]="isHeaderCollapsed" [isAnimated]="true">
-                <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed=true"><i
+                <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed=true" (click)="changeWriterEntry(false)"><i
                         class="fa fa-fw fa-fg fa-location-arrow"></i>Ana Sayfa</a>
-                <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed = true"><i
+                <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed = true " (click)="changeWriterEntry(true)"><i
                         class="fa fa-fw fa-fg fa-location-arrow"></i>Kendime Düşünceler</a>
                 <a class="row" [routerLink]="['/about']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed = true"><i
                         class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
@@ -104,8 +104,8 @@
 <nav class="blog-header" class="d-none d-sm-block" [collapse]="isHeaderCollapsed" [isAnimated]="true">
     <div class="container">
         <div class="row d-flex align-items-center">
-            <a [routerLink]="['/']" class="col-12 col-lg-auto  p-3">ANA SAYFA</a>
-            <a [routerLink]="['/personalblog']" class="col-12 col-lg-auto p-3">KENDİME DÜŞÜNCELER</a>
+            <a [routerLink]="['/']" class="col-12 col-lg-auto  p-3" (click)="changeWriterEntry(false)">ANA SAYFA</a>
+            <a [routerLink]="['/personalblog']" class="col-12 col-lg-auto p-3" (click)="changeWriterEntry(true)">KENDİME DÜŞÜNCELER</a>
             <!-- <a [routerLink]="['/']" class="p-3">MANDALIUMGAMES</a> -->
         </div>
     </div>

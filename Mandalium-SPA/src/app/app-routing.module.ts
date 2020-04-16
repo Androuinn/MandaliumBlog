@@ -11,13 +11,14 @@ import { BlogWriterEntryComponent } from './blog/blog-writerEntry/blog-writerEnt
 import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { UsermenuComponent } from './user/usermenu/usermenu.component';
+import { BlogEntriesResolver } from './_resolvers/blogEntries.resolver';
 
 
 
 const routes: Routes = [
-  {path: 'home', component: HomeComponent},
+  {path: 'home', component: HomeComponent , resolve: {entries: BlogEntriesResolver}},
   // {path: 'blog', component: BlogListComponent},
-  {path: 'personalblog', component: BlogWriterEntryComponent},
+  {path: 'personalblog', component: BlogWriterEntryComponent , resolve: {entries: BlogEntriesResolver}},
   {path: 'about', component: AboutComponent},
   {path: 'contact', component: ContactComponent},
   {path: 'blog/:id/:headline', component: BlogDetailedComponent, resolve: {blog: BlogEntryResolver}},

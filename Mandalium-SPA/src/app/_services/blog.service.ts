@@ -1,26 +1,45 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { BlogEntry } from '../_models/blogEntry';
-import { PaginatedResult } from '../_models/pagination';
+import { PaginatedResult, Pagination } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { Comment } from '../_models/Comment';
 import { Topic } from '../_models/Topic';
-import { Writer } from '../_models/Writer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlogService {
   baseUrl = environment.apiUrl;
-  blogEntry: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  currentBlogEntry = this.blogEntry.asObservable();
+  //#region behaviour subjects, pass data via service
+  blogEntryForCreationOrUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  currentBlogEntry = this.blogEntryForCreationOrUpdate.asObservable();
+  blogIsWriterEntry: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  currentBlogIsWriterEntry = this.blogIsWriterEntry.asObservable();
+  blogPagination: BehaviorSubject<Pagination> = new BehaviorSubject<Pagination>({
+    currentPage: 1, itemsPerPage: 7, totalItems: 1, totalPages: 1});
+  currentPagination = this.blogPagination.asObservable();
+  // TODO most read entries i düzelt
+  // blogMostReadEntries: BehaviorSubject<BlogEntry[]> = new BehaviorSubject<BlogEntry[]>(null);
+  // currentBlogMostReadEntries = this.blogMostReadEntries.asObservable();
+   //#endregion
   constructor(private http: HttpClient) {}
 
-  changeBlogEntry(entry: number) {
-    this.blogEntry.next(entry);
+  changeBlogEntryForCreationOrUpdate(entry: number) {
+    this.blogEntryForCreationOrUpdate.next(entry);
   }
+
+  changeBlogIsWriterEntry(writerEntry: boolean) {
+    this.blogIsWriterEntry.next(writerEntry);
+  }
+
+  changeBlogPagination(pagination: Pagination) {
+    this.blogPagination.next(pagination);
+  }
+
+
 
 
   //#region get methods

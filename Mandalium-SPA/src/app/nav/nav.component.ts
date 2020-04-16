@@ -3,6 +3,7 @@ import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { BlogService } from '../_services/blog.service';
 
 
 
@@ -23,7 +24,8 @@ export class NavComponent implements OnInit {
     public authService: AuthService,
     private router: Router,
     private alertify: AlertifyService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private blogService: BlogService
   ) {
     this.registerForm = formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50) ]],
@@ -77,7 +79,10 @@ export class NavComponent implements OnInit {
       }, error => {
         console.log(error);
       });
+  }
 
-
+  changeWriterEntry(writerEntry: boolean) {
+    this.blogService.changeBlogIsWriterEntry(writerEntry);
+    this.blogService.changeBlogPagination({currentPage: 1, totalPages: 1, totalItems: 1, itemsPerPage: 7});
   }
 }

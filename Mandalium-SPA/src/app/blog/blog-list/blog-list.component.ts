@@ -3,6 +3,7 @@ import { BlogService } from 'src/app/_services/blog.service';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { ActivatedRoute } from '@angular/router';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-blog-list',
@@ -12,16 +13,17 @@ import { ActivatedRoute } from '@angular/router';
 export class BlogListComponent implements OnInit {
   blogEntries: BlogEntry[];
   pagination: Pagination;
-  constructor(private blogService: BlogService, private route: ActivatedRoute) {}
+  constructor(private blogService: BlogService, private route: ActivatedRoute, private titleService: Title, private metaTagService: Meta) {}
 
   ngOnInit() {
-    this.pagination = {
-      currentPage: 1,
-      itemsPerPage: 7,
-      totalPages: 1,
-      totalItems: 1
-    };
-    this.loadBlogEntries();
+    this.route.data.subscribe(data => {
+      const x = data.entries as PaginatedResult<BlogEntry[]>;
+      this.blogEntries = x.result;
+      this.pagination = x.pagination;
+    });
+
+    this.titleService.setTitle('Mandalium | En Son Haberler');
+    this.metaTagService.updateTag({name: 'description', content: 'En Son Haberler'});
   }
 
   loadBlogEntries() {
@@ -31,6 +33,7 @@ export class BlogListComponent implements OnInit {
         (res: PaginatedResult<BlogEntry[]>) => {
           this.blogEntries = res.result;
           this.pagination = res.pagination;
+          this.blogService.changeBlogPagination(this.pagination);
         },
         error => {
           console.error(error);

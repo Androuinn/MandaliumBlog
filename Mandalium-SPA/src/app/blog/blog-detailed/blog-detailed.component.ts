@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Comment } from 'src/app/_models/Comment';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Pagination } from 'src/app/_models/pagination';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-blog-detailed',
@@ -19,7 +20,9 @@ export class BlogDetailedComponent implements OnInit {
   constructor(
     private blogService: BlogService,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private titleService: Title,
+    private metaTagService: Meta
   ) {
   }
 
@@ -34,6 +37,13 @@ export class BlogDetailedComponent implements OnInit {
         blogEntryId: data.blog.id
       });
     });
+
+    this.titleService.setTitle(this.blogEntry.headline.toString());
+    this.metaTagService.updateTag({name: 'description', content: this.blogEntry.headline.toString()});
+    this.metaTagService.updateTag({property: 'og:url', content: 'https://mandalium.azurewebsites.net/blog/' + this.blogEntry.id + '/' + this.blogEntry.headline});
+    this.metaTagService.updateTag({property: 'og:image', content: this.blogEntry.photoUrl.toString()});
+    this.metaTagService.updateTag({property: 'og:title', content: this.blogEntry.headline});
+    this.metaTagService.updateTag({property: 'og:description', content: this.blogEntry.headline.toString()});
   }
 
   writeComment() {

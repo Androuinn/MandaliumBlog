@@ -6,10 +6,10 @@ import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { Router } from '@angular/router';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { Photo } from 'src/app/_models/Photo';
 import { Writer } from 'src/app/_models/Writer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-usermenu',
@@ -40,7 +40,9 @@ export class UsermenuComponent implements OnInit {
     private userService: UserService,
     private alertify: AlertifyService,
     private formBuilder: FormBuilder,
-    private photoService: PhotoService
+    private photoService: PhotoService,
+    private titleService: Title,
+    private metaTagService: Meta
   ) {
     this.writerForm = this.formBuilder.group({
       id: Number,
@@ -60,6 +62,9 @@ export class UsermenuComponent implements OnInit {
       totalItems: 1,
     };
     this.getWriter();
+
+    this.titleService.setTitle('Hesap');
+    this.metaTagService.updateTag({name: 'description', content: 'Kullanıcı hesap bilgileri'});
   }
 
   openPosts() {
@@ -105,7 +110,7 @@ export class UsermenuComponent implements OnInit {
 
   // post numarasını sıfıra çekiyor eğer değiştirme yaptıysa 1 de kalıyor
   changeEntry(entry: number) {
-    this.blogService.changeBlogEntry(entry);
+    this.blogService.changeBlogEntryForCreationOrUpdate(entry);
     this.router.navigate(['/create']);
   }
 
