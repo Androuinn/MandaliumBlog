@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Timers;
 using Newtonsoft.Json;
-using System.Text.Json;
 
 namespace Mandalium.API.Helpers
 {
@@ -54,7 +52,7 @@ namespace Mandalium.API.Helpers
                         list.Add(new CountOfEntry
                         {
                             Id = id,
-                            WriterEntry = writerEntry
+                            WriterEntry = writerEntry,
                         });
                         WeeklyCounter[day] = list;
                     }

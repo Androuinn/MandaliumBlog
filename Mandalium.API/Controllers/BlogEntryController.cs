@@ -54,7 +54,6 @@ namespace Mandalium.API.Controllers
 
             foreach (var item in returndto)
             {
-                // item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl.Split("/").Last().Split(".").First() + ".webp");
                 item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
             }
 
@@ -125,57 +124,13 @@ namespace Mandalium.API.Controllers
             return Ok(topics);
         }
 
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> GetWriters()
-        {
-            var writers = _mapper.Map<IEnumerable<WriterDto>>(await _repo.GetWriters());
-
-            foreach (var item in writers)
-            {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
-            }
-            return Ok(writers);
-        }
-
-
-        [Route("[action]")]
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> GetWriter()
-        {
-            var writer = _mapper.Map<WriterDto>(await _repo.GetWriter(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
-
-             writer.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(writer.PhotoUrl + ".webp");
-            return Ok(writer);
-        }
-
-
-
+       
         #endregion
 
 
 
         #region  save methods
-
-        [Route("[action]")]
-        [Authorize]
-        [HttpPut]
-        public async Task<IActionResult> UpdateWriter([FromBody]WriterDto writerDto)
-        {
-            if (int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) != writerDto.Id)
-            {
-                return Unauthorized();
-            }
-
-           
-            var writer = _mapper.Map<Writer>(writerDto);
-
-            await _repo.UpdateWriter(writer);
-
-            return StatusCode(200);
-        }
-
+        
         [Route("[action]")]
         [Authorize]
         [HttpPut]

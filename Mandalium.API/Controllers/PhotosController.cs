@@ -22,13 +22,13 @@ namespace Mandalium.API.Controllers
 
         private readonly IMapper _mapper;
         private readonly IPhotoRepository _repo;
-        private readonly IBlogRepository<BlogEntry> _blrepo;
+        private readonly IUserRepository _userRepo;
 
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary _cloudinary;
-        public PhotosController(IOptions<CloudinarySettings> _cloudinaryConfig, IMapper mapper, IPhotoRepository repo, IBlogRepository<BlogEntry> blrepo)
+        public PhotosController(IOptions<CloudinarySettings> _cloudinaryConfig, IMapper mapper, IPhotoRepository repo, IUserRepository userRepo)
         {
-            this._blrepo = blrepo;
+            this._userRepo = userRepo;
             this._repo = repo;
             this._mapper = mapper;
 
@@ -112,7 +112,7 @@ namespace Mandalium.API.Controllers
                 return Unauthorized();
             }
 
-            var userProfile = await _blrepo.GetWriter(photoForCreationDto.WriterId);
+            var userProfile = await _userRepo.GetWriter(photoForCreationDto.WriterId);
 
             if (userProfile.PhotoUrl != null)
             {
@@ -153,7 +153,7 @@ namespace Mandalium.API.Controllers
                 photoForCreationDto.PublicId = uploadResult.PublicId;
 
                 userProfile.PhotoUrl = uploadResult.PublicId;
-                await _blrepo.UpdateWriter(userProfile);
+                await _userRepo.UpdateWriter(userProfile);
                 photoForCreationDto.PublicId = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(uploadResult.PublicId + ".webp");
                 return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photoForCreationDto.PublicId));
             }

@@ -34,12 +34,14 @@ namespace Mandalium.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddTransient<IBlogRepository<BlogEntry>,BlogRepository>();
+            services.AddScoped<IBlogRepository<BlogEntry>, BlogRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository<Writer>, AuthRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper(typeof(BlogRepository).Assembly);
-            services.AddControllers().AddNewtonsoftJson(opt => {
+            services.AddControllers().AddNewtonsoftJson(opt =>
+            {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -57,7 +59,7 @@ namespace Mandalium.API
             // services.AddMvc().ConfigureApiBehaviorOptions( options => {
             //     options.SuppressModelStateInvalidFilter = true;
             // });
-        
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,23 +70,23 @@ namespace Mandalium.API
                 app.UseDeveloperExceptionPage();
             }
 
-             app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-             app.UseDefaultFiles();
-             app.UseStaticFiles();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapFallbackToController("Index","Fallback");
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }

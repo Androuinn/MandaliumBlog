@@ -9,6 +9,7 @@ import { PhotoService } from 'src/app/_services/photo.service';
 import { Photo } from 'src/app/_models/Photo';
 import { Writer } from 'src/app/_models/Writer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from 'src/app/_services/user.service';
 
 @Component({
   selector: 'app-usermenu',
@@ -36,6 +37,7 @@ export class UsermenuComponent implements OnInit {
     private router: Router,
     public authService: AuthService,
     private blogService: BlogService,
+    private userService: UserService,
     private alertify: AlertifyService,
     private formBuilder: FormBuilder,
     private photoService: PhotoService
@@ -108,13 +110,13 @@ export class UsermenuComponent implements OnInit {
   }
 
   getWriter() {
-    this.blogService.getWriter().subscribe((res: Writer) => {
+    this.userService.getWriter().subscribe((res: Writer) => {
       this.writer = res;
     });
   }
 
   updateWriter() {
-    this.blogService.updateWriter(this.writerForm.value).subscribe(
+    this.userService.updateWriter(this.writerForm.value).subscribe(
       () => {
         this.alertify.success('Güncelleme Başarılı');
         this.getWriter();

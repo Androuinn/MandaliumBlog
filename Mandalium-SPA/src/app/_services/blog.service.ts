@@ -5,7 +5,6 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { BlogEntry } from '../_models/blogEntry';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
-import { WriterTopic } from '../_models/WriterTopic';
 import { Comment } from '../_models/Comment';
 import { Topic } from '../_models/Topic';
 import { Writer } from '../_models/Writer';
@@ -87,17 +86,6 @@ export class BlogService {
     return this.http.get<Topic[]>(this.baseUrl + 'blogentry/gettopics');
   }
 
-  getWriter(): Observable<Writer> {
-    return this.http.get<Writer>(this.baseUrl + 'blogentry/getwriter');
-  }
-
-  getWriters(): Observable<Writer[]> {
-    return this.http.get<Writer[]>(this.baseUrl + 'blogentry/getwriters');
-  }
-
-  updateWriter(writer: Writer) {
-    return this.http.put(this.baseUrl + 'blogentry/updatewriter', writer);
-  }
 
   //#endregion
 

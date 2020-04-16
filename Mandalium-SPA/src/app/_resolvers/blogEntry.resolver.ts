@@ -28,17 +28,4 @@ export class BlogEntryResolver implements Resolve<BlogEntry> {
         );
     }
 
-
-    // loadBlogEntry() {
-    // tslint:disable-next-line: max-line-length
-    //     this.blogService.getBlogEntry(this.route.snapshot.params.id, this.pagination.currentPage, this.pagination.itemsPerPage).subscribe(
-    //       (blogEntry: BlogEntry) => {
-    //         this.blogEntry = blogEntry;
-    //         this.pagination = blogEntry.comments.pagination;
-    //       },
-    //       error => {
-    //         console.error(error);
-    //       }
-    //     );
-    //   }
 }

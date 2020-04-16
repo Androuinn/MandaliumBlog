@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BlogService } from '../_services/blog.service';
 import { Writer } from '../_models/Writer';
+import { UserService } from '../_services/user.service';
 
 @Component({
   selector: 'app-about',
@@ -10,14 +11,14 @@ import { Writer } from '../_models/Writer';
 export class AboutComponent implements OnInit {
   writers: Writer[];
   openFullBackground = false;
-  constructor(private blogService: BlogService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.getWriters();
   }
 
   getWriters() {
-    return this.blogService.getWriters().subscribe((res: Writer[]) => {
+    return this.userService.getWriters().subscribe((res: Writer[]) => {
       this.writers = res;
     });
   }
