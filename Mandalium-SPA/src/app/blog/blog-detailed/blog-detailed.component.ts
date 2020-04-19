@@ -34,16 +34,18 @@ export class BlogDetailedComponent implements OnInit {
         commenterName: ['', [Validators.required, Validators.maxLength(100)]],
         email: ['',  [Validators.required, Validators.email, Validators.maxLength(100)]],
         commentString: ['', [Validators.required, Validators.maxLength(500)]],
-        blogEntryId: data.blog.id
+        blogEntryId: data.blog.id,
+        writerId: Number
       });
     });
 
     this.titleService.setTitle(this.blogEntry.headline.toString());
     this.metaTagService.updateTag({name: 'description', content: this.blogEntry.headline.toString()});
+    this.metaTagService.updateTag({property: 'og:type', content: 'article'});
     this.metaTagService.updateTag({property: 'og:url', content: 'https://mandalium.azurewebsites.net/blog/' + this.blogEntry.id + '/' + this.blogEntry.headline});
     this.metaTagService.updateTag({property: 'og:image', content: this.blogEntry.photoUrl.toString()});
     this.metaTagService.updateTag({property: 'og:title', content: this.blogEntry.headline});
-    this.metaTagService.updateTag({property: 'og:description', content: this.blogEntry.headline.toString()});
+    this.metaTagService.updateTag({property: 'og:description', content: this.blogEntry.subHeadline.toString()});
   }
 
   writeComment() {

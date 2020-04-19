@@ -12,7 +12,8 @@ namespace Mandalium.API.Models
         [Required]
         [Column(TypeName="varchar(150)")]
         public string PublicId { get; set; }
-        public int WriterId { get; set; }
+        public int? WriterId { get; set; }
+        public Writer  Writer { get; set; }
 
     }
 }

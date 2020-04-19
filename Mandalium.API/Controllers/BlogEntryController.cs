@@ -69,6 +69,11 @@ namespace Mandalium.API.Controllers
 
             var blogEntry = await _repo.GetBlogEntry(id, userParams);
 
+            if (blogEntry.isDeleted == true)
+            {
+                return BadRequest("Entry Bulunamadı");
+            }
+
             var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
 
             if (userParams.EntryAlreadyPicked == false)

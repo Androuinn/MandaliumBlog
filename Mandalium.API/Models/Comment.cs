@@ -24,6 +24,10 @@ namespace Mandalium.API.Models
         public BlogEntry BlogEntry { get; set; }
 
 
+        public int? WriterId { get; set; }
+        public Writer Writer {get;set;}
+
+
         public Comment()
         {
             Id = new Guid();

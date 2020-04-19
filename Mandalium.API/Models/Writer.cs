@@ -39,7 +39,9 @@ namespace Mandalium.API.Models
 
 
 
-
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Photo> Photos { get; set; }
+        public ICollection<BlogEntry>  BlogEntries { get; set; } 
 
     }
 }

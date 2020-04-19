@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, ExtraOptions } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { BlogDetailedComponent } from './blog/blog-detailed/blog-detailed.component';
 import { BlogEntryResolver } from './_resolvers/blogEntry.resolver';
@@ -30,7 +30,8 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 64]})],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled',
+                            anchorScrolling: 'enabled', scrollOffset: [0, 64], preloadingStrategy: PreloadAllModules})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

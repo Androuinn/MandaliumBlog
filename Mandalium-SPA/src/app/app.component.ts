@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
     }
 
     this.metaTagService.addTags([
-      { name: 'keywords', content: 'Mandalium Blog, En Son Haberler, Kendime Düşünceler,'},
+      // { name: 'decpription', content: 'Mandalium | Blog Dünyasının Vazgeçilmez Adresi, Eğlence ve Haber Sitesi'},
+      { name: 'keywords', content: 'Mandalium, Blog Dünyasının Vazgeçilmez Adresi, Eğlence ve Haber Sitesi, '},
       { name: 'robots', content: 'index, follow'},
       { name: 'author', content: 'Tugay Mandal'},
       { name: 'date', content:  this.date.toString() , scheme: 'DD-MM-YYYY'},
@@ -28,7 +29,9 @@ export class AppComponent implements OnInit {
       { property: 'og:url', content: 'https://mandalium.azurewebsites.net'},
       { property: 'og:image', content: 'https://res.cloudinary.com/dpwbfco4g/image/upload/v1587061001/%C3%A7zgisiz_logo_ddiqau.png'},
       { property: 'og:title', content: 'Mandalium | En son Haberler'},
-      { property: 'og:description', content: 'En Son Haberler'}
+      { property: 'og:description', content: 'Mandalium '}
     ]);
+
+    this.metaTagService.updateTag({name: 'description', content: 'Mandalium | Blog Dünyasının Vazgeçilmez Adresi, Eğlence ve Haber Sitesi'});
   }
 }
