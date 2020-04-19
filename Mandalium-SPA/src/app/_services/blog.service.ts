@@ -12,7 +12,7 @@ import { Topic } from '../_models/Topic';
   providedIn: 'root'
 })
 export class BlogService {
-  baseUrl = environment.apiUrl;
+  baseUrl = environment.apiUrl + 'blogentry';
   //#region behaviour subjects, pass data via service
   blogEntryForCreationOrUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   currentBlogEntry = this.blogEntryForCreationOrUpdate.asObservable();
@@ -58,11 +58,11 @@ export class BlogService {
     }
 
     if (writerId >= 1) {
-      params = params.append('writerId', writerId);
+      params = params.append('userId', writerId);
     }
 
 
-    return this.http.get<BlogEntry[]>(this.baseUrl + 'blogentry', {observe: 'response', params}).pipe(
+    return this.http.get<BlogEntry[]>(this.baseUrl, {observe: 'response', params}).pipe(
       map(response => {
         paginatedResult.result = response.body;
         if (response.headers.get('Pagination') != null) {
@@ -86,7 +86,7 @@ export class BlogService {
       params = params.append('EntryAlreadyPicked', userParams);
     }
 
-    return this.http.get<BlogEntry>(this.baseUrl + 'blogentry/' + id, {observe: 'response', params}).pipe(
+    return this.http.get<BlogEntry>(this.baseUrl + '/' + id, {observe: 'response', params}).pipe(
       map(response => {
         blogEntry = response.body;
         if (response.headers.get('Pagination') != null) {
@@ -98,11 +98,11 @@ export class BlogService {
   }
 
   getMostRead(): Observable<BlogEntry[]> {
-   return this.http.get<BlogEntry[]>(this.baseUrl + 'blogentry/getmostread');
+   return this.http.get<BlogEntry[]>(this.baseUrl + '/getmostread');
   }
 
   getTopics(): Observable<Topic[]> {
-    return this.http.get<Topic[]>(this.baseUrl + 'blogentry/gettopics');
+    return this.http.get<Topic[]>(this.baseUrl + '/gettopics');
   }
 
 
@@ -110,23 +110,23 @@ export class BlogService {
 
   //#region save methods
   saveBlogEntry(blogEntry: BlogEntry) {
-    return this.http.post(this.baseUrl + 'blogentry', blogEntry);
+    return this.http.post(this.baseUrl , blogEntry);
   }
 
   updateBlogEntry(blogentry: BlogEntry) {
-    return this.http.put(this.baseUrl + 'blogentry/UpdateBlogEntry', blogentry);
+    return this.http.put(this.baseUrl + '/UpdateBlogEntry', blogentry);
   }
 
   deleteBlogEntry(id: number) {
-    return this.http.put(this.baseUrl + 'blogentry/deleteblogentry', id);
+    return this.http.put(this.baseUrl + '/deleteblogentry', id);
   }
 
   saveComment(comment: Comment) {
-    return this.http.post(this.baseUrl + 'blogentry/writecomment', comment);
+    return this.http.post(this.baseUrl + '/writecomment', comment);
   }
 
   saveTopic(topic: Topic) {
-    return this.http.post(this.baseUrl + 'blogentry/savetopic', topic);
+    return this.http.post(this.baseUrl + '/savetopic', topic);
   }
   //#endregion
 

@@ -56,22 +56,25 @@
 
   <div class="row">
     <form class="p-4 mr-3" [formGroup]="commentFormGroup" (ngSubmit)="writeComment()">
-      <div class="row form-group">
-        <label class="col-4" for="email">Email: </label>
-        <input maxlength="100"
-          [ngClass]="{'is-invalid': commentFormGroup.get('email').errors && commentFormGroup.get('email').touched}"
-          class="col-8 " type="email" formControlName="email" id="email">
-        <div class="invalid-feedback text-right pt-2">Lütfen mail adresinizi girin.</div>
+      <div *ngIf="!authService.loggedIn()">
+        <div class="row form-group">
+          <label class="col-4" for="email">Email: </label>
+          <input maxlength="100"
+            [ngClass]="{'is-invalid': commentFormGroup.get('email').errors && commentFormGroup.get('email').touched}"
+            class="col-8 " type="email" formControlName="email" id="email">
+          <div class="invalid-feedback text-right pt-2">Lütfen mail adresinizi girin.</div>
+        </div>
+  
+        <div class="row form-group">
+          <label class="col-4" for="commenterName">İsminiz:</label>
+          <input maxlength="100"
+            [ngClass]="{'is-invalid': commentFormGroup.get('commenterName').errors && commentFormGroup.get('commenterName').touched}"
+            class="col-8 " type="text" formControlName="commenterName" id="commenterName">
+          <div class="invalid-feedback text-right pt-2">Lütfen isminizi girin.</div>
+        </div>
+  
       </div>
-
-      <div class="row form-group">
-        <label class="col-4" for="commenterName">İsminiz:</label>
-        <input maxlength="100"
-          [ngClass]="{'is-invalid': commentFormGroup.get('commenterName').errors && commentFormGroup.get('commenterName').touched}"
-          class="col-8 " type="text" formControlName="commenterName" id="commenterName">
-        <div class="invalid-feedback text-right pt-2">Lütfen isminizi girin.</div>
-      </div>
-
+      
 
       <div class="row justify-content-center form-group">
         <label class="col-4">Yorumunuz:</label>

@@ -18,10 +18,10 @@ namespace Mandalium.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository<Writer> _repo;
+        private readonly IAuthRepository<User> _repo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        public AuthController(IAuthRepository<Writer> repo, IConfiguration config, IMapper mapper)
+        public AuthController(IAuthRepository<User> repo, IConfiguration config, IMapper mapper)
         {
             this._mapper = mapper;
             this._config = config;
@@ -30,28 +30,28 @@ namespace Mandalium.API.Controllers
 
        
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody]WriterForRegisterDto writerForRegisterDto)
+        public async Task<IActionResult> Register([FromBody]UserForRegisterDto userForRegisterDto)
         {
             // kullanıcı capslede girer küçük harf ile de
-            writerForRegisterDto.Username = writerForRegisterDto.Username.ToLower();
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
-            if (await _repo.UserExists(writerForRegisterDto.Username))
+            if (await _repo.UserExists(userForRegisterDto.Username))
             {
                 return BadRequest("Kullanıcı Mevcut");
             }
 
-            var writerToCreate = _mapper.Map<Writer>(writerForRegisterDto);
+            var writerToCreate = _mapper.Map<User>(userForRegisterDto);
 
-            var createdWriter = await _repo.Register(writerToCreate, writerForRegisterDto.Password);
+            var createdWriter = await _repo.Register(writerToCreate, userForRegisterDto.Password);
 
-            return RedirectToRoute("GetEntries", new { controller = "BlogEntry" });
+            return StatusCode(200);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] WriterForLoginDto writerForLoginDto)
+        public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
 
-            var writerFromRepo = await _repo.Login(writerForLoginDto.Username.ToLower(), writerForLoginDto.Password);
+            var writerFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 
             if (writerFromRepo == null)
             {

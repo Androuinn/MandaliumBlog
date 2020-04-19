@@ -7,7 +7,7 @@ namespace Mandalium.API.Dtos
         public int Id { get; set; } 
         public string PhotoUrl { get; set; }
         public string PublicId { get; set; }
-        public int WriterId { get; set; }
+        public int UserId { get; set; }
         public IFormFile File { get; set; }
     }
 }

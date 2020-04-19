@@ -12,18 +12,18 @@ namespace Mandalium.API.Data
         /// </summary>
         /// <param name="writer"></param>
         /// <returns></returns>
-        Task<int> UpdateWriter(Writer writer);
+        Task<int> UpdateUser(User writer);
 
         /// <summary>
         /// Gets all writers
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Writer>> GetWriters();
+        Task<IEnumerable<User>> GetUsers();
         /// <summary>
         /// Gets the writer specified with the id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Writer> GetWriter(int id);
+        Task<User> GetUser(int id);
     }
 }

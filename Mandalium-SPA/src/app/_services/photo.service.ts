@@ -10,20 +10,20 @@ import { Photo } from '../_models/Photo';
   providedIn: 'root'
 })
 export class PhotoService {
-baseUrl = environment.apiUrl;
+baseUrl = environment.apiUrl + 'photos';
 
 constructor(private http: HttpClient) { }
 
 
   postPhoto(formData: FormData) {
-    return this.http.post(this.baseUrl + 'photos', formData);
+    return this.http.post(this.baseUrl  , formData);
   }
 
   updateProfilePhoto(formData: FormData) {
-    return this.http.put(this.baseUrl + 'photos', formData);
+    return this.http.put(this.baseUrl , formData);
   }
 
-  getPhotos(page?, itemsPerPage?, userParams?, writerId?): Observable<PaginatedResult<Photo[]>> {
+  getPhotos(page?, itemsPerPage?, userParams?, userId?): Observable<PaginatedResult<Photo[]>> {
     const paginatedResult: PaginatedResult<Photo[]> = new PaginatedResult<Photo[]>();
 
     let params = new HttpParams();
@@ -37,12 +37,12 @@ constructor(private http: HttpClient) { }
       params = params.append('writerEntry', userParams);
     }
 
-    if (writerId >= 1) {
-      params = params.append('writerId', writerId);
+    if (userId >= 1) {
+      params = params.append('userId', userId);
     }
 
 
-    return this.http.get<Photo[]>(this.baseUrl + 'photos',
+    return this.http.get<Photo[]>(this.baseUrl ,
     { observe: 'response', params, headers: {'Content-Type': 'application/json'}}).pipe(
       map(response => {
         paginatedResult.result = response.body;

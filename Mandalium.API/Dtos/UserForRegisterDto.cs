@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mandalium.API.Dtos
 {
-    public class WriterForRegisterDto
+    public class UserForRegisterDto
     {
         [Required]
         [MaxLength(50)]

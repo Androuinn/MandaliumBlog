@@ -6,11 +6,13 @@ import { Comment } from 'src/app/_models/Comment';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Pagination } from 'src/app/_models/pagination';
 import { Title, Meta } from '@angular/platform-browser';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-blog-detailed',
   templateUrl: './blog-detailed.component.html',
-  styleUrls: ['./blog-detailed.component.css']
+  styleUrls: ['./blog-detailed.component.css'],
 })
 export class BlogDetailedComponent implements OnInit {
   blogEntry: BlogEntry;
@@ -22,58 +24,99 @@ export class BlogDetailedComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private titleService: Title,
-    private metaTagService: Meta
-  ) {
-  }
+    private metaTagService: Meta,
+    private alertify: AlertifyService,
+    public authService: AuthService
+  ) {}
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
+    this.route.data.subscribe((data) => {
       this.blogEntry = data.blog;
       this.pagination = this.blogEntry.comments.pagination;
-      this.commentFormGroup = this.fb.group({
-        commenterName: ['', [Validators.required, Validators.maxLength(100)]],
-        email: ['',  [Validators.required, Validators.email, Validators.maxLength(100)]],
-        commentString: ['', [Validators.required, Validators.maxLength(500)]],
-        blogEntryId: data.blog.id,
-        writerId: Number
-      });
+      if (this.authService.loggedIn()) {
+        this.commentFormGroup = this.fb.group({
+          commentString: ['', [Validators.required, Validators.maxLength(500)]],
+          blogEntryId: data.blog.id,
+          userId: this.authService.decodedToken.nameid,
+        });
+      } else {
+        this.commentFormGroup = this.fb.group({
+          commenterName: ['', [Validators.required, Validators.maxLength(100)]],
+          email: [ '', [Validators.required, Validators.email, Validators.maxLength(100)] ],
+          commentString: ['', [Validators.required, Validators.maxLength(500)]],
+          blogEntryId: data.blog.id,
+          userId: Number,
+        });
+      }
     });
 
     this.titleService.setTitle(this.blogEntry.headline.toString());
-    this.metaTagService.updateTag({name: 'description', content: this.blogEntry.headline.toString()});
-    this.metaTagService.updateTag({property: 'og:type', content: 'article'});
-    this.metaTagService.updateTag({property: 'og:url', content: 'https://mandalium.azurewebsites.net/blog/' + this.blogEntry.id + '/' + this.blogEntry.headline});
-    this.metaTagService.updateTag({property: 'og:image', content: this.blogEntry.photoUrl.toString()});
-    this.metaTagService.updateTag({property: 'og:title', content: this.blogEntry.headline});
-    this.metaTagService.updateTag({property: 'og:description', content: this.blogEntry.subHeadline.toString()});
+    this.metaTagService.updateTag({
+      name: 'description',
+      content: this.blogEntry.headline.toString(),
+    });
+    this.metaTagService.updateTag({ property: 'og:type', content: 'article' });
+    this.metaTagService.updateTag({
+      property: 'og:url',
+      content:
+        'https://mandalium.azurewebsites.net/blog/' +
+        this.blogEntry.id +
+        '/' +
+        this.blogEntry.headline,
+    });
+    this.metaTagService.updateTag({
+      property: 'og:image',
+      content: this.blogEntry.photoUrl.toString(),
+    });
+    this.metaTagService.updateTag({
+      property: 'og:title',
+      content: this.blogEntry.headline,
+    });
+    this.metaTagService.updateTag({
+      property: 'og:description',
+      content: this.blogEntry.subHeadline.toString(),
+    });
   }
 
   writeComment() {
     if (this.commentFormGroup.valid) {
-      this.blogService.saveComment(this.commentFormGroup.value).subscribe(() => {
-          console.log('writing comment successful');
-          this.loadBlogEntry();
-          this.commentFormGroup.reset({
-            blogEntryId: this.blogEntry.id
-          });
-        }, error => {
+      this.blogService.saveComment(this.commentFormGroup.value).subscribe(
+        (res: Comment) => {
+          this.alertify.success('Yorum Yazma Başarılı');
+          this.blogEntry.comments.result.push(res);
+          // this.loadBlogEntry();
+          if (this.authService.loggedIn()) {
+            this.commentFormGroup.reset({
+              blogEntryId: this.blogEntry.id,
+              userId: this.authService.decodedToken.nameid,
+            });
+          } else {
+            this.commentFormGroup.reset({
+              blogEntryId: this.blogEntry.id,
+              userId: Number,
+            });
+          }
+        },
+        (error) => {
           console.error(error);
-        });
+        }
+      );
     }
   }
 
   loadBlogEntry() {
-    this.blogService.getBlogEntry(this.route.snapshot.params.id, this.pagination.currentPage, this.pagination.itemsPerPage, true).subscribe(
-      (blogEntry: BlogEntry) => {
-        this.blogEntry.comments = blogEntry.comments;
-        this.pagination = blogEntry.comments.pagination;
-      },
-      error => {
-        console.error(error);
-      }
-    );
+    this.blogService
+      .getBlogEntry( this.route.snapshot.params.id, this.pagination.currentPage, this.pagination.itemsPerPage, true)
+      .subscribe(
+        (blogEntry: BlogEntry) => {
+          this.blogEntry.comments = blogEntry.comments;
+          this.pagination = blogEntry.comments.pagination;
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
   }
-
 
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;

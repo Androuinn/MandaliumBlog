@@ -1,14 +1,14 @@
 <div class="container mt-3 border rounded" id="profile">
   <div class="row ">
     <div class="row col-12 col-md-4 p-2 d-flex justify-content-center align-self-center ">
-      <h4 class="d-flex justify-content-center font-italic pt-2 col-12">{{writer.name |uppercase}}
-        {{writer.surname |uppercase}}</h4>
+      <h4 class="d-flex justify-content-center font-italic pt-2 col-12">{{user.name |uppercase}}
+        {{user.surname |uppercase}}</h4>
       <small class="font-italic d-flex justify-content-center justify-content-md-end  mr-3 col-12"> <i
-          class="fa fa-birthday-cake fa-fw fa-fg"></i> {{writer.birthDate | date}}</small>
-      <img src="{{writer.photoUrl}}" alt="writer photo" class="img-thumbnail rounded col-11">
+          class="fa fa-birthday-cake fa-fw fa-fg"></i> {{user.birthDate | date}}</small>
+      <img src="{{user.photoUrl}}" alt="writer photo" class="img-thumbnail rounded col-11">
       <div class="container mt-3 text-center" >
         <button type="button" class="ml-1 btn btn-dark col-7 mt-1 text-light"
-          (click)="writerProfilePhotoUpdate = !writerProfilePhotoUpdate"><i class="fa fa-image fa-fw fa-fg"></i>
+          (click)="userProfilePhotoUpdate = !userProfilePhotoUpdate"><i class="fa fa-image fa-fw fa-fg"></i>
           Fotoğrafı Güncelle</button>
         <button type="button" class="ml-1 btn btn-primary col-7 mt-1" (click)="openUpdateProfile()"><i
             class="fa fa-id-badge fa-fw fa-fg"></i>Profili Güncelle</button>
@@ -21,13 +21,13 @@
     </div>
     <div class=" col-12 col-md-8 mt-5 align-self-center">
       <div>
-        <p>{{writer.background}}</p>
+        <p>{{user.background}}</p>
       </div>
     </div>
 
   </div>
 </div>
-<form (ngSubmit)="updateProfilePhoto()" [collapse]="!writerProfilePhotoUpdate" [isAnimated]="true">
+<form (ngSubmit)="updateProfilePhoto()" [collapse]="!userProfilePhotoUpdate" [isAnimated]="true">
   <div class="container mt-2">
     <div class="row form-group">
       <label class="col-12 col-md-4" for="file">Fotoğraf seçin ya da aşağıya url adresi girin.</label>
@@ -43,34 +43,33 @@
 </form>
 
 
-
-<div class="container mt-3" [collapse]='!writerUpdateOpen' [isAnimated]="true">
-  <form [formGroup]="writerForm" (ngSubmit)="updateWriter()">
+<div class="container mt-3" [collapse]='!userUpdateOpen' [isAnimated]="true" id="userForm">
+  <form [formGroup]="userForm" (ngSubmit)="updateUser()">
     <h4>Profili Güncelle</h4>
     <div class="row form-group">
-      <label class="col-4" for="name">İsim: </label>
-      <input class="col-8 " type="text" formControlName="name" id="name" required>
+      <label class="col-4" for="namechange">İsim: </label>
+      <input class="col-8 form-control " type="text" formControlName="name" id="namechange" required>
     </div>
 
     <div class="row form-group">
-      <label class="col-4" for="surname">Soyisim: </label>
-      <input class="col-8 form-control" type="text" formControlName="surname" id="surname" required>
+      <label class="col-4" for="surnamechange">Soyisim: </label>
+      <input class="col-8 form-control" type="text" formControlName="surname" id="surnamechange" required>
     </div>
 
     <div class="row form-group">
-      <label class="col-4" for="birthdate">Doğum Tarihi: </label>
+      <label class="col-4" for="birthdatechange">Doğum Tarihi: </label>
       <input class="col-8 form-control" placeholder="Doğum Tarihi" [bsConfig]="{dateInputFormat: 'YYYY-MM-DD'}"
-        bsDatepicker type="date" formControlName="birthdate" id="birthdate" required>
+        bsDatepicker type="date" formControlName="birthdate" id="birthdatechange" required>
     </div>
 
     <div class="row form-group">
-      <label class="col-12 col-md-4" for="birthdate">Hakkında: </label>
-      <textarea class="col-12 col-md-8 " type="textarea" formControlName="background" id="birthdate" cols="120"
+      <label class="col-12 col-md-4" for="backgroundchange">Hakkında: </label>
+      <textarea class="col-12 col-md-8 " type="textarea" formControlName="background" id="backgroundchange" cols="120"
         rows="10"></textarea>
     </div>
 
     <div class="row justify-content-end form-submit">
-      <button class="btn btn-success" type="submit" [disabled]="!writerForm.valid">
+      <button class="btn btn-success" type="submit" [disabled]="!userForm.valid">
         Kaydet
       </button>
     </div>

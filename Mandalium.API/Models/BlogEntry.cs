@@ -30,8 +30,8 @@ namespace Mandalium.API.Models
         public bool WriterEntry { get; set; }
 
 
-        public int? WriterId { get; set; }
-        public Writer Writer { get; set; }
+        public int? UserId { get; set; }
+        public User User { get; set; }
 
         public int? TopicId { get; set; }
         public Topic Topic { get; set; }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Mandalium.API.Controllers
 {
@@ -26,8 +27,10 @@ namespace Mandalium.API.Controllers
         private readonly IMapper _mapper;
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary _cloudinary;
-        public BlogEntryController(IBlogRepository<BlogEntry> repo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig)
+        private readonly IMemoryCache _memoryCache;
+        public BlogEntryController(IBlogRepository<BlogEntry> repo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig, IMemoryCache memoryCache)
         {
+            this._memoryCache = memoryCache;
             this.cloudinaryConfig = _cloudinaryConfig;
             this._mapper = mapper;
             this._repo = repo;
@@ -48,7 +51,17 @@ namespace Mandalium.API.Controllers
         [HttpGet(Name = "GetEntries")]
         public async Task<IActionResult> GetEntries([FromQuery]UserParams userParams)
         {
-            var entries = await _repo.GetBlogEntries(userParams);
+            string cachename = "entries" + userParams.WriterEntry.ToString() + userParams.PageNumber.ToString();
+
+            var entries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(1);
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
+                return _repo.GetBlogEntries(userParams);
+
+            });
+
+            // var entries = await _repo.GetBlogEntries(userParams);
 
             var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
 
@@ -66,8 +79,17 @@ namespace Mandalium.API.Controllers
         [HttpGet("{id}", Name = "GetEntry")]
         public async Task<IActionResult> GetEntry(int id, [FromQuery] UserParams userParams)
         {
+            string cachename = "entry" + id.ToString() + userParams.PageNumber.ToString();
 
-            var blogEntry = await _repo.GetBlogEntry(id, userParams);
+            var blogEntry = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(1);
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
+                return _repo.GetBlogEntry(id, userParams);
+
+            });
+
+            // var blogEntry = await _repo.GetBlogEntry(id, userParams);
 
             if (blogEntry.isDeleted == true)
             {
@@ -91,8 +113,28 @@ namespace Mandalium.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMostRead()
         {
-            var personalEntries = await _repo.GetMostRead(true);
-            var blogEntries = await _repo.GetMostRead(false);
+            string cachename = "personalEntries";
+
+            var personalEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(30);
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
+                return _repo.GetMostRead(true);
+
+            });
+            
+            cachename = "blogEntries";
+
+            var blogEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(30);
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
+                return _repo.GetMostRead(false);
+
+            });
+
+
+
 
             foreach (var item in personalEntries)
             {
@@ -124,24 +166,24 @@ namespace Mandalium.API.Controllers
             }
 
             var topics = _mapper.Map<IEnumerable<TopicDto>>(await _repo.GetTopics());
-            
+
 
             return Ok(topics);
         }
 
-       
+
         #endregion
 
 
 
         #region  save methods
-        
+
         [Route("[action]")]
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> DeleteBlogEntry([FromBody]int id)
         {
-            if (User.FindFirst(ClaimTypes.Role).Value != "1" )
+            if (User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return Unauthorized();
             }
@@ -180,7 +222,7 @@ namespace Mandalium.API.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
         {
-            if (blogEntryForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            if (blogEntryForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return Unauthorized();
             }
@@ -197,7 +239,7 @@ namespace Mandalium.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
         {
-            if (blogEntryForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            if (blogEntryForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return Unauthorized();
             }
@@ -216,10 +258,14 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> WriteComment(CommentDtoForCreation commentDtoForCreation)
         {
             var comment = _mapper.Map<Comment>(commentDtoForCreation);
-            await _repo.SaveComment(comment);
+            if (await _repo.SaveComment(comment) >= 0)
+            {
 
+                return Ok(_mapper.Map<CommentDto>(comment));
+            }
+            return BadRequest();
             // return RedirectToRoute("GetEntry",comment.BlogEntryId);
-            return NoContent();
+
         }
 
         #endregion

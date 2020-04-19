@@ -24,6 +24,12 @@ input {
   color: white;
 }
 
+#userForm input{
+  color: white;
+  background-color: black;
+}
+
+
 textarea {
   background-color: black;
   color: white;

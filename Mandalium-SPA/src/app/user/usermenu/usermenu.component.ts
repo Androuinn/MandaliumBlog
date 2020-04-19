@@ -6,7 +6,7 @@ import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { Router } from '@angular/router';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { Writer } from 'src/app/_models/Writer';
+import { User } from 'src/app/_models/Writer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
 import { Title, Meta } from '@angular/platform-browser';
@@ -20,7 +20,7 @@ export class UsermenuComponent implements OnInit {
   blogEntries: BlogEntry[];
   pagination: Pagination;
   postsOpen = false;
-  writer: Writer = {
+  user: User = {
     id: null,
     surname: '',
     name: '',
@@ -28,9 +28,9 @@ export class UsermenuComponent implements OnInit {
     birthDate: null,
     background: '',
   };
-  writerForm: FormGroup;
-  writerUpdateOpen = false;
-  writerProfilePhotoUpdate = false;
+  userForm: FormGroup;
+  userUpdateOpen = false;
+  userProfilePhotoUpdate = false;
   file: File;
 
   constructor(
@@ -44,7 +44,7 @@ export class UsermenuComponent implements OnInit {
     private titleService: Title,
     private metaTagService: Meta
   ) {
-    this.writerForm = this.formBuilder.group({
+    this.userForm = this.formBuilder.group({
       id: Number,
       name: ['', [Validators.required, Validators.maxLength(100)]],
       surname: ['', [Validators.required, Validators.maxLength(100)]],
@@ -61,7 +61,7 @@ export class UsermenuComponent implements OnInit {
       totalPages: 1,
       totalItems: 1,
     };
-    this.getWriter();
+    this.getUser();
 
     this.titleService.setTitle('Hesap');
     this.metaTagService.updateTag({name: 'description', content: 'Kullanıcı hesap bilgileri'});
@@ -73,14 +73,14 @@ export class UsermenuComponent implements OnInit {
   }
 
   openUpdateProfile() {
-    this.writerUpdateOpen = !this.writerUpdateOpen;
-    this.writerForm.setValue({
-      name: this.writer.name,
-      surname: this.writer.surname,
-      id: this.writer.id,
-      background: this.writer.background,
-      birthdate: this.writer.birthDate,
-      photoUrl: this.writer.photoUrl,
+    this.userUpdateOpen = !this.userUpdateOpen;
+    this.userForm.setValue({
+      name: this.user.name,
+      surname: this.user.surname,
+      id: this.user.id,
+      background: this.user.background,
+      birthdate: this.user.birthDate,
+      photoUrl: this.user.photoUrl,
     });
   }
 
@@ -114,21 +114,22 @@ export class UsermenuComponent implements OnInit {
     this.router.navigate(['/create']);
   }
 
-  getWriter() {
-    this.userService.getWriter().subscribe((res: Writer) => {
-      this.writer = res;
+  getUser() {
+    this.userService.getUser().subscribe((res: User) => {
+      this.user = res;
     });
   }
 
-  updateWriter() {
-    this.userService.updateWriter(this.writerForm.value).subscribe(
+  updateUser() {
+    this.userService.updateUser(this.userForm.value).subscribe(
       () => {
         this.alertify.success('Güncelleme Başarılı');
-        this.getWriter();
-        this.writerUpdateOpen = !this.writerUpdateOpen;
+        this.getUser();
+        this.userUpdateOpen = !this.userUpdateOpen;
       },
       (error) => {
         this.alertify.error('Güncelleme Başarısız');
+        console.log(error);
       }
     );
   }
@@ -138,7 +139,6 @@ export class UsermenuComponent implements OnInit {
   }
 
   deleteBlogEntry(id: number) {
-    console.log(id);
     return this.blogService.deleteBlogEntry(id).subscribe(
       () => {
         this.loadBlogEntries();
@@ -154,16 +154,16 @@ export class UsermenuComponent implements OnInit {
   updateProfilePhoto() {
     const formData: FormData = new FormData();
     formData.append('file', this.file, this.file.name);
-    formData.append('writerId', this.authService.decodedToken.nameid);
+    formData.append('userId', this.authService.decodedToken.nameid);
     console.log(formData);
     if (this.file != null) {
       return this.photoService.updateProfilePhoto(formData).subscribe(
         (res) => {
           this.alertify.success('fotoğraf yükleme başarılı');
-          this.writer.photoUrl = res.toString();
+          this.user.photoUrl = res.toString();
           this.router.navigate(['/profile']);
           this.file = null;
-          this.writerProfilePhotoUpdate = !this.writerProfilePhotoUpdate;
+          this.userProfilePhotoUpdate = !this.userProfilePhotoUpdate;
         },
         (error) => {
           console.error(error);

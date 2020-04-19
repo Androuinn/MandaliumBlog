@@ -24,7 +24,7 @@ namespace Mandalium.API.Dtos
         public string PhotoUrl { get; set; }
         public bool WriterEntry {get; set;}
 
-        public int WriterId { get; set; }
+        public int UserId { get; set; }
        
         public int TopicId { get; set; }
      

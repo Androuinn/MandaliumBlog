@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mandalium.API.Dtos
 {
-    public class WriterDto
+    public class UserDto
     {
         [Required]
         public int Id { get; set; }

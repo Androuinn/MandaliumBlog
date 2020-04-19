@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BlogService } from '../_services/blog.service';
-import { Writer } from '../_models/Writer';
+import { User } from '../_models/Writer';
 import { UserService } from '../_services/user.service';
 import { Title, Meta } from '@angular/platform-browser';
 
@@ -10,7 +10,7 @@ import { Title, Meta } from '@angular/platform-browser';
   styleUrls: ['./about.component.css'],
 })
 export class AboutComponent implements OnInit {
-  writers: Writer[];
+  writers: User[];
   openFullBackground = false;
   constructor(
     private userService: UserService,
@@ -32,7 +32,7 @@ export class AboutComponent implements OnInit {
   }
 
   getWriters() {
-    return this.userService.getWriters().subscribe((res: Writer[]) => {
+    return this.userService.getUsers().subscribe((res: User[]) => {
       this.writers = res;
     });
   }

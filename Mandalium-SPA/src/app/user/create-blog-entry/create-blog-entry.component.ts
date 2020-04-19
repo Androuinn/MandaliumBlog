@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Writer } from 'src/app/_models/Writer';
+import { User } from 'src/app/_models/Writer';
 import { Topic } from 'src/app/_models/Topic';
 import { BlogService } from 'src/app/_services/blog.service';
-import { WriterTopic } from 'src/app/_models/WriterTopic';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -20,7 +19,6 @@ import { Photo } from 'src/app/_models/Photo';
   styleUrls: ['./create-blog-entry.component.css'],
 })
 export class CreateBlogEntryComponent implements OnInit {
-  writers: Writer[];
   topics: Topic[];
   newTopic: Topic = {};
   innerTextHtml: string;
@@ -49,7 +47,7 @@ export class CreateBlogEntryComponent implements OnInit {
       subHeadline: ['', [Validators.required, Validators.maxLength(500)]],
       innerTextHtml: ['', Validators.required],
       photoUrl: ['', Validators.required],
-      writerId: this.authService.decodedToken.nameid,
+      userId: this.authService.decodedToken.nameid,
       topicId: Number,
       writerEntry: Boolean,
     });
@@ -76,7 +74,7 @@ export class CreateBlogEntryComponent implements OnInit {
           subHeadline: this.blogEntry.subHeadline,
           innerTextHtml: this.blogEntry.innerTextHtml,
           photoUrl: this.blogEntry.photoUrl.split('/').reverse().slice(0, 3).reverse().join('/').split('.').slice(0, 1).join(''),
-          writerId: this.authService.decodedToken.nameid,
+          userId: this.authService.decodedToken.nameid,
           topicId: this.blogEntry.topicId,
           writerEntry: this.blogEntry.writerEntry,
         });

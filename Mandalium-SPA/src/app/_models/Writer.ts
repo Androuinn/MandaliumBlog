@@ -1,4 +1,4 @@
-export interface Writer {
+export interface User {
     id: number;
     name: string;
     surname: string;

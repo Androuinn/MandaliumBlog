@@ -24,13 +24,13 @@ namespace Mandalium.API.Data
         public async Task<PagedList<BlogEntry>> GetBlogEntries(UserParams userParams)
         {
             IQueryable<BlogEntry> blogEntries;
-            if (userParams.WriterId >= 1)
+            if (userParams.UserId >= 1)
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterId == userParams.WriterId).Where(x => x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.UserId == userParams.UserId).Where(x => x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
             }
             else
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.Writer).Where(x => x.WriterEntry == userParams.WriterEntry).Where(x => x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.WriterEntry == userParams.WriterEntry).Where(x => x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
             }
 
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
@@ -40,7 +40,7 @@ namespace Mandalium.API.Data
         {
             if (userParams.EntryAlreadyPicked == false)
             {
-                var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.Writer).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
+                var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.User).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
                 var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
                 Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
 

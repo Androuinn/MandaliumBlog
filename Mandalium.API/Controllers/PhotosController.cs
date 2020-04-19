@@ -45,7 +45,7 @@ namespace Mandalium.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPhoto([FromForm]PhotoForCreationDto photoForCreationDto)
         {
-            if (photoForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            if (photoForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return Unauthorized();
             }
@@ -59,7 +59,7 @@ namespace Mandalium.API.Controllers
                     var uploadParams = new ImageUploadParams()
                     {
                         File = new FileDescription(photoForCreationDto.File.Name, stream),
-                        Folder = "Writers/" + photoForCreationDto.WriterId
+                        Folder = "Writers/" + photoForCreationDto.UserId
                     };
                     uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
@@ -68,7 +68,7 @@ namespace Mandalium.API.Controllers
 
             if (uploadResult != null)
             {
-                photoForCreationDto.WriterId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                photoForCreationDto.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 photoForCreationDto.PhotoUrl = uploadResult.Uri.ToString();
                 photoForCreationDto.PublicId = uploadResult.PublicId;
 
@@ -84,7 +84,7 @@ namespace Mandalium.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPhoto([FromQuery]UserParams userParams)
         {
-            if (userParams.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            if (userParams.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return Unauthorized();
             }
@@ -107,12 +107,12 @@ namespace Mandalium.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateProfilePhoto([FromForm]PhotoForCreationDto photoForCreationDto)
         {
-            if (photoForCreationDto.WriterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (photoForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
                 return Unauthorized();
             }
 
-            var userProfile = await _userRepo.GetWriter(photoForCreationDto.WriterId);
+            var userProfile = await _userRepo.GetUser(photoForCreationDto.UserId);
 
             if (userProfile.PhotoUrl != null)
             {
@@ -139,7 +139,7 @@ namespace Mandalium.API.Controllers
                     var uploadParams = new ImageUploadParams()
                     {
                         File = new FileDescription(photoForCreationDto.File.Name, stream),
-                        Folder = "Writers/" + photoForCreationDto.WriterId
+                        Folder = "Writers/" + photoForCreationDto.UserId
                     };
                     uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
@@ -148,12 +148,12 @@ namespace Mandalium.API.Controllers
 
             if (uploadResult != null)
             {
-                photoForCreationDto.WriterId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                photoForCreationDto.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 photoForCreationDto.PhotoUrl = uploadResult.Uri.ToString();
                 photoForCreationDto.PublicId = uploadResult.PublicId;
 
                 userProfile.PhotoUrl = uploadResult.PublicId;
-                await _userRepo.UpdateWriter(userProfile);
+                await _userRepo.UpdateUser(userProfile);
                 photoForCreationDto.PublicId = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(uploadResult.PublicId + ".webp");
                 return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photoForCreationDto.PublicId));
             }

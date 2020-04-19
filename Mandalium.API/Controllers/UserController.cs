@@ -40,9 +40,9 @@ namespace Mandalium.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> GetWriters()
+        public async Task<IActionResult> GetUsers()
         {
-            var writers = _mapper.Map<IEnumerable<WriterDto>>(await _repo.GetWriters());
+            var writers = _mapper.Map<IEnumerable<UserDto>>(await _repo.GetUsers());
 
             foreach (var item in writers)
             {
@@ -54,28 +54,28 @@ namespace Mandalium.API.Controllers
         [Route("[action]")]
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetWriter()
+        public async Task<IActionResult> GetUser()
         {
-            var writer = _mapper.Map<WriterDto>(await _repo.GetWriter(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+            var user = _mapper.Map<UserDto>(await _repo.GetUser(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
 
-            writer.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(writer.PhotoUrl + ".webp");
-            return Ok(writer);
+            user.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(user.PhotoUrl + ".webp");
+            return Ok(user);
         }
 
         [Route("[action]")]
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> UpdateWriter([FromBody]WriterDto writerDto)
+        public async Task<IActionResult> UpdateUser([FromBody]UserDto userDto)
         {
-            if (int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) != writerDto.Id)
+            if (int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) != userDto.Id)
             {
                 return Unauthorized();
             }
 
 
-            var writer = _mapper.Map<Writer>(writerDto);
+            var user = _mapper.Map<User>(userDto);
 
-            await _repo.UpdateWriter(writer);
+            await _repo.UpdateUser(user);
 
             return StatusCode(200);
         }

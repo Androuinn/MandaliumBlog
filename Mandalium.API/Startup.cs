@@ -36,10 +36,11 @@ namespace Mandalium.API
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IBlogRepository<BlogEntry>, BlogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAuthRepository<Writer>, AuthRepository>();
+            services.AddScoped<IAuthRepository<User>, AuthRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper(typeof(BlogRepository).Assembly);
+            services.AddMemoryCache();
             services.AddControllers().AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

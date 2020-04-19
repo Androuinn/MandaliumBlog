@@ -15,25 +15,25 @@ namespace Mandalium.API.Data
             this._context = context;
 
         }
-        public async Task<int> UpdateWriter(Writer writer)
+        public async Task<int> UpdateUser(User user)
         {
-            writer.PhotoUrl = writer.PhotoUrl.Split(".webp").First();
-            _context.Entry(writer).Property(x => x.Name).IsModified = true;
-            _context.Entry(writer).Property(x => x.Surname).IsModified = true;
-            _context.Entry(writer).Property(x => x.Background).IsModified = true;
-            _context.Entry(writer).Property(x => x.BirthDate).IsModified = true;
-            _context.Entry(writer).Property(x => x.PhotoUrl).IsModified = true;
+            user.PhotoUrl = user.PhotoUrl.Split(".webp").First();
+            _context.Entry(user).Property(x => x.Name).IsModified = true;
+            _context.Entry(user).Property(x => x.Surname).IsModified = true;
+            _context.Entry(user).Property(x => x.Background).IsModified = true;
+            _context.Entry(user).Property(x => x.BirthDate).IsModified = true;
+            _context.Entry(user).Property(x => x.PhotoUrl).IsModified = true;
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Writer>> GetWriters()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _context.Writers.AsNoTracking().Where(x => x.Role == true).ToListAsync();
+            return await _context.Users.AsNoTracking().Where(x => x.Role == true).ToListAsync();
         }
 
-        public async Task<Writer> GetWriter(int id)
+        public async Task<User> GetUser(int id)
         {
-            return await _context.Writers.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _context.Users.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
         }
     }
 }

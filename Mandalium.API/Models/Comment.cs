@@ -8,10 +8,10 @@ namespace Mandalium.API.Models
     {
         [Required]
         public Guid Id { get; set; }
-        [Required]
+       
         [Column(TypeName = "varchar(100)")]
         public string CommenterName { get; set; }
-        [Required]
+        
         [Column(TypeName = "varchar(100)")]
         public string Email { get; set; }
         [Required]
@@ -24,8 +24,8 @@ namespace Mandalium.API.Models
         public BlogEntry BlogEntry { get; set; }
 
 
-        public int? WriterId { get; set; }
-        public Writer Writer {get;set;}
+        public int? UserId { get; set; }
+        public User User {get;set;}
 
 
         public Comment()

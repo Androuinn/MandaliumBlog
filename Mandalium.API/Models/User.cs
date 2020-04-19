@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mandalium.API.Models
 {
-    public class Writer
+    public class User
     {
         [Required]
         public int Id { get; set; }

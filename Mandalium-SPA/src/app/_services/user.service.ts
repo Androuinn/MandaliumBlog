@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Writer } from '../_models/Writer';
+import { User } from '../_models/Writer';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -9,17 +9,17 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class UserService {
-  baseUrl = environment.apiUrl;
+  baseUrl = environment.apiUrl + 'user';
   constructor(private http: HttpClient) {}
-  getWriter(): Observable<Writer> {
-    return this.http.get<Writer>(this.baseUrl + 'user/getwriter');
+  getUser(): Observable<User> {
+    return this.http.get<User>(this.baseUrl + '/getuser');
   }
 
-  getWriters(): Observable<Writer[]> {
-    return this.http.get<Writer[]>(this.baseUrl + 'user/getwriters');
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + '/getusers');
   }
 
-  updateWriter(writer: Writer) {
-    return this.http.put(this.baseUrl + 'user/updatewriter', writer);
+  updateUser(user: User) {
+    return this.http.put(this.baseUrl + '/updateuser', user);
   }
 }
