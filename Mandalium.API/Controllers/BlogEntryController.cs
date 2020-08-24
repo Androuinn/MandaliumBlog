@@ -51,17 +51,17 @@ namespace Mandalium.API.Controllers
         [HttpGet(Name = "GetEntries")]
         public async Task<IActionResult> GetEntries([FromQuery]UserParams userParams)
         {
-            string cachename = "entries" + userParams.WriterEntry.ToString() + userParams.PageNumber.ToString();
+            // string cachename = "entries" + userParams.WriterEntry.ToString() + userParams.PageNumber.ToString();
 
-            var entries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            {
-                entry.SlidingExpiration = TimeSpan.FromMinutes(1);
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
-                return _repo.GetBlogEntries(userParams);
+            // var entries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            // {
+            //     entry.SlidingExpiration = TimeSpan.FromMinutes(1);
+            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
+            //     return _repo.GetBlogEntries(userParams);
 
-            });
+            // });
 
-            // var entries = await _repo.GetBlogEntries(userParams);
+             var entries = await _repo.GetBlogEntries(userParams);
 
             var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
 
@@ -79,17 +79,17 @@ namespace Mandalium.API.Controllers
         [HttpGet("{id}", Name = "GetEntry")]
         public async Task<IActionResult> GetEntry(int id, [FromQuery] UserParams userParams)
         {
-            string cachename = "entry" + id.ToString() + userParams.PageNumber.ToString();
+            // string cachename = "entry" + id.ToString() + userParams.PageNumber.ToString();
+            // if(userParams.EntryAlreadyPicked == true) _memoryCache.Remove(cachename);
+            // var blogEntry = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            // {
+            //     entry.SlidingExpiration = TimeSpan.FromMinutes(1);
+            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
+            //     return _repo.GetBlogEntry(id, userParams);
 
-            var blogEntry = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            {
-                entry.SlidingExpiration = TimeSpan.FromMinutes(1);
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
-                return _repo.GetBlogEntry(id, userParams);
+            // });
 
-            });
-
-            // var blogEntry = await _repo.GetBlogEntry(id, userParams);
+            var blogEntry = await _repo.GetBlogEntry(id, userParams);
 
             if (blogEntry.isDeleted == true)
             {
@@ -109,40 +109,58 @@ namespace Mandalium.API.Controllers
             return Ok(blogEntryDto);
         }
 
+
+        
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetComments(int id,[FromQuery] UserParams userParams)
+        {
+            var comments = await _repo.GetComments(id, userParams);
+             Response.AddPagination(comments.CurrentPage, comments.PageSize, comments.TotalCount, comments.TotalPages);
+           var commentsDto =  _mapper.Map<IEnumerable<CommentDto>>(comments);
+            return Ok(commentsDto) ;
+        }
+
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> GetMostRead()
         {
-            string cachename = "personalEntries";
+            // string cachename = "personalEntries";
 
-            var personalEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            {
-                entry.SlidingExpiration = TimeSpan.FromMinutes(30);
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
-                return _repo.GetMostRead(true);
+            // var personalEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            // {
+            //     entry.SlidingExpiration = TimeSpan.FromMinutes(30);
+            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
+            //     return _repo.GetMostRead(true);
 
-            });
+            // });
             
-            cachename = "blogEntries";
+            // cachename = "blogEntries";
 
-            var blogEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            {
-                entry.SlidingExpiration = TimeSpan.FromMinutes(30);
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
-                return _repo.GetMostRead(false);
+            // var blogEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
+            // {
+            //     entry.SlidingExpiration = TimeSpan.FromMinutes(30);
+            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
+            //     return _repo.GetMostRead(false);
 
-            });
+            // });
 
 
-
+            var personalEntries= await _repo.GetMostRead(true);
+            var blogEntries = await _repo.GetMostRead(false);
 
             foreach (var item in personalEntries)
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                if (!item.PhotoUrl.EndsWith("webp"))
+                {
+                     item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                }
             }
             foreach (var item in blogEntries)
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                if (!item.PhotoUrl.EndsWith("webp"))
+                {
+                     item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                }
             }
 
             var mostReadPersonalEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(personalEntries);
@@ -183,6 +201,7 @@ namespace Mandalium.API.Controllers
         [HttpPut]
         public async Task<IActionResult> DeleteBlogEntry([FromBody]int id)
         {
+            
             if (User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return Unauthorized();

@@ -105,6 +105,31 @@ export class BlogService {
     return this.http.get<Topic[]>(this.baseUrl + '/gettopics');
   }
 
+  getComments(id, commentPage?, commentsPerPage?, userParams?): Observable<PaginatedResult<Comment[]>> {
+    const paginatedResult: PaginatedResult<Comment []> = new PaginatedResult<Comment []>();
+
+    let params = new HttpParams();
+
+    if (commentPage != null && commentsPerPage != null) {
+      params = params.append('pageNumber', commentPage);
+      params = params.append('pageSize', commentsPerPage);
+    }
+
+    if (userParams != null) {
+      params = params.append('writerEntry', userParams);
+    }
+
+    return this.http.get<Comment[]>(this.baseUrl + '/getcomments/' + id , {observe: 'response', params}).pipe(
+      map(response => {
+        paginatedResult.result = response.body;
+        if (response.headers.get('Pagination') != null) {
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return paginatedResult;
+      })
+    );
+  }
+
 
   //#endregion
 

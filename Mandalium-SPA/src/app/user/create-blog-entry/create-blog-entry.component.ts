@@ -89,7 +89,7 @@ export class CreateBlogEntryComponent implements OnInit {
   postPhoto() {
     const formData: FormData = new FormData();
     formData.append('file', this.file, this.file.name);
-    formData.append('writerId', this.authService.decodedToken.nameid);
+    formData.append('userId', this.authService.decodedToken.nameid);
     console.log(formData);
     if (this.file != null) {
       return this.photoService.postPhoto(formData).subscribe(

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { BlogService } from 'src/app/_services/blog.service';
 import { ActivatedRoute } from '@angular/router';
 import { Comment } from 'src/app/_models/Comment';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Pagination } from 'src/app/_models/pagination';
+import { Pagination, PaginatedResult } from 'src/app/_models/pagination';
 import { Title, Meta } from '@angular/platform-browser';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
@@ -16,7 +16,6 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class BlogDetailedComponent implements OnInit {
   blogEntry: BlogEntry;
-  comment: Comment;
   commentFormGroup: FormGroup;
   pagination: Pagination;
   constructor(
@@ -26,7 +25,7 @@ export class BlogDetailedComponent implements OnInit {
     private titleService: Title,
     private metaTagService: Meta,
     private alertify: AlertifyService,
-    public authService: AuthService
+    public authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -83,8 +82,8 @@ export class BlogDetailedComponent implements OnInit {
       this.blogService.saveComment(this.commentFormGroup.value).subscribe(
         (res: Comment) => {
           this.alertify.success('Yorum Yazma Başarılı');
-          this.blogEntry.comments.result.push(res);
-          // this.loadBlogEntry();
+          // this.loadComments();
+          this.loadBlogEntry();
           if (this.authService.loggedIn()) {
             this.commentFormGroup.reset({
               blogEntryId: this.blogEntry.id,
@@ -103,6 +102,20 @@ export class BlogDetailedComponent implements OnInit {
       );
     }
   }
+
+  loadComments() {
+    this.blogService.getComments(this.route.snapshot.params.id, this.pagination.currentPage, this.pagination.itemsPerPage)
+    .subscribe(
+      (comments: PaginatedResult<Comment[]>) => {
+        this.blogEntry.comments.result = comments.result;
+        this.pagination = comments.pagination;
+        this.blogEntry.comments.result.push(null);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+}
 
   loadBlogEntry() {
     this.blogService

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from './_services/auth.service';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { Meta } from '@angular/platform-browser';
+import { Router, RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,12 @@ import { Meta } from '@angular/platform-browser';
 export class AppComponent implements OnInit {
   jwtHelper = new JwtHelperService();
   date = new Date();
-  constructor(private authService: AuthService, private metaTagService: Meta) {}
+  public showOverlay = true;
+  constructor(private authService: AuthService, private metaTagService: Meta, private router: Router) {
+    router.events.subscribe((event: RouterEvent) => {
+      this.navigationInterceptor(event);
+    });
+  }
 
   ngOnInit() {
     const token = localStorage.getItem('token');
@@ -32,6 +38,24 @@ export class AppComponent implements OnInit {
       { property: 'og:description', content: 'Mandalium '}
     ]);
 
-    this.metaTagService.updateTag({name: 'description', content: 'Mandalium | Blog Dünyasının Vazgeçilmez Adresi, Eğlence ve Haber Sitesi'});
+    this.metaTagService.updateTag({name: 'description',
+    content: 'Mandalium | Blog Dünyasının Vazgeçilmez Adresi, Eğlence ve Haber Sitesi'});
+  }
+
+  navigationInterceptor(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.showOverlay = true;
+    }
+    if (event instanceof NavigationEnd) {
+      this.showOverlay = false;
+    }
+
+    // Set loading state to false in both of the below events to hide the spinner in case a request fails
+    if (event instanceof NavigationCancel) {
+      this.showOverlay = false;
+    }
+    if (event instanceof NavigationError) {
+      this.showOverlay = false;
+    }
   }
 }

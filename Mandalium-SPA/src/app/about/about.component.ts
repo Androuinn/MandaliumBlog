@@ -36,4 +36,5 @@ export class AboutComponent implements OnInit {
       this.writers = res;
     });
   }
+
 }

@@ -54,12 +54,18 @@ namespace Mandalium.API.Data
             }
             else
             {
-                BlogEntry BlogEntry = new BlogEntry();
-                var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
-                BlogEntry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
+                BlogEntry Entry = new BlogEntry();
+                var comments = _context.Comments.AsNoTracking().Include(x=> x.User).Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
 
-                return BlogEntry;
+                return Entry;
             }
+        }
+
+        public async Task<PagedList<Comment>> GetComments(int id, UserParams userParams) 
+        {
+            var comments = _context.Comments.AsNoTracking().Include(x=> x.User).Where(x=> x.BlogEntryId == id).OrderByDescending(x=> x.CreatedDate).AsQueryable();
+            return await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<IEnumerable<BlogEntry>> GetMostRead(bool writerEntry)

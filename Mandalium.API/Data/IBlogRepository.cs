@@ -22,6 +22,7 @@ namespace Mandalium.API.Data
         /// <param name="userParams"></param>
         /// <returns></returns>
         Task<T> GetBlogEntry(int blogId, UserParams userParams);
+        Task<PagedList<Comment>> GetComments(int id, UserParams userParams);
 
         /// <summary>
         /// Gets Most Read Blog Entries(writerEntry specifies if it is user specific or not)
