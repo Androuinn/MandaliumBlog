@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Mandalium.API.Helpers;
 using Mandalium.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 
 //TODO writer ile ilgili olanları user repo ve controller altında topla
@@ -41,7 +42,7 @@ namespace Mandalium.API.Data
             if (userParams.EntryAlreadyPicked == false)
             {
                 var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.User).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
-                var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
                 Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
 
 
@@ -55,16 +56,16 @@ namespace Mandalium.API.Data
             else
             {
                 BlogEntry Entry = new BlogEntry();
-                var comments = _context.Comments.AsNoTracking().Include(x=> x.User).Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
                 Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
 
                 return Entry;
             }
         }
 
-        public async Task<PagedList<Comment>> GetComments(int id, UserParams userParams) 
+        public async Task<PagedList<Comment>> GetComments(int id, UserParams userParams)
         {
-            var comments = _context.Comments.AsNoTracking().Include(x=> x.User).Where(x=> x.BlogEntryId == id).OrderByDescending(x=> x.CreatedDate).AsQueryable();
+            var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntryId == id).OrderByDescending(x => x.CreatedDate).AsQueryable();
             return await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -72,16 +73,26 @@ namespace Mandalium.API.Data
         {
 
             List<BlogEntry> Entries;
-            var a = Counter.GetMostRead().SelectMany(x => x.Value).OrderByDescending(x => x.Count).Where(x => x.WriterEntry == writerEntry).ToList();
-            //order by hallet
-            if (a.Count != 0)
+            try
             {
-                Entries = await _context.BlogEntries.Where(x => (a.Select(c => c.Id).Contains(x.Id)) && (x.isDeleted == false)).Take(5).ToListAsync();
+                var a = Counter.GetMostRead().SelectMany(x => x.Value).OrderByDescending(x => x.Count).Where(x => x.WriterEntry == writerEntry).ToList();
+                //order by hallet
+                if (a.Count != 0)
+                {
+                    Entries = await _context.BlogEntries.Where(x => (a.Select(c => c.Id).Contains(x.Id)) && (x.isDeleted == false)).Take(5).ToListAsync();
+                }
+                else
+                {
+                    Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => (x.WriterEntry == writerEntry) && (x.isDeleted == false)).Take(5).ToListAsync();
+                }
+
             }
-            else
+            catch (System.Exception e)
             {
-                Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => (x.WriterEntry == writerEntry) && (x.isDeleted == false)).Take(5).ToListAsync();
+                Extensions.ReportError(e);
+                throw;
             }
+
 
             return Entries;
         }

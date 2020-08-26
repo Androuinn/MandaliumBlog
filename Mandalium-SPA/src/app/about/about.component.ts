@@ -34,6 +34,10 @@ export class AboutComponent implements OnInit {
   getWriters() {
     return this.userService.getUsers().subscribe((res: User[]) => {
       this.writers = res;
+      this.writers.forEach(element => {
+        element.collapse = false;
+      });
+
     });
   }
 

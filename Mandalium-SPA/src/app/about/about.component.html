@@ -54,12 +54,13 @@
         <img src="{{item.photoUrl}}" alt="writer photo" class="img-thumbnail rounded col-11">
       </div>
       <div class=" col-12 col-md-8 mt-5 align-self-center">
-        <div>
-          <p [collapse]="!openFullBackground" [isAnimated]="true">{{item.background}} </p>
-          <p [collapse]="openFullBackground" [isAnimated]="true">{{item.background | slice: 0:1000}} </p>
-        </div>
+        <div [collapse]="!item.collapse" [isAnimated]="true" [innerHTML]="item.background"></div>
+        <div [collapse]="item.collapse" [isAnimated]="true" [innerHTML]="item.background.slice(0,300)"></div>
+          <!-- <p [collapse]="!item.collapse" [isAnimated]="true">{{item.background}} </p>
+          <p [collapse]="item.collapse" [isAnimated]="true">{{item.background | slice: 0:1000}} </p>
+        </div> -->
         <div class="col-12 text-right">
-          <button class="btn btn-warning mb-3" (click)="openFullBackground = !openFullBackground">Devamını Okuyayım</button>
+          <button class="btn btn-warning mb-3" (click)="item.collapse = !item.collapse">Devamını Okuyayım</button>
         </div>
       </div>
 

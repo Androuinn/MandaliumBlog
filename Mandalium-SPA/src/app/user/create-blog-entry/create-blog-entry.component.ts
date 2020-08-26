@@ -12,6 +12,7 @@ import { BlogEntry } from 'src/app/_models/blogEntry';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { Photo } from 'src/app/_models/Photo';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-create-blog-entry',
@@ -31,6 +32,7 @@ export class CreateBlogEntryComponent implements OnInit {
   addPhotos = false;
   choosePhotos = false;
   pagination: Pagination;
+  public Editor = ClassicEditor;
 
   constructor(
     private blogService: BlogService,

@@ -61,7 +61,7 @@ namespace Mandalium.API.Controllers
 
             // });
 
-             var entries = await _repo.GetBlogEntries(userParams);
+            var entries = await _repo.GetBlogEntries(userParams);
 
             var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
 

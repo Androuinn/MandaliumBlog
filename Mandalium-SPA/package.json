@@ -22,6 +22,8 @@
     "@angular/router": "~9.1.1",
     "@angular/service-worker": "~9.1.1",
     "@auth0/angular-jwt": "^4.0.0",
+    "@ckeditor/ckeditor5-angular": "^1.2.3",
+    "@ckeditor/ckeditor5-build-classic": "^21.0.0",
     "alertifyjs": "^1.13.1",
     "bootstrap": "^4.4.1",
     "bootswatch": "^4.4.1",

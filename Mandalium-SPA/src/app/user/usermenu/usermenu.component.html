@@ -20,8 +20,8 @@
 
     </div>
     <div class=" col-12 col-md-8 mt-5 align-self-center">
-      <div>
-        <p>{{user.background}}</p>
+      <div [innerHTML]="user.background">
+        <!-- <p>{{user.background}}</p> -->
       </div>
     </div>
 
@@ -64,8 +64,9 @@
 
     <div class="row form-group">
       <label class="col-12 col-md-4" for="backgroundchange">Hakkında: </label>
-      <textarea class="col-12 col-md-8 " type="textarea" formControlName="background" id="backgroundchange" cols="120"
-        rows="10"></textarea>
+      <ckeditor [editor]="Editor" formControlName="background" class="ck-content" id="background"  data="<p>Hello, world!</p>"></ckeditor>
+      <!-- <textarea class="col-12 col-md-8 " type="textarea" formControlName="background" id="backgroundchange" cols="120"
+        rows="10"></textarea> -->
     </div>
 
     <div class="row justify-content-end form-submit">

@@ -29,9 +29,12 @@
 
     <div class="row form-group">
       <h5 class="col-12">Inner Text HTML:</h5>
-      <textarea formControlName="innerTextHtml" [(ngModel)]="innerTextHtml" (ngform)="getInnerHtml($event)"
-        class="col-12" name="" id="textarea" cols="120" rows="10" required></textarea>
+      <ckeditor [editor]="Editor" formControlName="innerTextHtml" class="ck-content" id="innerTextHtml"  data="<p>Hello, world!</p>"></ckeditor>
+      <!-- <textarea formControlName="innerTextHtml" [(ngModel)]="innerTextHtml" (ngform)="getInnerHtml($event)"
+        class="col-12" name="" id="textarea" cols="120" rows="10" required></textarea> -->
     </div>
+
+    
 
     <!-- post photo -->
     <div class="row justify-content-end form-submit">

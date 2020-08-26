@@ -8,6 +8,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { JwtModule} from '@auth0/angular-jwt';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import localeTr from '@angular/common/locales/tr';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -52,9 +53,10 @@ export function tokenGetter() {
       CreateBlogEntryComponent,
       BlogWriterEntryComponent,
       ContactComponent,
-      UsermenuComponent
+      UsermenuComponent,
    ],
    imports: [
+      CKEditorModule,
       BrowserModule,
       AppRoutingModule,
       HttpClientModule,

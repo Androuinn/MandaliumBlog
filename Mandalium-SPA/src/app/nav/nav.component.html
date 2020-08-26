@@ -159,7 +159,7 @@
         <div class="invalid-feedback text-right pt-2">Lütfen doğum tarihinizi girin.</div>
 
         <div class="row justify-content-end form-submit">
-            <button class="btn btn-success" type="submit" [disabled]="!registerForm.valid">
+            <button  class="btn btn-success disabled" type="submit" [disabled]="!registerForm.valid && !isRegisterClicked ">
                 Kaydet
             </button>
         </div>

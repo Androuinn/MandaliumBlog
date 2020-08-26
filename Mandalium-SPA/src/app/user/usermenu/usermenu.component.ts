@@ -10,6 +10,7 @@ import { User } from 'src/app/_models/Writer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
 import { Title, Meta } from '@angular/platform-browser';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-usermenu',
@@ -32,6 +33,7 @@ export class UsermenuComponent implements OnInit {
   userUpdateOpen = false;
   userProfilePhotoUpdate = false;
   file: File;
+  public Editor = ClassicEditor;
 
   constructor(
     private router: Router,

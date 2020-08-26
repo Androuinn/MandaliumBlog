@@ -5,4 +5,5 @@ export interface User {
     birthDate: number;
     background: string;
     photoUrl: string;
+    collapse?: boolean;
 }

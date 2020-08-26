@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
@@ -15,6 +15,7 @@ import { BlogService } from '../_services/blog.service';
 export class NavComponent implements OnInit {
   loginModel: any = {};
   date: Date;
+  isRegisterClicked = false;
   isHeaderCollapsed = true;
   isCollapsed = true;
   registerForm: FormGroup;
@@ -72,12 +73,14 @@ export class NavComponent implements OnInit {
 
 
   register() {
-      return this.authService.register(this.registerForm.value).subscribe(() => {
+      const a = this.registerForm.value;
+      this.registerForm.reset();
+      return this.authService.register(a).subscribe(() => {
       this.loginModel.password = this.registerForm.get('password').value;
       this.loginModel.username = this.registerForm.get('username').value;
       this.login();
       }, error => {
-        console.log(error);
+        this.alertify.error('Kullanıcı Mevcut');
       });
   }
 
