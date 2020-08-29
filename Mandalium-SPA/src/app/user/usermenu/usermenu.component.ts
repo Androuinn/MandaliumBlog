@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
 import { BlogService } from 'src/app/_services/blog.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { BlogEntry } from 'src/app/_models/blogEntry';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { User } from 'src/app/_models/Writer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,7 +17,7 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
   templateUrl: './usermenu.component.html',
   styleUrls: ['./usermenu.component.css'],
 })
-export class UsermenuComponent implements OnInit {
+export class UsermenuComponent implements OnInit, AfterViewChecked {
   blogEntries: BlogEntry[];
   pagination: Pagination;
   postsOpen = false;
@@ -34,6 +34,8 @@ export class UsermenuComponent implements OnInit {
   userProfilePhotoUpdate = false;
   file: File;
   public Editor = ClassicEditor;
+  fragment: any;
+
 
   constructor(
     private router: Router,
@@ -44,7 +46,8 @@ export class UsermenuComponent implements OnInit {
     private formBuilder: FormBuilder,
     private photoService: PhotoService,
     private titleService: Title,
-    private metaTagService: Meta
+    private metaTagService: Meta,
+    private route: ActivatedRoute
   ) {
     this.userForm = this.formBuilder.group({
       id: Number,
@@ -69,12 +72,21 @@ export class UsermenuComponent implements OnInit {
     this.metaTagService.updateTag({name: 'description', content: 'Kullanıcı hesap bilgileri'});
   }
 
+  ngAfterViewChecked(): void {
+    try {
+        if (this.fragment) {
+            document.querySelector('#' + this.fragment).scrollIntoView();
+        }
+    } catch (e) { }
+  }
+
   openPosts() {
     this.loadBlogEntries();
     this.postsOpen = !this.postsOpen;
   }
 
   openUpdateProfile() {
+    this.route.fragment.subscribe(fragment => { this.fragment = fragment; });
     this.userUpdateOpen = !this.userUpdateOpen;
     this.userForm.setValue({
       name: this.user.name,
@@ -119,6 +131,9 @@ export class UsermenuComponent implements OnInit {
   getUser() {
     this.userService.getUser().subscribe((res: User) => {
       this.user = res;
+      if (this.user.photoUrl == null || this.user.photoUrl === '') {
+        this.user.photoUrl = '../../assets/çzgisiz logo.png';
+      }
     });
   }
 

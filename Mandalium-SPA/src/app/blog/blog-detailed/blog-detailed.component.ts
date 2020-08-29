@@ -18,6 +18,7 @@ export class BlogDetailedComponent implements OnInit {
   blogEntry: BlogEntry;
   commentFormGroup: FormGroup;
   pagination: Pagination;
+
   constructor(
     private blogService: BlogService,
     private route: ActivatedRoute,
@@ -47,7 +48,7 @@ export class BlogDetailedComponent implements OnInit {
           userId: Number,
         });
       }
-    });
+    } );
 
     this.titleService.setTitle(this.blogEntry.headline.toString());
     this.metaTagService.updateTag({

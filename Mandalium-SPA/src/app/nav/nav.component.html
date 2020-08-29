@@ -76,18 +76,24 @@
                     </div>
                     <div class="col-12 col-md-5 justify-content-center align-self-center">
                         <form ng *ngIf="!loggedIn()" #loginForm="ngForm" [collapse]="isCollapsed" [isAnimated]="true"
-                            class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+                            class="form-inline" (ngSubmit)="login()">
                             <div class="col-7">
-                                <input class="form-control mr-sm-2" type="text" name="username"
+                                <div class="row"> 
+                                    <input class="form-control col-12 " type="text" name="username"
                                     placeholder="Kullanıcı Adı" required [(ngModel)]="loginModel.username">
-                                <input class="form-control mr-sm-2" type="password" name="password" placeholder="Şifre"
+                                <input class="form-control col-12 " type="password" name="password" placeholder="Şifre"
                                     required [(ngModel)]="loginModel.password">
+                                </div>
+                              
                             </div>
                             <div class="col-7">
-                                <button [disabled]="!loginForm.valid" class="btn btn-success col-6 "
+                                <div class="row">
+                                    <button [disabled]="!loginForm.valid" class="btn btn-success col-6 "
                                     type="submit">Giriş</button>
                                 <button class="btn btn-primary col-6" *ngIf="!loggedIn()" type="button"
                                     (click)="isRegisterFormCollapsed=!isRegisterFormCollapsed">Kayıt ol</button>
+                                </div>
+                               
 
                             </div>
 
@@ -159,7 +165,7 @@
         <div class="invalid-feedback text-right pt-2">Lütfen doğum tarihinizi girin.</div>
 
         <div class="row justify-content-end form-submit">
-            <button  class="btn btn-success disabled" type="submit" [disabled]="!registerForm.valid && !isRegisterClicked ">
+            <button  class="btn btn-success" type="submit" [disabled]="!registerForm.valid && !isRegisterClicked ">
                 Kaydet
             </button>
         </div>

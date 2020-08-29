@@ -17,7 +17,7 @@
     </div>
 
     <div class="row form-group">
-      <label class="col-4" for="subHeadline">AltBaşlık:</label>
+      <label class="col-4" for="subHeadline">Alt Başlık:</label>
       <input class="col-8 " type="text" formControlName="subHeadline" id="subHeadline" required>
     </div>
 
@@ -29,12 +29,11 @@
 
     <div class="row form-group">
       <h5 class="col-12">Inner Text HTML:</h5>
-      <ckeditor [editor]="Editor" formControlName="innerTextHtml" class="ck-content" id="innerTextHtml"  data="<p>Hello, world!</p>"></ckeditor>
+      <ckeditor [editor]="Editor" formControlName="innerTextHtml" class="ck-content col-12" id="innerTextHtml"  data="<p>Hello, world!</p>"></ckeditor>
       <!-- <textarea formControlName="innerTextHtml" [(ngModel)]="innerTextHtml" (ngform)="getInnerHtml($event)"
         class="col-12" name="" id="textarea" cols="120" rows="10" required></textarea> -->
     </div>
 
-    
 
     <!-- post photo -->
     <div class="row justify-content-end form-submit">

@@ -58,7 +58,11 @@ namespace Mandalium.API.Controllers
         {
             var user = _mapper.Map<UserDto>(await _repo.GetUser(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
 
-            user.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(user.PhotoUrl + ".webp");
+            if (!string.IsNullOrEmpty(user.PhotoUrl))
+            {
+                 user.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(user.PhotoUrl + ".webp");
+            }
+           
             return Ok(user);
         }
 

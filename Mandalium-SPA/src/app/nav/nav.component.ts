@@ -74,10 +74,12 @@ export class NavComponent implements OnInit {
 
   register() {
       const a = this.registerForm.value;
+      const password = this.registerForm.get('password').value;
+      const username = this.registerForm.get('username').value;
       this.registerForm.reset();
       return this.authService.register(a).subscribe(() => {
-      this.loginModel.password = this.registerForm.get('password').value;
-      this.loginModel.username = this.registerForm.get('username').value;
+      this.loginModel.password = password;
+      this.loginModel.username = username;
       this.login();
       }, error => {
         this.alertify.error('Kullanıcı Mevcut');

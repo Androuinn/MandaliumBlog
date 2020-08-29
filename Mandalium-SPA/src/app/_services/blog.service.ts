@@ -7,6 +7,7 @@ import { PaginatedResult, Pagination } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { Comment } from '../_models/Comment';
 import { Topic } from '../_models/Topic';
+import { MethodCallResponse } from '../_models/MethodCallResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -86,11 +87,11 @@ export class BlogService {
       params = params.append('EntryAlreadyPicked', userParams);
     }
 
-    return this.http.get<BlogEntry>(this.baseUrl + '/' + id, {observe: 'response', params}).pipe(
+    return this.http.get<MethodCallResponse<BlogEntry>>(this.baseUrl + '/' + id, {observe: 'response', params}).pipe(
       map(response => {
-        blogEntry = response.body;
+        blogEntry = response.body.entity;
         if (response.headers.get('Pagination') != null) {
-          response.body.comments.pagination = JSON.parse(response.headers.get('Pagination'));
+          response.body.entity.comments.pagination = JSON.parse(response.headers.get('Pagination'));
         }
         return blogEntry;
       })

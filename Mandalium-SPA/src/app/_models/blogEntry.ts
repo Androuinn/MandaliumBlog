@@ -9,6 +9,7 @@ export interface BlogEntry {
     createdDate: Date;
     writerName: string;
     writerSurname: string;
+    writerId: number;
     topicName: number;
     photoUrl: string;
     topicId: number;

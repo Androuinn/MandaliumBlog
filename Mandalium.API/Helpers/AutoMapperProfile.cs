@@ -11,6 +11,7 @@ namespace Mandalium.API.Helpers
         {
             CreateMap<BlogEntry, BlogEntryDto>().ForMember(dest => dest.WriterName, opt => opt.MapFrom(src => src.User.Name))
             .ForMember(dest => dest.WriterSurname, opt => opt.MapFrom(src => src.User.Surname))
+            .ForMember(dest => dest.WriterId, opt => opt.MapFrom(src => src.User.Id))
             .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic.TopicName));
             
 

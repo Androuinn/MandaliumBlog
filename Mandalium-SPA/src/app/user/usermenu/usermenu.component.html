@@ -10,12 +10,12 @@
         <button type="button" class="ml-1 btn btn-dark col-7 mt-1 text-light"
           (click)="userProfilePhotoUpdate = !userProfilePhotoUpdate"><i class="fa fa-image fa-fw fa-fg"></i>
           Fotoğrafı Güncelle</button>
-        <button type="button" class="ml-1 btn btn-primary col-7 mt-1" (click)="openUpdateProfile()"><i
-            class="fa fa-id-badge fa-fw fa-fg"></i>Profili Güncelle</button>
+        <a [routerLink]="['/profile']" fragment="userForm" type="button" class="ml-1 btn btn-primary col-7 mt-1 text-white" (click)="openUpdateProfile()"><i
+            class="fa fa-id-badge fa-fw fa-fg"></i>Profili Güncelle</a>
         <a class="ml-1 btn btn-success col-7 mt-1" style="cursor: pointer;" *ngIf="authService.decodedToken.role == 1" [routerLink]="['/create']"
           (click)="changeEntry(0)"><i class="fa fa-plus-square fa-fw fa-fg text-light "></i>YENİ YAZI</a>
         <button type="button" class="ml-1 btn btn-danger col-7 mt-1" *ngIf="authService.decodedToken.role == 1" (click)="openPosts()"><i
-            class="fa fa-clipboard fa-fw fa-fg text-light "></i>YAZILARIMI GÖSTER</button>
+            class="fa fa-clipboard fa-fw fa-fg text-white "></i>YAZILARIMI GÖSTER</button>
       </div>
 
     </div>
@@ -64,7 +64,7 @@
 
     <div class="row form-group">
       <label class="col-12 col-md-4" for="backgroundchange">Hakkında: </label>
-      <ckeditor [editor]="Editor" formControlName="background" class="ck-content" id="background"  data="<p>Hello, world!</p>"></ckeditor>
+      <ckeditor [editor]="Editor"  formControlName="background" class="ck-content col-12 col-md-8" id="background"  data="<p>Hello, world!</p>"></ckeditor>
       <!-- <textarea class="col-12 col-md-8 " type="textarea" formControlName="background" id="backgroundchange" cols="120"
         rows="10"></textarea> -->
     </div>

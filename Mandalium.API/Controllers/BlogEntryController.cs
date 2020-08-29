@@ -49,7 +49,7 @@ namespace Mandalium.API.Controllers
 
 
         [HttpGet(Name = "GetEntries")]
-        public async Task<IActionResult> GetEntries([FromQuery]UserParams userParams)
+        public async Task<IActionResult> GetEntries([FromQuery] UserParams userParams)
         {
             // string cachename = "entries" + userParams.WriterEntry.ToString() + userParams.PageNumber.ToString();
 
@@ -61,18 +61,29 @@ namespace Mandalium.API.Controllers
 
             // });
 
-            var entries = await _repo.GetBlogEntries(userParams);
-
-            var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
-
-            foreach (var item in returndto)
+            try
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                var entries = await _repo.GetBlogEntries(userParams);
+
+                var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
+
+                foreach (var item in returndto)
+                {
+                    item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                }
+
+                Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
+                
+                return Ok(returndto);
+            }
+            catch (System.Exception ex)
+            {
+
+                Extensions.ReportError(ex);
             }
 
-            Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
+            return StatusCode(500);
 
-            return Ok(returndto);
         }
 
 
@@ -89,35 +100,57 @@ namespace Mandalium.API.Controllers
 
             // });
 
-            var blogEntry = await _repo.GetBlogEntry(id, userParams);
 
-            if (blogEntry.isDeleted == true)
+            try
             {
-                return BadRequest("Entry Bulunamadı");
+                var blogEntry = await _repo.GetBlogEntry(id, userParams);
+
+                if (blogEntry.isDeleted == true)
+                {
+                    return BadRequest("Entry Bulunamadı");
+                }
+
+                var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
+
+                if (userParams.EntryAlreadyPicked == false)
+                {
+                    blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl + ".webp");
+                }
+
+
+                Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
+                 var a = new MethodCallResponse<BlogEntryDto>(){entity= blogEntryDto, Message=null, StatusCode = ReturnCodes.OK};
+                return Ok(a);
             }
-
-            var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
-
-            if (userParams.EntryAlreadyPicked == false)
+            catch (System.Exception ex)
             {
-                blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl + ".webp");
+
+                Extensions.ReportError(ex);
             }
+            return StatusCode(500);
 
-
-            Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
-
-            return Ok(blogEntryDto);
         }
 
 
-        
+
         [HttpGet("[action]/{id}")]
-        public async Task<IActionResult> GetComments(int id,[FromQuery] UserParams userParams)
+        public async Task<IActionResult> GetComments(int id, [FromQuery] UserParams userParams)
         {
-            var comments = await _repo.GetComments(id, userParams);
-             Response.AddPagination(comments.CurrentPage, comments.PageSize, comments.TotalCount, comments.TotalPages);
-           var commentsDto =  _mapper.Map<IEnumerable<CommentDto>>(comments);
-            return Ok(commentsDto) ;
+            try
+            {
+                var comments = await _repo.GetComments(id, userParams);
+                Response.AddPagination(comments.CurrentPage, comments.PageSize, comments.TotalCount, comments.TotalPages);
+                var commentsDto = _mapper.Map<IEnumerable<CommentDto>>(comments);
+                return Ok(commentsDto);
+            }
+            catch (System.Exception ex)
+            {
+
+                Extensions.ReportError(ex);
+            }
+            return StatusCode(500);
+
+
         }
 
         [Route("[action]")]
@@ -133,7 +166,7 @@ namespace Mandalium.API.Controllers
             //     return _repo.GetMostRead(true);
 
             // });
-            
+
             // cachename = "blogEntries";
 
             // var blogEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
@@ -144,33 +177,42 @@ namespace Mandalium.API.Controllers
 
             // });
 
-
-            var personalEntries= await _repo.GetMostRead(true);
-            var blogEntries = await _repo.GetMostRead(false);
-
-            foreach (var item in personalEntries)
+            try
             {
-                if (!item.PhotoUrl.EndsWith("webp"))
+                var personalEntries = await _repo.GetMostRead(true);
+                var blogEntries = await _repo.GetMostRead(false);
+
+                foreach (var item in personalEntries)
                 {
-                     item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                    if (!item.PhotoUrl.EndsWith("webp"))
+                    {
+                        item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                    }
                 }
-            }
-            foreach (var item in blogEntries)
-            {
-                if (!item.PhotoUrl.EndsWith("webp"))
+                foreach (var item in blogEntries)
                 {
-                     item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                    if (!item.PhotoUrl.EndsWith("webp"))
+                    {
+                        item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                    }
                 }
+
+                var mostReadPersonalEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(personalEntries);
+                var mostReadEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(blogEntries);
+
+                return Ok(new
+                {
+                    mostReadPersonalEntriesDto,
+                    mostReadEntriesDto
+                });
             }
-
-            var mostReadPersonalEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(personalEntries);
-            var mostReadEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(blogEntries);
-
-            return Ok(new
+            catch (System.Exception ex)
             {
-                mostReadPersonalEntriesDto,
-                mostReadEntriesDto
-            });
+
+                Extensions.ReportError(ex);
+            }
+            return StatusCode(500);
+
         }
 
         [Route("[action]")]
@@ -183,10 +225,18 @@ namespace Mandalium.API.Controllers
                 return Unauthorized();
             }
 
-            var topics = _mapper.Map<IEnumerable<TopicDto>>(await _repo.GetTopics());
+            try
+            {
+                var topics = _mapper.Map<IEnumerable<TopicDto>>(await _repo.GetTopics());
+                return Ok(topics);
+            }
+            catch (System.Exception ex)
+            {
 
+                Extensions.ReportError(ex);
+            }
+            return StatusCode(500);
 
-            return Ok(topics);
         }
 
 
@@ -199,18 +249,27 @@ namespace Mandalium.API.Controllers
         [Route("[action]")]
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> DeleteBlogEntry([FromBody]int id)
+        public async Task<IActionResult> DeleteBlogEntry([FromBody] int id)
         {
-            
+
             if (User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return Unauthorized();
             }
 
-            if (await _repo.DeleteBlogEntry(id) != 0)
+            try
             {
-                return StatusCode(200);
+                if (await _repo.DeleteBlogEntry(id) != 0)
+                {
+                    return StatusCode(200);
+                }
             }
+            catch (System.Exception ex)
+            {
+
+                Extensions.ReportError(ex);
+            }
+
             return BadRequest();
         }
 
@@ -225,12 +284,22 @@ namespace Mandalium.API.Controllers
                 return Unauthorized();
             }
 
-            var topic = _mapper.Map<Topic>(topicDto);
-            var number = await _repo.SaveTopic(topic);
-            if (number != 0)
+            try
             {
-                return StatusCode(200);
+                var topic = _mapper.Map<Topic>(topicDto);
+                var number = await _repo.SaveTopic(topic);
+                if (number != 0)
+                {
+                    return StatusCode(200);
+                }
             }
+            catch (System.Exception ex)
+            {
+
+                Extensions.ReportError(ex);
+            }
+
+
             return StatusCode(400);
         }
 
@@ -246,10 +315,21 @@ namespace Mandalium.API.Controllers
                 return Unauthorized();
             }
 
-            var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
-            await _repo.SaveBlogEntry(blogEntry);
+            try
+            {
+                var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
+                await _repo.SaveBlogEntry(blogEntry);
+                return StatusCode(200);
+            }
+            catch (System.Exception ex)
+            {
 
-            return StatusCode(200);
+                Extensions.ReportError(ex);
+            }
+
+            return StatusCode(500);
+
+
         }
 
 
@@ -263,11 +343,21 @@ namespace Mandalium.API.Controllers
                 return Unauthorized();
             }
 
+            try
+            {
+                var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
+                await _repo.UpdateBlogEntry(blogEntry);
 
-            var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
-            await _repo.UpdateBlogEntry(blogEntry);
+                return StatusCode(200);
+            }
+            catch (System.Exception ex)
+            {
 
-            return StatusCode(200);
+                Extensions.ReportError(ex);
+            }
+            return StatusCode(500);
+
+
         }
 
 
@@ -276,14 +366,25 @@ namespace Mandalium.API.Controllers
         [HttpPost]
         public async Task<IActionResult> WriteComment(CommentDtoForCreation commentDtoForCreation)
         {
-            var comment = _mapper.Map<Comment>(commentDtoForCreation);
-            if (await _repo.SaveComment(comment) >= 0)
+
+            try
+            {
+                var comment = _mapper.Map<Comment>(commentDtoForCreation);
+                if (await _repo.SaveComment(comment) >= 0)
+                {
+
+                    return Ok(_mapper.Map<CommentDto>(comment));
+                }
+                return BadRequest();
+                // return RedirectToRoute("GetEntry",comment.BlogEntryId);
+            }
+            catch (System.Exception ex)
             {
 
-                return Ok(_mapper.Map<CommentDto>(comment));
+                Extensions.ReportError(ex);
             }
-            return BadRequest();
-            // return RedirectToRoute("GetEntry",comment.BlogEntryId);
+
+            return StatusCode(500);
 
         }
 

@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { BlogService } from '../_services/blog.service';
 import { User } from '../_models/Writer';
 import { UserService } from '../_services/user.service';
 import { Title, Meta } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css'],
 })
-export class AboutComponent implements OnInit {
+export class AboutComponent implements OnInit, AfterViewChecked {
   writers: User[];
   openFullBackground = false;
+  fragment: any;
   constructor(
     private userService: UserService,
     private titleService: Title,
-    private metaTagService: Meta
+    private metaTagService: Meta,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.getWriters();
+
 
     this.titleService.setTitle('Hakkımda');
     this.metaTagService.updateTag({name: 'description', content: 'Hakkımda'});
@@ -31,13 +35,23 @@ export class AboutComponent implements OnInit {
 
   }
 
+  ngAfterViewChecked(): void {
+    try {
+        if (this.fragment) {
+            document.querySelector('#' + this.fragment).scrollIntoView();
+        }
+    } catch (e) { }
+  }
   getWriters() {
     return this.userService.getUsers().subscribe((res: User[]) => {
       this.writers = res;
       this.writers.forEach(element => {
+        if (element.photoUrl == null || element.photoUrl === '') {
+          element.photoUrl = '../../assets/çzgisiz logo.png';
+        }
         element.collapse = false;
       });
-
+      this.route.fragment.subscribe(fragment => { this.fragment = fragment; });
     });
   }
 

@@ -24,8 +24,8 @@ namespace Mandalium.API.Helpers
             string logfile = String.Empty;
             try
             {
-                logfile = "result.txt";
-
+                logfile = "../Mandalium.API/Errors/" + DateTime.Now.ToShortDateString()+ ".txt";
+                
                 if (!File.Exists(logfile))
                 {
                     using (var writer = new StreamWriter(logfile, true))

@@ -8,7 +8,7 @@
       <h2 class="blog-post-title">{{blogEntry.headline}}</h2>
       <h5 class="text-dark">{{blogEntry.subHeadline}}</h5>
       <p class="blog-post-meta">{{blogEntry.createdDate | date:('mediumDate')}}, Yazar: <a [routerLink]="['/about']"
-          routerLinkActive="router-link-active">{{blogEntry.writerName}}
+          routerLinkActive="router-link-active" fragment="writername-{{blogEntry.writerId}}">{{blogEntry.writerName}}
           {{blogEntry.writerSurname}}</a></p>
           <div class="row mb-3">
           <img class="col-12 rounded" src="{{blogEntry.photoUrl}}" alt="{{blogEntry.headline}}">
@@ -77,10 +77,10 @@
       
 
       <div class="row justify-content-center form-group">
-        <label class="col-4">Yorumunuz:</label>
+        <label class="col-12 col-md-4">Yorumunuz:</label>
         <textarea maxlength="500"
           [ngClass]="{'is-invalid': commentFormGroup.get('commentString').errors && commentFormGroup.get('commentString').touched}"
-          formControlName="commentString" class="col-8" name="commentString" id="commentString" cols="120"
+          formControlName="commentString" class="col-12 col-md-8" name="commentString" id="commentString" cols="120"
           rows="5"></textarea>
         <div class="invalid-feedback text-right pt-2">Lütfen yorumunuzu girin.</div>
       </div>
