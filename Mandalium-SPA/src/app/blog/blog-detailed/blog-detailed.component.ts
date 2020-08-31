@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { BlogService } from 'src/app/_services/blog.service';
 import { ActivatedRoute } from '@angular/router';
@@ -32,6 +32,9 @@ export class BlogDetailedComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.blogEntry = data.blog;
+      if (this.blogEntry.photoUrl == null || this.blogEntry.photoUrl === '') {
+        this.blogEntry.photoUrl =  '../../assets/çzgisiz logo.png';
+      }
       this.pagination = this.blogEntry.comments.pagination;
       if (this.authService.loggedIn()) {
         this.commentFormGroup = this.fb.group({

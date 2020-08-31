@@ -46,7 +46,10 @@ namespace Mandalium.API.Controllers
 
             foreach (var item in writers)
             {
-                item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                if (!string.IsNullOrEmpty(item.PhotoUrl))
+                {
+                     item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                }
             }
             return Ok(writers);
         }

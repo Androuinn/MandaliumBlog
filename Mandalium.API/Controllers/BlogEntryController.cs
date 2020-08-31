@@ -69,7 +69,10 @@ namespace Mandalium.API.Controllers
 
                 foreach (var item in returndto)
                 {
-                    item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                    if (!string.IsNullOrEmpty(item.PhotoUrl))
+                    {
+                         item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                    }
                 }
 
                 Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
@@ -112,7 +115,7 @@ namespace Mandalium.API.Controllers
 
                 var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
 
-                if (userParams.EntryAlreadyPicked == false)
+                if (userParams.EntryAlreadyPicked == false && !string.IsNullOrEmpty(blogEntryDto.PhotoUrl))
                 {
                     blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl + ".webp");
                 }
@@ -184,14 +187,14 @@ namespace Mandalium.API.Controllers
 
                 foreach (var item in personalEntries)
                 {
-                    if (!item.PhotoUrl.EndsWith("webp"))
+                    if (!item.PhotoUrl.EndsWith("webp") && !string.IsNullOrEmpty(item.PhotoUrl))
                     {
                         item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
                     }
                 }
                 foreach (var item in blogEntries)
                 {
-                    if (!item.PhotoUrl.EndsWith("webp"))
+                    if (!item.PhotoUrl.EndsWith("webp") && !string.IsNullOrEmpty(item.PhotoUrl))
                     {
                         item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
                     }

@@ -24,6 +24,17 @@ export class BlogMostReadComponent implements OnInit {
     this.blogService.getMostRead().subscribe((mostReadEntries: any) => {
       this.mostReadBlogEntries = mostReadEntries.mostReadEntriesDto;
       this.mostReadPersonalEntries = mostReadEntries.mostReadPersonalEntriesDto;
+      this.mostReadBlogEntries.forEach(element => {
+        if (element.photoUrl == null || element.photoUrl === '') {
+          element.photoUrl = '../../assets/çzgisiz logo.png';
+        }
+      });
+      this.mostReadPersonalEntries.forEach(element => {
+        if (element.photoUrl == null || element.photoUrl === '') {
+          element.photoUrl = '../../assets/çzgisiz logo.png';
+        }
+      });
+
     }, error => {
       console.error(error);
     });

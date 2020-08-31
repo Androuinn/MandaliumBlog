@@ -1,9 +1,6 @@
 import {
   Component,
   OnInit,
-  Output,
-  EventEmitter,
-  AfterViewChecked,
 } from '@angular/core';
 import { BlogService } from 'src/app/_services/blog.service';
 import { BlogEntry } from 'src/app/_models/blogEntry';
@@ -11,7 +8,6 @@ import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
-import { MethodCallResponse } from 'src/app/_models/MethodCallResponse';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -36,6 +32,11 @@ export class BlogListComponent implements OnInit {
     this.route.data.subscribe((data) => {
       const x = data.entries as PaginatedResult<BlogEntry[]>;
       this.blogEntries = x.result;
+      this.blogEntries.forEach(element => {
+        if (element.photoUrl == null || element.photoUrl === '') {
+          element.photoUrl = '../../assets/çzgisiz logo.png';
+        }
+      });
       this.pagination = x.pagination;
     });
 
