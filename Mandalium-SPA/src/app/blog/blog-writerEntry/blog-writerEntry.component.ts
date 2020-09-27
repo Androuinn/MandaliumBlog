@@ -19,6 +19,11 @@ export class BlogWriterEntryComponent implements OnInit {
     this.route.data.subscribe(data => {
       const x = data.entries as PaginatedResult<BlogEntry[]>;
       this.blogEntries = x.result;
+      this.blogEntries.forEach(element => {
+        if (element.photoUrl == null || element.photoUrl === '') {
+          element.photoUrl = '../../assets/çzgisiz logo.png';
+        }
+      });
       this.pagination = x.pagination;
     });
 
@@ -28,6 +33,10 @@ export class BlogWriterEntryComponent implements OnInit {
     this.metaTagService.updateTag({property: 'og:url', content: 'https://mandalium.azurewebsites.net/personalblog'});
     this.metaTagService.updateTag({property: 'og:title', content: 'Mandalium | Kendime Düşünceler'});
     this.metaTagService.updateTag({property: 'og:description', content: 'Kendime Düşünceler'});
+    this.metaTagService.updateTag({
+      property: 'og:image',
+      content: 'https://mandalium.azurewebsites.net/assets/çzgisiz logo.png',
+    });
   }
 
   loadBlogEntries() {
@@ -36,6 +45,11 @@ export class BlogWriterEntryComponent implements OnInit {
       .subscribe(
         (res: PaginatedResult<BlogEntry[]>) => {
           this.blogEntries = res.result;
+          this.blogEntries.forEach(element => {
+            if (element.photoUrl == null || element.photoUrl === '') {
+              element.photoUrl = '../../assets/çzgisiz logo.png';
+            }
+          });
           this.pagination = res.pagination;
           this.blogService.changeBlogPagination(this.pagination);
         },

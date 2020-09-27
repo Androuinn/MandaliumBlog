@@ -48,7 +48,7 @@ export class CreateBlogEntryComponent implements OnInit {
       headline: ['', [Validators.required, Validators.maxLength(200)]],
       subHeadline: ['', [Validators.required, Validators.maxLength(500)]],
       innerTextHtml: ['', Validators.required],
-      photoUrl: ['', Validators.required],
+      photoUrl: [''],
       userId: this.authService.decodedToken.nameid,
       topicId: Number,
       writerEntry: Boolean,

@@ -45,6 +45,14 @@ export class BlogListComponent implements OnInit {
       name: 'description',
       content: 'En Son Haberler',
     });
+    this.metaTagService.updateTag({property: 'og:site_name', content: 'Mandalium'});
+    this.metaTagService.updateTag({property: 'og:url', content: 'https://mandalium.azurewebsites.net/blog'});
+    this.metaTagService.updateTag({property: 'og:title', content: 'Mandalium | Kendime Düşünceler'});
+    this.metaTagService.updateTag({property: 'og:description', content: 'Kendime Düşünceler'});
+    this.metaTagService.updateTag({
+      property: 'og:image',
+      content: 'https://mandalium.azurewebsites.net/assets/çzgisiz logo.png',
+    });
   }
 
   loadBlogEntries() {
