@@ -61,6 +61,7 @@ namespace Mandalium.API.Helpers
             var fromAddress = new MailAddress("noreply.mandalium@gmail.com", "noreply-mandalium");
             var toAddress = new MailAddress("noreply.mandalium@gmail.com", "Deneme");
             const string password = "";
+            const string fromPassword ="anonymouspassowrd";
 
             var smtp = new SmtpClient
             {
