@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Comment } from 'src/app/_models/Comment';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Pagination, PaginatedResult } from 'src/app/_models/pagination';
-import { Title, Meta } from '@angular/platform-browser';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { MetaService } from 'src/app/_services/meta.service';
 
 @Component({
   selector: 'app-blog-detailed',
@@ -23,10 +23,9 @@ export class BlogDetailedComponent implements OnInit {
     private blogService: BlogService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private titleService: Title,
-    private metaTagService: Meta,
     private alertify: AlertifyService,
     public authService: AuthService,
+    private metaService: MetaService
   ) {}
 
   ngOnInit() {
@@ -53,32 +52,9 @@ export class BlogDetailedComponent implements OnInit {
       }
     } );
 
-    this.titleService.setTitle(this.blogEntry.headline.toString());
-    this.metaTagService.updateTag({
-      name: 'description',
-      content: this.blogEntry.headline.toString(),
-    });
-    this.metaTagService.updateTag({ property: 'og:type', content: 'article' });
-    this.metaTagService.updateTag({
-      property: 'og:url',
-      content:
-        'https://mandalium.azurewebsites.net/blog/' +
-        this.blogEntry.id +
-        '/' +
-        this.blogEntry.headline,
-    });
-    this.metaTagService.updateTag({
-      property: 'og:image',
-      content: this.blogEntry.photoUrl.toString(),
-    });
-    this.metaTagService.updateTag({
-      property: 'og:title',
-      content: this.blogEntry.headline,
-    });
-    this.metaTagService.updateTag({
-      property: 'og:description',
-      content: this.blogEntry.subHeadline.toString(),
-    });
+    this.metaService.UpdateTags(this.blogEntry.headline.toString(), this.blogEntry.headline.toString(), 'blog/' +
+    this.blogEntry.id.toString() + '/' + this.blogEntry.headline.toString(),
+    this.blogEntry.headline.toString(), this.blogEntry.subHeadline.toString(), this.blogEntry.photoUrl.toString() );
   }
 
   writeComment() {

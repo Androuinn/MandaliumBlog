@@ -9,8 +9,8 @@ import { PhotoService } from 'src/app/_services/photo.service';
 import { User } from 'src/app/_models/Writer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
-import { Title, Meta } from '@angular/platform-browser';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { MetaService } from 'src/app/_services/meta.service';
 
 @Component({
   selector: 'app-usermenu',
@@ -45,9 +45,8 @@ export class UsermenuComponent implements OnInit, AfterViewChecked {
     private alertify: AlertifyService,
     private formBuilder: FormBuilder,
     private photoService: PhotoService,
-    private titleService: Title,
-    private metaTagService: Meta,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private metaService: MetaService
   ) {
     this.userForm = this.formBuilder.group({
       id: Number,
@@ -68,8 +67,7 @@ export class UsermenuComponent implements OnInit, AfterViewChecked {
     };
     this.getUser();
 
-    this.titleService.setTitle('Hesap');
-    this.metaTagService.updateTag({name: 'description', content: 'Kullanıcı hesap bilgileri'});
+    this.metaService.UpdateTags('Hesap', 'Kullanıcı hesap bilgileri', null, null, null, null);
   }
 
   ngAfterViewChecked(): void {

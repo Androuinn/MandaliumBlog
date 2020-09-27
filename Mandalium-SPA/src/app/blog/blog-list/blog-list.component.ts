@@ -6,9 +6,8 @@ import { BlogService } from 'src/app/_services/blog.service';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { ActivatedRoute } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { MetaService } from 'src/app/_services/meta.service';
 
 @Component({
   selector: 'app-blog-list',
@@ -23,9 +22,7 @@ export class BlogListComponent implements OnInit {
   constructor(
     private blogService: BlogService,
     private route: ActivatedRoute,
-    private titleService: Title,
-    private metaTagService: Meta,
-    private http: HttpClient
+    private metaService: MetaService
   ) {}
 
   ngOnInit() {
@@ -40,19 +37,8 @@ export class BlogListComponent implements OnInit {
       this.pagination = x.pagination;
     });
 
-    this.titleService.setTitle('Mandalium | En Son Haberler');
-    this.metaTagService.updateTag({
-      name: 'description',
-      content: 'En Son Haberler',
-    });
-    this.metaTagService.updateTag({property: 'og:site_name', content: 'Mandalium'});
-    this.metaTagService.updateTag({property: 'og:url', content: 'https://mandalium.azurewebsites.net/blog'});
-    this.metaTagService.updateTag({property: 'og:title', content: 'Mandalium | Kendime Düşünceler'});
-    this.metaTagService.updateTag({property: 'og:description', content: 'Kendime Düşünceler'});
-    this.metaTagService.updateTag({
-      property: 'og:image',
-      content: 'https://mandalium.azurewebsites.net/assets/çzgisiz logo.png',
-    });
+    this.metaService.UpdateTags('Mandalium | En Son Haberler', 'En Son Haberler',
+    'Blog', 'Mandalium | En Son Haberler', 'En Son Haberler', null);
   }
 
   loadBlogEntries() {

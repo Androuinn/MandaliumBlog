@@ -3,7 +3,7 @@ import { BlogEntry } from 'src/app/_models/blogEntry';
 import { Pagination, PaginatedResult } from 'src/app/_models/pagination';
 import { BlogService } from 'src/app/_services/blog.service';
 import { ActivatedRoute } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
+import { MetaService } from 'src/app/_services/meta.service';
 
 @Component({
   selector: 'app-blog-writerentry',
@@ -13,7 +13,7 @@ import { Title, Meta } from '@angular/platform-browser';
 export class BlogWriterEntryComponent implements OnInit {
   blogEntries: BlogEntry[];
   pagination: Pagination;
-  constructor(private blogService: BlogService, private route: ActivatedRoute, private titleService: Title, private metaTagService: Meta) {}
+  constructor(private blogService: BlogService, private route: ActivatedRoute, private metaService: MetaService) {}
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -27,16 +27,8 @@ export class BlogWriterEntryComponent implements OnInit {
       this.pagination = x.pagination;
     });
 
-    this.titleService.setTitle('Kendime Düşünceler');
-    this.metaTagService.updateTag({name: 'description', content: 'Kendime Düşünceler'});
-    this.metaTagService.updateTag({property: 'og:site_name', content: 'Mandalium'});
-    this.metaTagService.updateTag({property: 'og:url', content: 'https://mandalium.azurewebsites.net/personalblog'});
-    this.metaTagService.updateTag({property: 'og:title', content: 'Mandalium | Kendime Düşünceler'});
-    this.metaTagService.updateTag({property: 'og:description', content: 'Kendime Düşünceler'});
-    this.metaTagService.updateTag({
-      property: 'og:image',
-      content: 'https://mandalium.azurewebsites.net/assets/çzgisiz logo.png',
-    });
+    this.metaService.UpdateTags('Kendime Düşünceler', 'Kendime Düşünceler',
+     'PersonalBlog', 'Mandalium | Kendime Düşünceler', 'Kendime Düşünceler', null);
   }
 
   loadBlogEntries() {

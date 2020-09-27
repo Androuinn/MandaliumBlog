@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { User } from '../_models/Writer';
 import { UserService } from '../_services/user.service';
-import { Title, Meta } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { MetaService } from '../_services/meta.service';
 
 @Component({
   selector: 'app-about',
@@ -16,33 +16,14 @@ export class AboutComponent implements OnInit, AfterViewChecked {
   fragment: any;
   constructor(
     private userService: UserService,
-    private titleService: Title,
-    private metaTagService: Meta,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private metaService: MetaService,
   ) {}
 
   ngOnInit() {
     this.getWriters();
-
-    this.titleService.setTitle('Hakkımda');
-    this.metaTagService.updateTag({ name: 'description', content: 'Hakkımda' });
-    this.metaTagService.updateTag({
-      property: 'og:url',
-      content: 'https://mandalium.azurewebsites.net/about',
-    });
-    this.metaTagService.updateTag({
-      property: 'og:image',
-      content:
-        'https://res.cloudinary.com/dpwbfco4g/image/upload/v1587061001/%C3%A7zgisiz_logo_ddiqau.png',
-    });
-    this.metaTagService.updateTag({
-      property: 'og:title',
-      content: 'Hakkımda',
-    });
-    this.metaTagService.updateTag({
-      property: 'og:description',
-      content: 'Hakkımda',
-    });
+    this.metaService.UpdateTags('Hakkımda', 'Hakkımda', 'about', 'Hakkımda','Hakkımda', 
+    'https://res.cloudinary.com/dpwbfco4g/image/upload/v1587061001/%C3%A7zgisiz_logo_ddiqau.png'  );
   }
 
   ngAfterViewChecked(): void {
