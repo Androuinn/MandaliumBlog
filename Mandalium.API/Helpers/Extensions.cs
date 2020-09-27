@@ -3,11 +3,14 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Net.Mail;
+using System.Net;
 
 namespace Mandalium.API.Helpers
 {
     public static class Extensions
     {
+
         public static void AddPagination(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
         {
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
@@ -22,6 +25,7 @@ namespace Mandalium.API.Helpers
         public static void ReportError(Exception exception)
         {
             string logfile = String.Empty;
+            string error = string.Format( "=>{0} An Error occurred: {1}  Message: {2}{3}", DateTime.Now, exception.StackTrace, exception.Message);
             try
             {
                 logfile = "../Mandalium.API/Errors/" + "Errors.txt";
@@ -35,14 +39,21 @@ namespace Mandalium.API.Helpers
                         Environment.NewLine
                         );
                 }
+
+                #if DEBUG
+               //Do nothing
+                # else
+                {
+                 SendMail("Api Hata Mesajı", error);
+                }
+                #endif
+
             }
             catch (Exception)
             {
                 throw;
             }
         }
-<<<<<<< Updated upstream
-=======
 
 
         public static void SendMail(string mailSubject, string mailBody)
@@ -70,6 +81,5 @@ namespace Mandalium.API.Helpers
             }
 
         }
->>>>>>> Stashed changes
     }
 }

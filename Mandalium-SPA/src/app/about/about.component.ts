@@ -22,7 +22,7 @@ export class AboutComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.getWriters();
-    this.metaService.UpdateTags('Hakkımda', 'Hakkımda', 'about', 'Hakkımda','Hakkımda', 
+    this.metaService.UpdateTags('Hakkımda', 'Hakkımda', 'about', 'Hakkımda', 'Hakkımda',
     'https://res.cloudinary.com/dpwbfco4g/image/upload/v1587061001/%C3%A7zgisiz_logo_ddiqau.png'  );
   }
 
