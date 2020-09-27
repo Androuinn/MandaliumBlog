@@ -41,5 +41,35 @@ namespace Mandalium.API.Helpers
                 throw;
             }
         }
+<<<<<<< Updated upstream
+=======
+
+
+        public static void SendMail(string mailSubject, string mailBody)
+        {
+            var fromAddress = new MailAddress("noreply.mandalium@gmail.com", "noreply-mandalium");
+            var toAddress = new MailAddress("noreply.mandalium@gmail.com", "Deneme");
+            const string password = "";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                Timeout = 20000
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = mailSubject,
+                Body = mailBody
+            })
+            {
+                smtp.Send(message);
+            }
+
+        }
+>>>>>>> Stashed changes
     }
 }
