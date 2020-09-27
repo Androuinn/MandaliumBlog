@@ -24,33 +24,16 @@ namespace Mandalium.API.Helpers
             string logfile = String.Empty;
             try
             {
-                logfile = "../Mandalium.API/Errors/" + DateTime.Now.ToShortDateString()+ ".txt";
-                
-                if (!File.Exists(logfile))
+                logfile = "../Mandalium.API/Errors/" + "Errors.txt";
+                using (var writer = new StreamWriter(logfile, true))
                 {
-                    using (var writer = new StreamWriter(logfile, true))
-                    {
-                        writer.WriteLine(
-                            "=>{0} An Error occurred: {1}  Message: {2}{3}",
-                            DateTime.Now,
-                            exception.StackTrace,
-                            exception.Message,
-                            Environment.NewLine
-                            );
-                    }
-                }
-                else
-                {
-                    using (var writer = new StreamWriter(logfile, true))
-                    {
-                        writer.WriteLine(
-                            "=>{0} An Error occurred: {1}  Message: {2}{3}",
-                            DateTime.Now,
-                            exception.StackTrace,
-                            exception.Message,
-                            Environment.NewLine
-                            );
-                    }
+                    writer.WriteLine(
+                        "=>{0} An Error occurred: {1}  Message: {2}{3}",
+                        DateTime.Now,
+                        exception.StackTrace,
+                        exception.Message,
+                        Environment.NewLine
+                        );
                 }
             }
             catch (Exception)
