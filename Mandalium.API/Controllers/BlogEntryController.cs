@@ -74,9 +74,9 @@ namespace Mandalium.API.Controllers
                          item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
                     }
                 }
-
-                Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
                 
+                Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
+
                 return Ok(returndto);
             }
             catch (System.Exception ex)

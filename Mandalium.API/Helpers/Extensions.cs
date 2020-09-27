@@ -3,11 +3,14 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Net.Mail;
+using System.Net;
 
 namespace Mandalium.API.Helpers
 {
     public static class Extensions
     {
+
         public static void AddPagination(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
         {
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
@@ -22,6 +25,7 @@ namespace Mandalium.API.Helpers
         public static void ReportError(Exception exception)
         {
             string logfile = String.Empty;
+            string error = string.Format( "=>{0} An Error occurred: {1}  Message: {2}{3}", DateTime.Now, exception.StackTrace, exception.Message);
             try
             {
                 logfile = "../Mandalium.API/Errors/" + "Errors.txt";
@@ -35,11 +39,47 @@ namespace Mandalium.API.Helpers
                         Environment.NewLine
                         );
                 }
+
+                #if DEBUG
+               //Do nothing
+                # else
+                {
+                 SendMail("Api Hata Mesajı", error);
+                }
+                #endif
+
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+
+
+        public static void SendMail(string mailSubject, string mailBody)
+        {
+            var fromAddress = new MailAddress("noreply.mandalium@gmail.com", "noreply-mandalium");
+            var toAddress = new MailAddress("noreply.mandalium@gmail.com", "Deneme");
+            const string password = "";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                Timeout = 20000
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = mailSubject,
+                Body = mailBody
+            })
+            {
+                smtp.Send(message);
+            }
+
         }
     }
 }
