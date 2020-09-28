@@ -12,11 +12,13 @@ import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { UsermenuComponent } from './user/usermenu/usermenu.component';
 import { BlogEntriesResolver } from './_resolvers/blogEntries.resolver';
+import { RegisterComponent } from './user/register/register.component';
 
 
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent , resolve: {entries: BlogEntriesResolver}},
+  {path: 'register', component: RegisterComponent},
   // {path: 'blog', component: BlogListComponent},
   {path: 'personalblog', component: BlogWriterEntryComponent , resolve: {entries: BlogEntriesResolver}},
   {path: 'about', component: AboutComponent},

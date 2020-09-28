@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
@@ -19,7 +19,6 @@ export class NavComponent implements OnInit {
   isHeaderCollapsed = true;
   isCollapsed = true;
   registerForm: FormGroup;
-  isRegisterFormCollapsed = true;
 
   constructor(
     public authService: AuthService,
@@ -31,6 +30,7 @@ export class NavComponent implements OnInit {
     this.registerForm = formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50) ]],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(16) ]],
+      confirmpassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(16)]],
       name: ['', [Validators.required, Validators.maxLength(50)]],
       surname: ['', [Validators.required, Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
@@ -46,7 +46,6 @@ export class NavComponent implements OnInit {
     this.authService.login(this.loginModel).subscribe(
       (next) => {
         this.alertify.success('Giriş başarılı');
-        this.isRegisterFormCollapsed = true;
         this.loginModel = {};
       },
       (error) => {
@@ -68,22 +67,6 @@ export class NavComponent implements OnInit {
     this.authService.decodedToken = null;
     this.alertify.message('Çıkış yapıldı');
     this.router.navigate(['/']);
-  }
-
-
-
-  register() {
-      const a = this.registerForm.value;
-      const password = this.registerForm.get('password').value;
-      const username = this.registerForm.get('username').value;
-      this.registerForm.reset();
-      return this.authService.register(a).subscribe(() => {
-      this.loginModel.password = password;
-      this.loginModel.username = username;
-      this.login();
-      }, error => {
-        this.alertify.error('Kullanıcı Mevcut');
-      });
   }
 
   changeWriterEntry(writerEntry: boolean) {

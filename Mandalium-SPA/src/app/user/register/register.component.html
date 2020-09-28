@@ -1,0 +1,63 @@
+
+<div class="container mt-3" id="registerForm">
+  <h4 class="mt-1">KAYIT OL</h4>
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <div class="row form-group">
+          <label class="col-4" for="username">Kullanıcı Adı: </label>
+          <input class="col-8 form-control " type="text" formControlName="username" id="username" required
+              [ngClass]="{'is-invalid': registerForm.get('username').errors && registerForm.get('username').touched}">
+          <div class="invalid-feedback text-right pt-2">Lütfen kullanıcı adınızı girin.</div>
+      </div>
+
+      <div class="row form-group">
+          <label class="col-4" for="password">Şifre:</label>
+          <input class="col-8 form-control" type="password" formControlName="password" id="password" required
+              [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched}">
+          <div class="invalid-feedback text-right pt-2">Lütfen 4 ile 16 karakter arasında bir şifre girin.</div>
+      </div>
+
+      <div class="row form-group">
+          <label class="col-4" for="confirmpassword">Şifre (Tekrar):</label>
+          <input class="col-8 form-control" type="password" formControlName="confirmpassword" id="confirmpassword" required
+              [ngClass]="{'is-invalid': registerForm.get('confirmpassword').errors && registerForm.get('confirmpassword').touched}">
+          <div class="invalid-feedback text-right pt-2">Lütfen 4 ile 16 karakter arasında bir şifre girin.</div>
+      </div>
+
+      <div class="row form-group">
+          <label class="col-4" for="surname">Email:</label>
+          <input class="col-8 form-control" type="email" formControlName="email" id="email" required
+              [ngClass]="{'is-invalid': registerForm.get('email').errors && registerForm.get('email').touched}">
+          <div class="invalid-feedback text-right pt-2">Lütfen geçerli bir mail adresi girin.</div>
+      </div>
+
+      <div class="row form-group">
+          <label class="col-4" for="name">İsminiz:</label>
+          <input class="col-8 form-control" type="text" formControlName="name" id="name" required
+              [ngClass]="{'is-invalid': registerForm.get('name').errors && registerForm.get('name').touched}">
+          <div class="invalid-feedback text-right pt-2">Lütfen isminizi girin.</div>
+      </div>
+
+      <div class="row form-group">
+          <label class="col-4" for="surname">Soyisminiz:</label>
+          <input class="col-8 form-control" type="text" formControlName="surname" id="surname" required
+              [ngClass]="{'is-invalid': registerForm.get('surname').errors && registerForm.get('surname').touched}">
+          <div class="invalid-feedback text-right pt-2">Lütfen soyisminizi girin.</div>
+      </div>
+
+      <div class="row form-group">
+          <label class="col-4" for="birthdate">Doğum Tarihiniz:</label>
+          <input class="col-8 form-control" placeholder="Doğum Tarihi" [bsConfig]="{dateInputFormat: 'YYYY-MM-DD'}"
+              bsDatepicker type="date" formControlName="birthdate" id="birthdate"
+              [ngClass]="{'is-invalid': registerForm.get('birthdate').errors && registerForm.get('birthdate').touched}">
+      </div>
+      <div class="invalid-feedback text-right pt-2">Lütfen doğum tarihinizi girin.</div>
+
+      <div class="row justify-content-end form-submit">
+          <button  class="btn btn-success" type="submit" [disabled]="!registerForm.valid ">
+              Kaydet
+          </button>
+      </div>
+
+
+  </form>
+</div>

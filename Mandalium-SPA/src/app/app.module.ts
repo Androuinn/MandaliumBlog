@@ -30,6 +30,7 @@ import { UsermenuComponent } from './user/usermenu/usermenu.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BlogEntriesResolver } from './_resolvers/blogEntries.resolver';
+import { RegisterComponent } from './user/register/register.component';
 
 
 
@@ -54,6 +55,7 @@ export function tokenGetter() {
       BlogWriterEntryComponent,
       ContactComponent,
       UsermenuComponent,
+      RegisterComponent
    ],
    imports: [
       CKEditorModule,

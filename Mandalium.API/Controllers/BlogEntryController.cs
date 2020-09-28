@@ -120,7 +120,6 @@ namespace Mandalium.API.Controllers
                     blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl + ".webp");
                 }
 
-
                 Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
                  var a = new MethodCallResponse<BlogEntryDto>(){entity= blogEntryDto, Message=null, StatusCode = ReturnCodes.OK};
                 return Ok(a);

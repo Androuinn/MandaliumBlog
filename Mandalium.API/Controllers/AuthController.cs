@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mandalium.API.Dtos;
 using System.Text;
 using System;
-using Microsoft.AspNetCore.Authorization;
+using Mandalium.API.Helpers;
 
 namespace Mandalium.API.Controllers
 {
@@ -43,6 +43,10 @@ namespace Mandalium.API.Controllers
             var writerToCreate = _mapper.Map<User>(userForRegisterDto);
 
             var createdWriter = await _repo.Register(writerToCreate, userForRegisterDto.Password);
+
+            var text = System.IO.File.ReadAllText(@"../Mandalium.API/MailTemplates/UserCreatedTemplate.html");
+
+            Extensions.SendMail(createdWriter.Email, "Kayıt Doğrulama Maili", string.Format(text, createdWriter.Name + " " + createdWriter.Surname), false);
 
             return StatusCode(200);
         }

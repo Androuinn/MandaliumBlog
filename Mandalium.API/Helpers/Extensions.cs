@@ -44,7 +44,7 @@ namespace Mandalium.API.Helpers
                //Do nothing
                 # else
                 {
-                 SendMail("Api Hata Mesajı", error);
+                 SendMail("noreply.mandalium@gmail.com", "Api Hata Mesajı", error, false);
                 }
                 #endif
 
@@ -56,12 +56,10 @@ namespace Mandalium.API.Helpers
         }
 
 
-        public static void SendMail(string mailSubject, string mailBody)
+        public static void SendMail(string mailTo, string mailSubject, string mailBody, bool bodyhtml)
         {
             var fromAddress = new MailAddress("noreply.mandalium@gmail.com", "noreply-mandalium");
-            var toAddress = new MailAddress("noreply.mandalium@gmail.com", "Deneme");
-            const string password = "";
-            const string fromPassword ="anonymouspassowrd";
+            var toAddress = new MailAddress(mailTo, "Deneme");
 
             var smtp = new SmtpClient
             {
@@ -75,7 +73,8 @@ namespace Mandalium.API.Helpers
             using (var message = new MailMessage(fromAddress, toAddress)
             {
                 Subject = mailSubject,
-                Body = mailBody
+                Body = mailBody,
+                IsBodyHtml = bodyhtml
             })
             {
                 smtp.Send(message);

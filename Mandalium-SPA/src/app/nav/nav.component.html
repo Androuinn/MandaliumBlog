@@ -15,13 +15,13 @@
 
 
             <div class="text-light p-2" [collapse]="isHeaderCollapsed" [isAnimated]="true">
-                <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed=true" (click)="changeWriterEntry(false)"><i
+                <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed" (click)="changeWriterEntry(false)"><i
                         class="fa fa-fw fa-fg fa-location-arrow"></i>Ana Sayfa</a>
-                <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed = true " (click)="changeWriterEntry(true)"><i
+                <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed" (click)="changeWriterEntry(true)"><i
                         class="fa fa-fw fa-fg fa-location-arrow"></i>Kendime Düşünceler</a>
-                <a class="row" [routerLink]="['/about']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed = true"><i
+                <a class="row" [routerLink]="['/about']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
                         class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
-                <a class="row" [routerLink]="['/contact']" (click)="isHeaderCollapsed = !isHeaderCollapsed && isRegisterFormCollapsed = true"><i
+                <a class="row" [routerLink]="['/contact']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
                         class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
                 <a class="row" *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/profile']"
                     (click)="isHeaderCollapsed = !isHeaderCollapsed"><i class="fa fa-id-badge fa-fw fa-fg"></i>Hesap</a>
@@ -40,7 +40,7 @@
                         <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0"
                             type="submit">Giriş</button>
                             <button class="btn btn-primary" *ngIf="!loggedIn()" type="button"
-                                    (click)="isRegisterFormCollapsed=!isRegisterFormCollapsed">Kayıt ol</button>
+                                    [routerLink]="['/register']" routerLinkActive="router-link-active">Kayıt ol</button>
                     </form>
                 </div>
             </div>
@@ -54,8 +54,8 @@
             <div class="row text-light">
                 <div class="col-4 pt-1"><time><i class="fa fa-calendar fa-fw fa-fg "></i>{{date | date}}</time></div>
                 <div class="col-8 d-flex justify-content-end">
-                    <a [routerLink]="['/about']" (click)="isRegisterFormCollapsed = true"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
-                    <a [routerLink]="['/contact']" (click)="isRegisterFormCollapsed = true"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
+                    <a [routerLink]="['/about']"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
+                    <a [routerLink]="['/contact']"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
                     <a *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/profile']"><i
                             class="fa fa-id-badge fa-fw fa-fg"></i>Hesap</a>
                     <a *ngIf="loggedIn()" style="cursor: pointer;" (click)="logout()"><i
@@ -91,7 +91,7 @@
                                     <button [disabled]="!loginForm.valid" class="btn btn-success col-6 "
                                     type="submit">Giriş</button>
                                 <button class="btn btn-primary col-6" *ngIf="!loggedIn()" type="button"
-                                    (click)="isRegisterFormCollapsed=!isRegisterFormCollapsed">Kayıt ol</button>
+                                   [routerLink]="['/register']" routerLinkActive="router-link-active">Kayıt ol</button>
                                 </div>
                                
 
@@ -112,64 +112,6 @@
         <div class="row d-flex align-items-center">
             <a [routerLink]="['/']" class="col-12 col-lg-auto  p-3" (click)="changeWriterEntry(false)">ANA SAYFA</a>
             <a [routerLink]="['/personalblog']" class="col-12 col-lg-auto p-3" (click)="changeWriterEntry(true)">KENDİME DÜŞÜNCELER</a>
-            <!-- <a [routerLink]="['/']" class="p-3">MANDALIUMGAMES</a> -->
         </div>
     </div>
 </nav>
-
-
-<div class="container mt-3" id="registerForm" [collapse]="isRegisterFormCollapsed" [isAnimated]="true">
-    <h4 class="mt-1">KAYIT OL</h4>
-    <form [formGroup]="registerForm" (ngSubmit)="register()">
-        <div class="row form-group">
-            <label class="col-4" for="username">Kullanıcı Adı: </label>
-            <input class="col-8 form-control " type="text" formControlName="username" id="username" required
-                [ngClass]="{'is-invalid': registerForm.get('username').errors && registerForm.get('username').touched}">
-            <div class="invalid-feedback text-right pt-2">Lütfen kullanıcı adınızı girin.</div>
-        </div>
-
-        <div class="row form-group">
-            <label class="col-4" for="password">Şifre:</label>
-            <input class="col-8 form-control" type="password" formControlName="password" id="password" required
-                [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched}">
-            <div class="invalid-feedback text-right pt-2">Lütfen 4 ile 16 karakter arasında bir şifre girin.</div>
-        </div>
-
-        <div class="row form-group">
-            <label class="col-4" for="surname">Email:</label>
-            <input class="col-8 form-control" type="email" formControlName="email" id="email" required
-                [ngClass]="{'is-invalid': registerForm.get('email').errors && registerForm.get('email').touched}">
-            <div class="invalid-feedback text-right pt-2">Lütfen geçerli bir mail adresi girin.</div>
-        </div>
-
-        <div class="row form-group">
-            <label class="col-4" for="name">İsminiz:</label>
-            <input class="col-8 form-control" type="text" formControlName="name" id="name" required
-                [ngClass]="{'is-invalid': registerForm.get('name').errors && registerForm.get('name').touched}">
-            <div class="invalid-feedback text-right pt-2">Lütfen isminizi girin.</div>
-        </div>
-
-        <div class="row form-group">
-            <label class="col-4" for="surname">Soyisminiz:</label>
-            <input class="col-8 form-control" type="text" formControlName="surname" id="surname" required
-                [ngClass]="{'is-invalid': registerForm.get('surname').errors && registerForm.get('surname').touched}">
-            <div class="invalid-feedback text-right pt-2">Lütfen soyisminizi girin.</div>
-        </div>
-
-        <div class="row form-group">
-            <label class="col-4" for="birthdate">Doğum Tarihiniz:</label>
-            <input class="col-8 form-control" placeholder="Doğum Tarihi" [bsConfig]="{dateInputFormat: 'YYYY-MM-DD'}"
-                bsDatepicker type="date" formControlName="birthdate" id="birthdate"
-                [ngClass]="{'is-invalid': registerForm.get('birthdate').errors && registerForm.get('birthdate').touched}">
-        </div>
-        <div class="invalid-feedback text-right pt-2">Lütfen doğum tarihinizi girin.</div>
-
-        <div class="row justify-content-end form-submit">
-            <button  class="btn btn-success" type="submit" [disabled]="!registerForm.valid && !isRegisterClicked ">
-                Kaydet
-            </button>
-        </div>
-
-
-    </form>
-</div>
