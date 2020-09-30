@@ -12,6 +12,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   loginModel: any = {};
+  activationPin: any;
+  registerposted: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,7 +50,8 @@ export class RegisterComponent implements OnInit {
     return this.authService.register(a).subscribe(() => {
     this.loginModel.password = password;
     this.loginModel.username = username;
-    this.login();
+    // this.login();
+    this.registerposted = true;
     }, error => {
       this.alertify.error('Kullanıcı Mevcut');
     });
@@ -67,6 +70,19 @@ login() {
       this.router.navigate(['/']);
     }
   );
+}
+
+sendActivationPin() {
+  this.authService.sendActivationPin(this.activationPin).subscribe(() => {
+    this.alertify.success('Başarılı');
+    this.registerposted = false;
+    this.router.navigate(['/']);
+    this.login();
+  },
+  error => {
+    this.alertify.error(error);
+    this.registerposted = false;
+  });
 }
 
 

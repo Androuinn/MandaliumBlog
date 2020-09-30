@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 
@@ -38,6 +38,12 @@ export class AuthService {
 
   register(model: any) {
     return this.http.post(this.baseUrl + 'register', model);
+  }
+
+  sendActivationPin(Pin: string) {
+    const headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
+
+    return this.http.post(this.baseUrl + 'confirm', Pin, {headers:headers} );
   }
 
 }

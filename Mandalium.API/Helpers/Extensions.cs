@@ -10,7 +10,7 @@ namespace Mandalium.API.Helpers
 {
     public static class Extensions
     {
-
+        public static int ActivationPin { get; set; }
         public static void AddPagination(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
         {
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
