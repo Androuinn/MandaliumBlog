@@ -11,6 +11,7 @@ using Mandalium.API.Dtos;
 using System.Text;
 using System;
 using Mandalium.API.Helpers;
+using System.IO;
 
 namespace Mandalium.API.Controllers
 {
@@ -55,7 +56,7 @@ namespace Mandalium.API.Controllers
             catch (System.Exception ex)
             {
                 Extensions.ReportError(ex);
-               return StatusCode(500);
+                return StatusCode(500);
             }
         }
 
@@ -74,8 +75,8 @@ namespace Mandalium.API.Controllers
                 var createdWriter = await _repo.Register(writerToCreate, newUser.Password);
                 newUser = null;
 
-                var text = System.IO.File.ReadAllText(@"../Mandalium.API/MailTemplates/UserCreatedTemplate.html");
-
+                var text = System.IO.File.ReadAllText( @Environment.CurrentDirectory + "/MailTemplates/UserCreatedTemplate.html");
+               
                 Extensions.SendMail(createdWriter.Email, "Kayıt Doğrulama Maili", string.Format(text, createdWriter.Name + " " + createdWriter.Surname), true);
 
                 return StatusCode(200);
@@ -83,7 +84,7 @@ namespace Mandalium.API.Controllers
             catch (System.Exception ex)
             {
                 Extensions.ReportError(ex);
-               return StatusCode(500);
+                return StatusCode(500);
             }
         }
 

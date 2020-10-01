@@ -76,11 +76,10 @@ sendActivationPin() {
   this.authService.sendActivationPin(this.activationPin).subscribe(() => {
     this.alertify.success('Başarılı');
     this.registerposted = false;
-    this.router.navigate(['/']);
     this.login();
   },
   error => {
-    this.alertify.error(error);
+    this.alertify.error('Başarısız');
     this.registerposted = false;
   });
 }

@@ -25,10 +25,10 @@ namespace Mandalium.API.Helpers
         public static void ReportError(Exception exception)
         {
             string logfile = String.Empty;
-            string error = string.Format( "=>{0} An Error occurred: {1}  Message: {2}{3}", DateTime.Now, exception.StackTrace, exception.Message);
+            string error = string.Format( "=>{0} An Error occurred: {1}  Message: {2}{3}", DateTime.Now, exception.StackTrace, exception.Message, Environment.NewLine);
             try
             {
-                logfile = "../Mandalium.API/Errors/" + "Errors.txt";
+                logfile = Environment.CurrentDirectory +"/Errors/" + "Errors.txt";
                 using (var writer = new StreamWriter(logfile, true))
                 {
                     writer.WriteLine(
@@ -60,7 +60,6 @@ namespace Mandalium.API.Helpers
         {
             var fromAddress = new MailAddress("noreply.mandalium@gmail.com", "noreply-mandalium");
             var toAddress = new MailAddress(mailTo, "Deneme");
-
             var smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",
