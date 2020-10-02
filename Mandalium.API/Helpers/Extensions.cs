@@ -59,7 +59,7 @@ namespace Mandalium.API.Helpers
         public static void SendMail(string mailTo, string mailSubject, string mailBody, bool bodyhtml)
         {
             var fromAddress = new MailAddress("noreply.mandalium@gmail.com", "noreply-mandalium");
-            var toAddress = new MailAddress(mailTo, "Deneme");
+            var toAddress = new MailAddress(mailTo, mailTo);
             var smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",

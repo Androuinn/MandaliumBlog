@@ -48,7 +48,7 @@ namespace Mandalium.API.Controllers
 
                 Extensions.ActivationPin = new Random().Next(10000, 99999);
 
-                Extensions.SendMail("tugay.mandal@gmail.com", "Mandalium Aktivasyon Pini",
+                Extensions.SendMail(userForRegisterDto.Email, "Mandalium Aktivasyon Pini",
                 "Kayıt doğrulamak için aktivasyon pini:" + Extensions.ActivationPin.ToString(), false);
 
                 return StatusCode(200);
