@@ -62,10 +62,16 @@ namespace Mandalium.API
             // });
 
         }
+      
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
         {
+
+            Extensions.FromMail = context.SystemSettings.FirstOrDefault(x=> x.Key == "FromMail").Value;
+            Extensions.FromMailPassword = context.SystemSettings.FirstOrDefault(x=> x.Key == "FromMailPassword").Value;
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

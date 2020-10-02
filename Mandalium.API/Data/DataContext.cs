@@ -15,5 +15,6 @@ namespace Mandalium.API.Data
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get; set; }
     }
 }
