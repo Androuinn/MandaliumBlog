@@ -23,7 +23,6 @@ import { FooterComponent } from './footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AboutComponent } from './about/about.component';
 import { CreateBlogEntryComponent } from './user/create-blog-entry/create-blog-entry.component';
-import { BlogWriterEntryComponent } from './blog/blog-writerEntry/blog-writerEntry.component';
 import { ContactComponent } from './contact/contact.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { UsermenuComponent } from './user/usermenu/usermenu.component';
@@ -52,7 +51,6 @@ export function tokenGetter() {
       FooterComponent,
       AboutComponent,
       CreateBlogEntryComponent,
-      BlogWriterEntryComponent,
       ContactComponent,
       UsermenuComponent,
       RegisterComponent

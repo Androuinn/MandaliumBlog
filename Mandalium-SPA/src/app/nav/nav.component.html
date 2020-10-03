@@ -50,8 +50,7 @@
     </nav>
 
 
-    <div class="container d-none d-sm-block">
-        <div class="container p-1">
+    <div class="container d-none d-sm-block p-1">
             <div class="row text-light">
                 <div class="col-4 pt-1"><time><i class="fa fa-calendar fa-fw fa-fg "></i>{{date | date}}</time></div>
                 <div class="col-8 d-flex justify-content-end">
@@ -66,7 +65,7 @@
                             class="fa fa-sign-out fa-fw fa-fg"></i>Kullanıcı Girişi</a>
                 </div>
             </div>
-        </div>
+       
 
 
 
@@ -110,7 +109,7 @@
                 <div class="row d-flex align-items-center">
                     <a [routerLink]="['/']" class="col-12 col-lg-auto  p-3" (click)="changeWriterEntry(false)">ANA
                         SAYFA</a>
-                    <a [routerLink]="['/personalblog']" class="col-12 col-lg-auto p-3"
+                    <a [routerLink]="['/']" class="col-12 col-lg-auto p-3"
                         (click)="changeWriterEntry(true)">KENDİME DÜŞÜNCELER</a>
                 </div>
             </div>
