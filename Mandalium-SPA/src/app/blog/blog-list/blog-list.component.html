@@ -1,5 +1,6 @@
 <div class="title-top">
-  <h4 class="title-inner">EN SON HABERLER</h4>
+  <h4 id="haber" style="cursor: pointer;" class="title-inner" (click)="this.writerEntry=false ; loadBlogEntries()">EN SON HABERLER</h4>
+  <h4 id="düsünce" style="cursor: pointer;" class="title-inner-unfocused" (click)="this.writerEntry=true ; loadBlogEntries()" >KENDİME DÜŞÜNCELER</h4>
 </div>
 
 <article class="mb-3 col-12" *ngFor="let entry of blogEntries">

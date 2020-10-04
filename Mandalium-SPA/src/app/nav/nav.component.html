@@ -17,9 +17,9 @@
             <div class="text-light p-2" [collapse]="isHeaderCollapsed" [isAnimated]="true">
                 <a class="row" [routerLink]="['/']" (click)="isHeaderCollapsed = !isHeaderCollapsed"
                     (click)="changeWriterEntry(false)"><i class="fa fa-fw fa-fg fa-location-arrow"></i>Ana Sayfa</a>
-                <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed"
+                <!-- <a class="row" [routerLink]="['/personalblog']" (click)="isHeaderCollapsed = !isHeaderCollapsed"
                     (click)="changeWriterEntry(true)"><i class="fa fa-fw fa-fg fa-location-arrow"></i>Kendime
-                    Düşünceler</a>
+                    Düşünceler</a> -->
                 <a class="row" [routerLink]="['/about']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
                         class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
                 <a class="row" [routerLink]="['/contact']" (click)="isHeaderCollapsed = !isHeaderCollapsed"><i
@@ -50,10 +50,11 @@
     </nav>
 
 
-    <div class="container d-none d-sm-block p-1">
+    <div class="background container d-none d-sm-block p-1">
             <div class="row text-light">
-                <div class="col-4 pt-1"><time><i class="fa fa-calendar fa-fw fa-fg "></i>{{date | date}}</time></div>
-                <div class="col-8 d-flex justify-content-end">
+                <div class="col-3 pt-1"><time><i class="fa fa-calendar fa-fw fa-fg "></i>{{date | date}}</time></div>
+                <div class="col-9 d-flex justify-content-end">
+                    <a [routerLink]="['/']" (click)="changeWriterEntry(false)"><i class="fa fa-user fa-fw fa-fg"></i>Ana Sayfa</a>
                     <a [routerLink]="['/about']"><i class="fa fa-user fa-fw fa-fg"></i>Hakkımda</a>
                     <a [routerLink]="['/contact']"><i class="fa fa-at fa-fw fa-fg"></i>İletişim</a>
                     <a *ngIf="loggedIn()" style="cursor: pointer;" [routerLink]="['/profile']"><i
@@ -69,7 +70,7 @@
 
 
 
-        <div class="bg-light rounded">
+        <div class="background rounded">
             <div class="container">
                 <div class="row">
                     <div class="col-12  col-md-7 d-flex  justify-content-center justify-content-lg-start pt-1 logo-a">
@@ -77,10 +78,10 @@
                             <img src="../../assets/çzgisiz logo.png" alt="">
                         </a>
                     </div>
-                    <div class="col-12 col-md-5  justify-content-center  align-self-center">
+                    <div class="col-12 col-md-5  justify-content-center align-self-center">
                         <form ng *ngIf="!loggedIn()" #loginForm="ngForm" [collapse]="isCollapsed" [isAnimated]="true"
-                            class=" form-inline  justify-content-center" (ngSubmit)="login()" >
-                            <div class="col-7">
+                          class=" form-inline  justify-content-center" (ngSubmit)="login()" >
+                            <div class="col-12 col-lg-7">
                                 <div class="row">
                                     <input class="form-control col-12 " type="text" name="username"
                                         placeholder="Kullanıcı Adı" required [(ngModel)]="loginModel.username">
@@ -89,7 +90,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-7">
+                            <div class="col-12 col-lg-7">
                                 <div class="row">
                                     <button [disabled]="!loginForm.valid" class="btn btn-success col-6 "
                                         type="submit">Giriş</button>
@@ -104,7 +105,7 @@
             </div>
         </div>
 
-        <nav class="blog-header" class="d-none d-sm-block" [collapse]="isHeaderCollapsed" [isAnimated]="true">
+        <!-- <nav class="blog-header" class="d-none d-sm-block" [collapse]="isHeaderCollapsed" [isAnimated]="true">
             <div class="container">
                 <div class="row d-flex align-items-center">
                     <a [routerLink]="['/']" class="col-12 col-lg-auto  p-3" (click)="changeWriterEntry(false)">ANA
@@ -113,7 +114,7 @@
                         (click)="changeWriterEntry(true)">KENDİME DÜŞÜNCELER</a>
                 </div>
             </div>
-        </nav>
+        </nav> -->
         
     </div>
 

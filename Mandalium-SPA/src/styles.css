@@ -42,7 +42,20 @@ html {
 }
 
 
-
+.title-inner-unfocused{
+  background-color: #2d2e33;
+  color:#6d6d78 !important;
+  font-weight: 600;
+  font-size: 1.4rem;
+  box-sizing: border-box;
+  padding: 14px 20px;
+  text-align: center;
+  white-space: nowrap;
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  margin-bottom: 0px !important;
+}
 
 .title-inner{
   color: white !important;

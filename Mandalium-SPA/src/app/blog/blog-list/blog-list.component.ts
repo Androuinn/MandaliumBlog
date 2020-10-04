@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   Component,
   OnInit,
 } from '@angular/core';
@@ -14,9 +15,10 @@ import { MetaService } from 'src/app/_services/meta.service';
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css'],
 })
-export class BlogListComponent implements OnInit {
+export class BlogListComponent implements OnInit, AfterViewChecked {
   blogEntries: BlogEntry[];
   pagination: Pagination;
+  writerEntry = false;
   fragment: any;
   baseUrl = environment.apiUrl + 'blogentry';
   constructor(
@@ -41,12 +43,29 @@ export class BlogListComponent implements OnInit {
     'Blog', 'Mandalium | En Son Haberler', 'En Son Haberler', null);
   }
 
+  ngAfterViewChecked(): void {
+    try {
+      if (this.writerEntry === true) {
+       document.querySelector('#haber').classList.remove('title-inner');
+       document.querySelector('#haber').classList.add('title-inner-unfocused');
+       document.querySelector('#düsünce').classList.add('title-inner');
+       document.querySelector('#düsünce').classList.remove('title-inner-unfocused');
+      } else {
+        document.querySelector('#haber').classList.add('title-inner');
+        document.querySelector('#haber').classList.remove('title-inner-unfocused');
+        document.querySelector('#düsünce').classList.remove('title-inner');
+        document.querySelector('#düsünce').classList.add('title-inner-unfocused');
+      }
+    } catch (e) {}
+  }
+
   loadBlogEntries() {
+
     this.blogService
       .getBlogEntries(
         this.pagination.currentPage,
         this.pagination.itemsPerPage,
-        false
+        this.writerEntry
       )
       .subscribe(
         (res: PaginatedResult<BlogEntry[]>) => {

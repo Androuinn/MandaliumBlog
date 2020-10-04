@@ -22,6 +22,10 @@ header a:hover{
     color: black;
 }
 
+.background{
+background-color: #2d2e33;
+}
+
 
  header div.logo-a a:hover{
     background-color: inherit;
