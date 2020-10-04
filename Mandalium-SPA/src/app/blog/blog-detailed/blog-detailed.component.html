@@ -20,23 +20,17 @@
 
     <h4 class="p-4" *ngIf="blogEntry.comments[0]== null">Henüz yorum yok. İlk Yorumu sen bırak.</h4>
 
-    <div class="card mb-1 col-12 " *ngFor="let comment of blogEntry.comments">
-      <div class="row">
-        <div class="card-body">
-          <div class="col-12 d-flex ">
-            <h6 class="col-6 border-bottom text-white d-inline pl-5 pt-2">{{comment.commenterName}}</h6>
-            <div class="col-6 d-flex justify-content-end">
-              <time class="text-white  pl-5 pr-2 pt-2 ">Tarih: {{comment.createdDate| date:'shortDate' }}</time>
-            </div>
-
-          </div>
-          <div class="col-12">
-            <p class="border border-dark rounded p-3">{{comment.commentString}}</p>
-          </div>
-
+    
+      <div class="row col-12 comment" *ngFor="let comment of blogEntry.comments">
+        <div class="col-4 comment-commenter">
+          <h6>{{comment.commenterName}}</h6>
+          <img class="img-comment" src="../../../assets/çzgisiz logo.png">
+          <time class="time-comment">Yorum Tarihi: {{comment.createdDate| date:'shortDate'}}</time>
+        </div>
+        <div class="col-8">
+          {{comment.commentString}}
         </div>
       </div>
-    </div>
 
     <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
       [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
@@ -74,7 +68,7 @@
 
 
       <div class="row justify-content-center form-group">
-        <label class="col-12 col-md-4">Yorumunuz:</label>
+        <label class="col-12 col-md-4">Yorum:</label>
         <textarea maxlength="500"
           [ngClass]="{'is-invalid': commentFormGroup.get('commentString').errors && commentFormGroup.get('commentString').touched}"
           formControlName="commentString" class="col-12 col-md-8" name="commentString" id="commentString" cols="120"
