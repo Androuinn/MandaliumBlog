@@ -36,6 +36,7 @@ h5 {
 .comment{
     padding: 1rem !important;
     margin-bottom: 0.25rem !important;
+    margin-left: 0;
     background-color: #151515  !important;
 }
 

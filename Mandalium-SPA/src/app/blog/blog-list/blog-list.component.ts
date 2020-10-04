@@ -70,6 +70,11 @@ export class BlogListComponent implements OnInit, AfterViewChecked {
       .subscribe(
         (res: PaginatedResult<BlogEntry[]>) => {
           this.blogEntries = res.result;
+          this.blogEntries.forEach(element => {
+            if (element.photoUrl == null || element.photoUrl === '') {
+              element.photoUrl = '../../assets/çzgisiz logo.png';
+            }
+          });
           this.pagination = res.pagination;
           this.blogService.changeBlogPagination(this.pagination);
         },
