@@ -13,18 +13,12 @@
     <h4>Create Blog Post</h4>
     <div class="row form-group">
       <label class="col-4" for="headline">Başlık: </label>
-      <input class="col-8 " type="text" formControlName="headline" id="headline" required>
+      <input class="col-8 " type="text" maxlength="200"  formControlName="headline" id="headline" required>
     </div>
 
     <div class="row form-group">
       <label class="col-4" for="subHeadline">Alt Başlık:</label>
-      <input class="col-8 " type="text" formControlName="subHeadline" id="subHeadline" required>
-    </div>
-
-    <div class="row form-group">
-      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h1></h1>'">h1</button>
-      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h2></h2>'">h2</button>
-      <button class="btn btn-dark bg-dark text-light" (click)="innerTextHtml= innerTextHtml +'<h3></h3>'">h3</button>
+      <input class="col-8 " type="text" maxlength="500" formControlName="subHeadline" id="subHeadline" required>
     </div>
 
     <div class="row form-group">

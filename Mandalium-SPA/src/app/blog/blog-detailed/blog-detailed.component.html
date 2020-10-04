@@ -1,58 +1,55 @@
-<div class="container mt-3">
-  <div class="row ">
-    <section class="col-12 col-lg-8 ">
-     
-<div class="container bg-light rounded pt-4 pb-4">
-  <article class="blog-main">
-    <div class="blog-post">
-      <h2 class="blog-post-title">{{blogEntry.headline}}</h2>
-      <h5 class="text-dark">{{blogEntry.subHeadline}}</h5>
-      <p class="blog-post-meta">{{blogEntry.createdDate | date:('mediumDate')}}, Yazar: <a [routerLink]="['/about']"
+<div class=container>
+  <div class="rounded pt-4 pb-4">
+    <article>
+      <h2>{{blogEntry.headline}}</h2>
+      <h5>{{blogEntry.subHeadline}}</h5>
+      <p>{{blogEntry.createdDate | date:('mediumDate')}}, Yazar: <a [routerLink]="['/about']"
           routerLinkActive="router-link-active" fragment="writername-{{blogEntry.writerId}}">{{blogEntry.writerName}}
           {{blogEntry.writerSurname}}</a></p>
-          <div class="row mb-3">
-          <img class="col-12 rounded" src="{{blogEntry.photoUrl}}" alt="{{blogEntry.headline}}">
-          </div>
-         
-      
+      <div class="row mb-3">
+        <img class="col-12" src="{{blogEntry.photoUrl}}" alt="{{blogEntry.headline}}">
+      </div>
       <div [innerHTML]=blogEntry.innerTextHtml></div>
+    </article>
+  </div>
+  <div>
+    <div class="title-top ">
+      <h4 class="title-inner">YORUMLAR</h4>
     </div>
-  </article>
-</div>
-<div>
-  <h4 id="yorum" class="mt-3 p-2 border-bottom border-top">Yorumlar</h4>
 
-  <h5 class="p-4" *ngIf="blogEntry.comments[0]== null">Henüz yorum yok. İlk Yorumu sen bırak.</h5>
 
-  <div class="card mb-1 col-12 " *ngFor="let comment of blogEntry.comments">
-    <div class="row">
-      <div class="card-body">
-        <div class="col-12 d-flex ">
-          <h6 class="col-6 border-bottom text-white d-inline pl-5 pt-2">{{comment.commenterName}}</h6>
-          <div class="col-6 d-flex justify-content-end">
-            <time class="text-white  pl-5 pr-2 pt-2 ">Tarih: {{comment.createdDate| date:'shortDate' }}</time>
+    <h4 class="p-4" *ngIf="blogEntry.comments[0]== null">Henüz yorum yok. İlk Yorumu sen bırak.</h4>
+
+    <div class="card mb-1 col-12 " *ngFor="let comment of blogEntry.comments">
+      <div class="row">
+        <div class="card-body">
+          <div class="col-12 d-flex ">
+            <h6 class="col-6 border-bottom text-white d-inline pl-5 pt-2">{{comment.commenterName}}</h6>
+            <div class="col-6 d-flex justify-content-end">
+              <time class="text-white  pl-5 pr-2 pt-2 ">Tarih: {{comment.createdDate| date:'shortDate' }}</time>
+            </div>
+
+          </div>
+          <div class="col-12">
+            <p class="border border-dark rounded p-3">{{comment.commentString}}</p>
           </div>
 
         </div>
-        <div class="col-12">
-          <p class="border border-dark rounded p-3">{{comment.commentString}}</p>
-        </div>
-
       </div>
     </div>
+
+    <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+      nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+    </pagination>
+
   </div>
 
-  <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
-    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"
-    firstText="&laquo;" lastText="&raquo;">
-  </pagination>
-
-</div>
-
-<div class="container">
-  <h4 class="p-2 border-bottom">Yorum Yap</h4>
 
 
+  <div class="title-top">
+    <h4 class="title-inner">YORUM YAP</h4>
+  </div>
 
   <div class="row">
     <form class="p-4 mr-3" [formGroup]="commentFormGroup" (ngSubmit)="writeComment()">
@@ -64,7 +61,7 @@
             class="col-8 " type="email" formControlName="email" id="email">
           <div class="invalid-feedback text-right pt-2">Lütfen mail adresinizi girin.</div>
         </div>
-  
+
         <div class="row form-group">
           <label class="col-4" for="commenterName">İsminiz:</label>
           <input maxlength="100"
@@ -72,9 +69,9 @@
             class="col-8 " type="text" formControlName="commenterName" id="commenterName">
           <div class="invalid-feedback text-right pt-2">Lütfen isminizi girin.</div>
         </div>
-  
+
       </div>
-      
+
 
       <div class="row justify-content-center form-group">
         <label class="col-12 col-md-4">Yorumunuz:</label>
@@ -94,11 +91,3 @@
     </form>
   </div>
 </div>
-    </section>
-
-    <section class="col-12 col-lg-4 border bg-light rounded p-4 ">
-      <app-blog-most-read></app-blog-most-read>
-    </section>
-  </div>
-</div>
-

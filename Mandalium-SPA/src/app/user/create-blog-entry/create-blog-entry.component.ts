@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/_services/auth.service';
-import { environment } from 'src/environments/environment';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';

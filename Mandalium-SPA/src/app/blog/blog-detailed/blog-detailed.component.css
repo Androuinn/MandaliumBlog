@@ -1,16 +1,25 @@
-input{
-    background-color: black;
-    color: white; 
+input {
+  background-color: black;
+  color: white;
 }
 
 textarea {
-    background-color: black;
-    color: white;
+  background-color: black;
+  color: white;
 }
 
 img {
-    background-position: center;
-    background-size: cover;
-    object-fit: cover;
-    padding: 0px;
+  object-fit: contain;
+  background-color: black;
+  border-radius: 0.25rem;
+}
+
+h2 {
+  font-weight: bolder;
+}
+
+h5 {
+    font-style: italic;
+    color: #0099ff;
+    font-weight: 500;
 }
