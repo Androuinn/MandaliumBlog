@@ -18,9 +18,8 @@ ul {
 li img {
   height: 150px;
   width: inherit;
-  background-position: center;
-  background-size: cover;
-  object-fit: cover;
-
-  
+  object-fit: contain;
+ background-color: black;
 }
+
+

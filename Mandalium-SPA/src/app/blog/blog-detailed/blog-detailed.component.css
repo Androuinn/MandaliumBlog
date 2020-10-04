@@ -15,8 +15,16 @@ img {
 }
 
 
-h2 {
+h1 {
   font-weight: bolder;
+  font-size: 2.4rem;
+  line-height: 1.16667em;
+  font-weight: 700;
+  letter-spacing: 0;
+} 
+
+*{
+  box-sizing: border-box;
 }
 
 h5 {
@@ -28,13 +36,13 @@ h5 {
 .comment{
     padding: 1rem !important;
     margin-bottom: 0.25rem !important;
-    background-color: #222 !important;
+    background-color: #151515  !important;
 }
 
 .img-comment{
     object-fit: contain;
     background-color: black;
-    width: 100px;
+    width: 100%;
 }
 
 .time-comment{

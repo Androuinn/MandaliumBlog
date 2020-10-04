@@ -1,7 +1,7 @@
 <div class=container>
-  <div class="rounded pt-4 pb-4">
+  <div class="rounded pb-4">
     <article>
-      <h2>{{blogEntry.headline}}</h2>
+      <h1>{{blogEntry.headline}}</h1>
       <h5>{{blogEntry.subHeadline}}</h5>
       <p>{{blogEntry.createdDate | date:('mediumDate')}}, Yazar: <a [routerLink]="['/about']"
           routerLinkActive="router-link-active" fragment="writername-{{blogEntry.writerId}}">{{blogEntry.writerName}}

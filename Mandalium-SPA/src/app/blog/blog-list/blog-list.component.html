@@ -2,24 +2,24 @@
   <h4 class="title-inner">EN SON HABERLER</h4>
 </div>
 
-<article class="card mb-3 col-12 border border-dark" *ngFor="let entry of blogEntries">
+<article class="mb-3 col-12" *ngFor="let entry of blogEntries">
   <a href="#" class="stretched-link" [routerLink]="['/blog', entry.id, entry.headline]"
     routerLinkActive="router-link-active">
     <div class="row">
-      <div class="col-12 col-md-5 p-2">
+      <div class="col-12 col-md-5 ">
         <img class="card-img" src={{entry.photoUrl}} alt="{{entry.headline}}">
       </div>
       <div class="col-12 col-md-7 card-body">
         <h5>{{entry.headline}}</h5>
         <strong class="d-inline-block mb-2 badge badge-success">{{entry.topicName |uppercase}}</strong>
         <p>{{entry.subHeadline }}</p>
-        <span style="position: absolute; bottom: 5%;">{{entry.writerName}} {{entry.writerSurname}} -
+        <span style="position: absolute; bottom: 3%; color: slategrey;">{{entry.writerName |uppercase}}
+          {{entry.writerSurname |uppercase}} -
           {{entry.createdDate | date}}</span>
-
       </div>
-
     </div>
   </a>
+  <hr class="my-4">
 </article>
 
 <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
