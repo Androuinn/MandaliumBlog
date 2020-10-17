@@ -4,5 +4,6 @@ export interface Comment {
   email: string;
   commentString: string;
   createdDate: Date;
+  photoUrl: string;
   blogEntryId: number;
 }

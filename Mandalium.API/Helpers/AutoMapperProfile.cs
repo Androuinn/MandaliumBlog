@@ -32,7 +32,10 @@ namespace Mandalium.API.Helpers
             CreateMap<Comment,CommentDtoForCreation>();
             CreateMap<CommentDtoForCreation,Comment>();
 
-            CreateMap<Comment,CommentDto>().ForMember(dest => dest.CommenterName, opt => opt.MapFrom(src => (src.CommenterName == null) ? src.User.Username : src.CommenterName));
+            CreateMap<Comment,CommentDto>()
+            .ForMember(dest => dest.CommenterName, opt => opt.MapFrom(src => (src.CommenterName == null) ? src.User.Username : src.CommenterName))
+            .ForMember(dest => dest.CommenterId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.User.PhotoUrl));
                 
 
             CreateMap<UserForRegisterDto, User>();

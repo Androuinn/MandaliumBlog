@@ -1,6 +1,6 @@
 <div class="container mt-3" id="registerForm">
     <h4 class="mt-1">KAYIT OL</h4>
-    <form *ngIf="!registerposted" [formGroup]="registerForm" (ngSubmit)="register()" [collapse]="registerposted" [isAnimated]="true" >
+    <form *ngIf="!registerposted" [formGroup]="registerForm" (ngSubmit)="register()" [collapse]="registerposted" [isAnimated]="true" autocomplete="off">
         <div class="row form-group">
             <label class="col-4" for="username">Kullanıcı Adı: </label>
             <input class="col-8 form-control " type="text" formControlName="username" id="username" required

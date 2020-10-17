@@ -43,6 +43,7 @@ h5 {
 .img-comment{
     object-fit: contain;
     background-color: black;
+    height: 100px;
     width: 100%;
 }
 

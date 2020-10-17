@@ -42,9 +42,8 @@ namespace Mandalium.API.Data
             if (userParams.EntryAlreadyPicked == false)
             {
                 var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.User).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
-                var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
                 Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
-
 
                 Counter.Add(DateTime.Now.Date, blogId, Entry.WriterEntry);
 
