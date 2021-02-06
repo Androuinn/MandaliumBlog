@@ -35,7 +35,7 @@ namespace Mandalium.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), m=> m.MigrationsAssembly("Mandalium.Core")));
+            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), m => m.MigrationsAssembly("Mandalium.Core")));
             services.AddScoped<IBlogRepository<BlogEntry>, BlogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository<User>, AuthRepository>();
@@ -60,14 +60,14 @@ namespace Mandalium.API
             });
             services.AddCors();
         }
-      
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
         {
 
-            Extensions.FromMail = context.SystemSettings.FirstOrDefault(x=> x.Key == "FromMail").Value;
-            Extensions.FromMailPassword = context.SystemSettings.FirstOrDefault(x=> x.Key == "FromMailPassword").Value;
+            Extensions.FromMail = context.SystemSettings.FirstOrDefault(x => x.Key == "FromMail").Value;
+            Extensions.FromMailPassword = context.SystemSettings.FirstOrDefault(x => x.Key == "FromMailPassword").Value;
 
 
             if (env.IsDevelopment())
@@ -88,6 +88,17 @@ namespace Mandalium.API
             app.UseStaticFiles();
 
 
+
+            app.Use(async (httpContext, next) =>
+            {
+                httpContext.Response.Headers.Remove("Server");
+                httpContext.Response.Headers.Remove("X-Powered-By");
+                httpContext.Response.Headers.Add("X-Frame-Options", "DENY");
+                httpContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                httpContext.Response.Headers.Add("X-Xss-Protection", "1; mode=block");
+                httpContext.Response.Headers.Add("Content-Security-Policy", "default-src 'self'");
+                await next();
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
