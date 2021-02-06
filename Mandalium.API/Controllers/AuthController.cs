@@ -1,17 +1,16 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using Mandalium.API.Data;
-using Mandalium.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using Mandalium.API.Dtos;
 using System.Text;
 using System;
 using Mandalium.API.Helpers;
-using System.IO;
+using Mandalium.Core.Dto;
+using Mandalium.Core.Interfaces;
+using Mandalium.Core.Models;
 
 namespace Mandalium.API.Controllers
 {

@@ -18,7 +18,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:35:22 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
    at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
@@ -28,7 +28,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
    at Mandalium.API.Controllers.BlogEntryController.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Controllers\BlogEntryController.cs:line 182  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:39:01 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
@@ -39,7 +39,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:39:01 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
    at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
@@ -49,7 +49,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
    at Mandalium.API.Controllers.BlogEntryController.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Controllers\BlogEntryController.cs:line 183  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:40:31 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
@@ -60,7 +60,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:40:31 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
    at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
@@ -70,7 +70,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
    at Mandalium.API.Controllers.BlogEntryController.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Controllers\BlogEntryController.cs:line 183  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:40:50 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
@@ -81,7 +81,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:40:50 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
    at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
@@ -91,7 +91,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
    at Mandalium.API.Controllers.BlogEntryController.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Controllers\BlogEntryController.cs:line 182  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:41:28 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
@@ -102,7 +102,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:41:28 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
    at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
@@ -112,7 +112,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
    at Mandalium.API.Controllers.BlogEntryController.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Controllers\BlogEntryController.cs:line 182  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:42:38 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
@@ -123,7 +123,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:42:38 An Error occurred:    at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
    at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
@@ -133,7 +133,7 @@
    at System.IO.File.InternalReadAllText(String path, Encoding encoding)
    at System.IO.File.ReadAllText(String path)
    at Mandalium.API.Helpers.Counter.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\Counter.cs:line 142
-   at Mandalium.API.Data.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
+   at Mandalium.Core.Context.BlogRepository.GetMostRead(Boolean writerEntry) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 78
    at Mandalium.API.Controllers.BlogEntryController.GetMostRead() in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Controllers\BlogEntryController.cs:line 182  Message: The process cannot access the file 'E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Helpers\weeklyData.json' because it is being used by another process.
 
 =>29.08.2020 19:59:37 An Error occurred:    at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.IdentityMap`1.ThrowIdentityConflict(InternalEntityEntry entry)
@@ -152,6 +152,6 @@
    at Microsoft.EntityFrameworkCore.DbContext.SetEntityState[TEntity](TEntity entity, EntityState entityState)
    at Microsoft.EntityFrameworkCore.DbContext.Update[TEntity](TEntity entity)
    at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.Update(TEntity entity)
-   at Mandalium.API.Data.BlogRepository.GetBlogEntry(Int32 blogId, UserParams userParams) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 52
+   at Mandalium.Core.Context.BlogRepository.GetBlogEntry(Int32 blogId, UserParams userParams) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Data\BlogRepository.cs:line 52
    at Mandalium.API.Controllers.BlogEntryController.GetEntry(Int32 id, UserParams userParams) in E:\Bjklimah\Projeler\MandaliumBlog\mandalium.api\Controllers\BlogEntryController.cs:line 106  Message: The instance of entity type 'User' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the conflicting key values.
 

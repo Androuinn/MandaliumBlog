@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Mandalium.API.Data;
-using Mandalium.API.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,6 +16,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Mandalium.API.Helpers;
+using Mandalium.Core.Context;
+using Mandalium.Core.Interfaces;
+using Mandalium.Core.Models;
+using Mandalium.Infrastructure.Repositories;
 
 namespace Mandalium.API
 {
@@ -39,7 +41,7 @@ namespace Mandalium.API
             services.AddScoped<IAuthRepository<User>, AuthRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
-            services.AddAutoMapper(typeof(BlogRepository).Assembly);
+            services.AddAutoMapper(config => config.AddProfile<AutoMapperProfile>());
             services.AddMemoryCache();
             services.AddControllers().AddNewtonsoftJson(opt =>
             {

@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Mandalium.API.Data;
-using Mandalium.API.Dtos;
 using Mandalium.API.Helpers;
-using Mandalium.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,6 +11,10 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using System.Security.Claims;
 using Microsoft.Extensions.Caching.Memory;
+using Mandalium.Core.Interfaces;
+using Mandalium.Core.Models;
+using Mandalium.Core.Helpers.Pagination;
+using Mandalium.Core.Dto;
 
 namespace Mandalium.API.Controllers
 {
