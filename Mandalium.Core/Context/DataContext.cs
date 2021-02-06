@@ -7,7 +7,7 @@ namespace Mandalium.Core.Context
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            
+          
         }
 
         public DbSet<BlogEntry> BlogEntries { get; set; }
@@ -16,5 +16,14 @@ namespace Mandalium.Core.Context
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<SystemSetting> SystemSettings { get; set; }
+        public DbSet<MostReadEntries> MostReadEntries { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<MostReadEntries>().HasNoKey();
+            modelBuilder.Entity<MostReadEntries>().Property(x=> x.CreatedOn).ValueGeneratedOnAdd();
+        }
     }
 }

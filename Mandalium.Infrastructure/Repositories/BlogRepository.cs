@@ -8,6 +8,7 @@ using Mandalium.Core.Context;
 using Mandalium.Core.Helpers.Pagination;
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -48,7 +49,12 @@ namespace Mandalium.Infrastructure.Repositories
                 var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
                 Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
 
-                Counter.Add(DateTime.Now.Date, blogId, Entry.WriterEntry);
+                //Counter.Add(DateTime.Now.Date, blogId, Entry.WriterEntry);
+
+                //TODO userId de eklenebilir.
+                var Id = new SqlParameter("@BlogId", Entry.Id);
+                var writerEntry = new SqlParameter("@WriterEntry", Entry.WriterEntry);
+                await _context.Database.ExecuteSqlRawAsync("EXEC InsertMostRead @BlogId, @WriterEntry", Id, writerEntry);
 
                 Entry.TimesRead += 1;
                 _context.BlogEntries.Update(Entry);
@@ -77,17 +83,14 @@ namespace Mandalium.Infrastructure.Repositories
             List<BlogEntry> Entries;
             try
             {
-                var a = Counter.GetMostRead().SelectMany(x => x.Value).OrderByDescending(x => x.Count).Where(x => x.WriterEntry == writerEntry).ToList();
-                //order by hallet
-                if (a.Count != 0)
-                {
-                    Entries = await _context.BlogEntries.Where(x => (a.Select(c => c.Id).Contains(x.Id)) && (x.isDeleted == false)).Take(5).ToListAsync();
-                }
-                else
-                {
-                    Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => (x.WriterEntry == writerEntry) && (x.isDeleted == false)).Take(5).ToListAsync();
-                }
+                // TODO burası tek sorguya inebilir. Sp ile getirilebilir?
+                var allEntries = await _context.MostReadEntries.Where(x => x.CreatedOn > DateTime.Now.AddDays(-7) && x.IsWriterEntry == writerEntry).ToListAsync();
+                var groupedEntries = allEntries.GroupBy(x => x.BlogEntryId).Select(x => new { x.Key, Values = x.ToList() }).OrderByDescending(x => x.Values.Count).Take(5);
 
+                if (allEntries.Count != 0)
+                    Entries = await _context.BlogEntries.Where(x => (groupedEntries.Select(c => c.Key).Contains(x.Id)) && (x.isDeleted == false)).Take(5).ToListAsync();
+                else
+                    Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => (x.WriterEntry == writerEntry) && (x.isDeleted == false)).Take(5).ToListAsync();
             }
             catch (System.Exception e)
             {

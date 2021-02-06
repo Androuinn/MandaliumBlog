@@ -35,7 +35,7 @@ namespace Mandalium.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), m=> m.MigrationsAssembly("Mandalium.Core")));
             services.AddScoped<IBlogRepository<BlogEntry>, BlogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository<User>, AuthRepository>();
@@ -59,10 +59,6 @@ namespace Mandalium.API
                 };
             });
             services.AddCors();
-            // services.AddMvc().ConfigureApiBehaviorOptions( options => {
-            //     options.SuppressModelStateInvalidFilter = true;
-            // });
-
         }
       
 

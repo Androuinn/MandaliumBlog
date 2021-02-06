@@ -70,7 +70,7 @@ namespace Mandalium.API.Controllers
             if (uploadResult != null)
             {
                 photoForCreationDto.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                photoForCreationDto.PhotoUrl = uploadResult.Uri.ToString();
+                photoForCreationDto.PhotoUrl = uploadResult.Url.ToString();
                 photoForCreationDto.PublicId = uploadResult.PublicId;
 
                 await _repo.AddPhoto(_mapper.Map<Photo>(photoForCreationDto));
@@ -150,7 +150,7 @@ namespace Mandalium.API.Controllers
             if (uploadResult != null)
             {
                 photoForCreationDto.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                photoForCreationDto.PhotoUrl = uploadResult.Uri.ToString();
+                photoForCreationDto.PhotoUrl = uploadResult.Url.ToString();
                 photoForCreationDto.PublicId = uploadResult.PublicId;
 
                 userProfile.PhotoUrl = uploadResult.PublicId;
