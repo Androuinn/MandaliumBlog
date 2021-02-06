@@ -6,6 +6,7 @@ using Newtonsoft.Json.Serialization;
 using System.Net.Mail;
 using System.Net;
 using Mandalium.Core.Helpers.Pagination;
+using NLog;
 
 namespace Mandalium.API.Helpers
 {
@@ -24,41 +25,10 @@ namespace Mandalium.API.Helpers
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
 
-
-
         public static void ReportError(Exception exception)
         {
-            string logfile = String.Empty;
-            string error = string.Format("=>{0} An Error occurred: {1}  Message: {2}{3}", DateTime.Now, exception.StackTrace, exception.Message, Environment.NewLine);
-            try
-            {
-                logfile = Environment.CurrentDirectory + "/Errors/" + "Errors.txt";
-                using (var writer = new StreamWriter(logfile, true))
-                {
-                    writer.WriteLine(
-                        "=>{0} An Error occurred: {1}  Message: {2}{3}",
-                        DateTime.Now,
-                        exception.StackTrace,
-                        exception.Message,
-                        Environment.NewLine
-                        );
-                }
-
-#if DEBUG
-                //Do nothing
-#else
-                {
-                 SendMail("noreply.mandalium@gmail.com", "Api Hata Mesajı", error, false);
-                }
-#endif
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            LogManager.GetLogger("Mandalium Nlog").Error(exception, exception.StackTrace);
         }
-
 
         public static void SendMail(string mailTo, string mailSubject, string mailBody, bool bodyhtml)
         {

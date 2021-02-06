@@ -160,7 +160,6 @@ namespace Mandalium.API.Controllers
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
             return StatusCode(500);

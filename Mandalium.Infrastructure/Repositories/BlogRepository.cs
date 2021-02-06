@@ -10,7 +10,6 @@ using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 
 //TODO writer ile ilgili olanları user repo ve controller altında topla
@@ -80,24 +79,17 @@ namespace Mandalium.Infrastructure.Repositories
         public async Task<IEnumerable<BlogEntry>> GetMostRead(bool writerEntry)
         {
 
-            List<BlogEntry> Entries;
-            try
-            {
-                // TODO burası tek sorguya inebilir. Sp ile getirilebilir?
-                var allEntries = await _context.MostReadEntries.Where(x => x.CreatedOn > DateTime.Now.AddDays(-7) && x.IsWriterEntry == writerEntry).ToListAsync();
-                var groupedEntries = allEntries.GroupBy(x => x.BlogEntryId).Select(x => new { x.Key, Values = x.ToList() }).OrderByDescending(x => x.Values.Count).Take(5);
+            List<BlogEntry> Entries = null;
 
-                if (allEntries.Count != 0)
-                    Entries = await _context.BlogEntries.Where(x => (groupedEntries.Select(c => c.Key).Contains(x.Id)) && (x.isDeleted == false)).Take(5).ToListAsync();
-                else
-                    Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => (x.WriterEntry == writerEntry) && (x.isDeleted == false)).Take(5).ToListAsync();
-            }
-            catch (System.Exception e)
-            {
-                Extensions.ReportError(e);
-                throw;
-            }
 
+            // TODO burası tek sorguya inebilir. Sp ile getirilebilir?
+            var allEntries = await _context.MostReadEntries.Where(x => x.CreatedOn > DateTime.Now.AddDays(-7) && x.IsWriterEntry == writerEntry).ToListAsync();
+            var groupedEntries = allEntries.GroupBy(x => x.BlogEntryId).Select(x => new { x.Key, Values = x.ToList() }).OrderByDescending(x => x.Values.Count).Take(5);
+
+            if (allEntries.Any())
+                Entries = await _context.BlogEntries.Where(x => (groupedEntries.Select(c => c.Key).Contains(x.Id)) && (x.isDeleted == false)).Take(5).ToListAsync();
+            else
+                Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => (x.WriterEntry == writerEntry) && (x.isDeleted == false)).Take(5).ToListAsync();
 
             return Entries;
         }
