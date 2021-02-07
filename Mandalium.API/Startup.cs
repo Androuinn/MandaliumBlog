@@ -96,7 +96,6 @@ namespace Mandalium.API
                 httpContext.Response.Headers.Add("X-Frame-Options", "DENY");
                 httpContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                 httpContext.Response.Headers.Add("X-Xss-Protection", "1; mode=block");
-                httpContext.Response.Headers.Add("Content-Security-Policy", "default-src 'self'");
                 await next();
             });
             app.UseEndpoints(endpoints =>
