@@ -12,7 +12,6 @@ import { BlogService } from 'src/app/_services/blog.service';
 export class BlogMostReadComponent implements OnInit {
   @Input()  mostReadEntries: any;
   mostReadBlogEntries: BlogEntry[];
-  mostReadPersonalEntries: BlogEntry[];
   constructor(private blogService: BlogService) { }
 
   ngOnInit() {
@@ -22,19 +21,12 @@ export class BlogMostReadComponent implements OnInit {
 
   getMostRead() {
     this.blogService.getMostRead().subscribe((mostReadEntries: any) => {
-      this.mostReadBlogEntries = mostReadEntries.mostReadEntriesDto;
-      this.mostReadPersonalEntries = mostReadEntries.mostReadPersonalEntriesDto;
+      this.mostReadBlogEntries = mostReadEntries;
       this.mostReadBlogEntries.forEach(element => {
         if (element.photoUrl == null || element.photoUrl === '') {
           element.photoUrl = '../../assets/çzgisiz logo.png';
         }
       });
-      this.mostReadPersonalEntries.forEach(element => {
-        if (element.photoUrl == null || element.photoUrl === '') {
-          element.photoUrl = '../../assets/çzgisiz logo.png';
-        }
-      });
-
     }, error => {
       console.error(error);
     });

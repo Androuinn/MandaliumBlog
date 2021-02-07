@@ -98,8 +98,8 @@ export class BlogService {
     );
   }
 
-  getMostRead(): Observable<BlogEntry[]> {
-   return this.http.get<BlogEntry[]>(this.baseUrl + '/getmostread');
+  getMostRead(): Observable<BlogEntry> {
+   return this.http.get<BlogEntry>(this.baseUrl + '/getmostread');
   }
 
   getTopics(): Observable<Topic[]> {

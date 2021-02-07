@@ -37,7 +37,7 @@ namespace Mandalium.API.Controllers
             this._repo = repo;
 
             Account acc = new Account(
-                 _cloudinaryConfig.Value.CloudName,
+                _cloudinaryConfig.Value.CloudName,
                 _cloudinaryConfig.Value.ApiKey,
                 _cloudinaryConfig.Value.ApiSecret
             );
@@ -52,37 +52,18 @@ namespace Mandalium.API.Controllers
         [HttpGet(Name = "GetEntries")]
         public async Task<IActionResult> GetEntries([FromQuery] UserParams userParams)
         {
-            // string cachename = "entries" + userParams.WriterEntry.ToString() + userParams.PageNumber.ToString();
-
-            // var entries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            // {
-            //     entry.SlidingExpiration = TimeSpan.FromMinutes(1);
-            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
-            //     return _repo.GetBlogEntries(userParams);
-
-            // });
-
             try
             {
                 var entries = await _repo.GetBlogEntries(userParams);
 
-                var returndto = _mapper.Map<IEnumerable<BlogEntryListDto>>(entries);
-
-                foreach (var item in returndto)
-                {
-                    if (!string.IsNullOrEmpty(item.PhotoUrl))
-                    {
-                        item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
-                    }
-                }
+                ConvertPhotoUrl(entries, 250);
 
                 Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
 
-                return Ok(returndto);
+                return Ok(_mapper.Map<IEnumerable<BlogEntryListDto>>(entries));
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
 
@@ -94,44 +75,16 @@ namespace Mandalium.API.Controllers
         [HttpGet("{id}", Name = "GetEntry")]
         public async Task<IActionResult> GetEntry(int id, [FromQuery] UserParams userParams)
         {
-            // string cachename = "entry" + id.ToString() + userParams.PageNumber.ToString();
-            // if(userParams.EntryAlreadyPicked == true) _memoryCache.Remove(cachename);
-            // var blogEntry = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            // {
-            //     entry.SlidingExpiration = TimeSpan.FromMinutes(1);
-            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5);
-            //     return _repo.GetBlogEntry(id, userParams);
-
-            // });
-
-
             try
             {
                 var blogEntry = await _repo.GetBlogEntry(id, userParams);
 
                 if (blogEntry.isDeleted == true)
-                {
                     return BadRequest("Entry Bulunamadı");
-                }
 
                 var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);
 
-                if (userParams.EntryAlreadyPicked == false && !string.IsNullOrEmpty(blogEntryDto.PhotoUrl))
-                {
-                    blogEntryDto.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(blogEntryDto.PhotoUrl + ".webp");
-                }
-
-                foreach (var comment in blogEntryDto.Comments)
-                {
-                    if (!string.IsNullOrEmpty(comment.PhotoUrl))
-                    {
-                        comment.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(comment.PhotoUrl);
-                    }
-                    else
-                    {
-                        comment.PhotoUrl = "../../assets/çzgisiz logo.png";
-                    }
-                }
+                ConvertPhotoUrl(new List<BlogEntryDto>() { blogEntryDto }, 500);
 
                 Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
                 var a = new MethodCallResponse<BlogEntryDto>() { entity = blogEntryDto, Message = null, StatusCode = ReturnCodes.OK };
@@ -171,71 +124,27 @@ namespace Mandalium.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMostRead()
         {
-            // string cachename = "personalEntries";
-
-            // var personalEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            // {
-            //     entry.SlidingExpiration = TimeSpan.FromMinutes(30);
-            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
-            //     return _repo.GetMostRead(true);
-
-            // });
-
-            // cachename = "blogEntries";
-
-            // var blogEntries = await _memoryCache.GetOrCreateAsync(cachename, entry =>
-            // {
-            //     entry.SlidingExpiration = TimeSpan.FromMinutes(30);
-            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(60);
-            //     return _repo.GetMostRead(false);
-
-            // });
-
-            //var a = await _memoryCache.GetOrCreateAsync("mostReadEntries", entry =>
-            //{
-            //    entry.SlidingExpiration = TimeSpan.FromMinutes(5);
-            //    entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(30);
-            //    return new object { Personal = _repo.GetMostRead(true), NonPersonal = _repo.GetMostRead(false) };
-
-            //});
+            var blogEntries = await _memoryCache.GetOrCreateAsync("mostReadEntries", entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(5);
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(30);
+                return _repo.GetMostRead();
+            });
 
             try
             {
-                var personalEntries = await _repo.GetMostRead(true);
-                var blogEntries = await _repo.GetMostRead(false);
+                ConvertPhotoUrl(blogEntries, 250);
 
-                foreach (var item in personalEntries)
-                {
-                    if (!item.PhotoUrl.EndsWith("webp") && !string.IsNullOrEmpty(item.PhotoUrl))
-                    {
-                        item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
-                    }
-                }
-                foreach (var item in blogEntries)
-                {
-                    if (!item.PhotoUrl.EndsWith("webp") && !string.IsNullOrEmpty(item.PhotoUrl))
-                    {
-                        item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
-                    }
-                }
-
-                var mostReadPersonalEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(personalEntries);
-                var mostReadEntriesDto = _mapper.Map<IEnumerable<BlogEntryListDto>>(blogEntries);
-
-                return Ok(new
-                {
-                    mostReadPersonalEntriesDto,
-                    mostReadEntriesDto
-                });
+                return Ok(_mapper.Map<IEnumerable<BlogEntryListDto>>(blogEntries));
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
             return StatusCode(500);
 
         }
+
 
         [Route("[action]")]
         [Authorize]
@@ -243,9 +152,7 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> GetTopics()
         {
             if (User.FindFirst(ClaimTypes.Role).Value != "1")
-            {
                 return Unauthorized();
-            }
 
             try
             {
@@ -254,7 +161,6 @@ namespace Mandalium.API.Controllers
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
             return StatusCode(500);
@@ -275,9 +181,7 @@ namespace Mandalium.API.Controllers
         {
 
             if (User.FindFirst(ClaimTypes.Role).Value != "1")
-            {
                 return Unauthorized();
-            }
 
             try
             {
@@ -288,7 +192,6 @@ namespace Mandalium.API.Controllers
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
 
@@ -302,9 +205,7 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> SaveTopic(TopicDto topicDto)
         {
             if (User.FindFirst(ClaimTypes.Role).Value != "1")
-            {
                 return Unauthorized();
-            }
 
             try
             {
@@ -333,9 +234,7 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> SaveBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
         {
             if (blogEntryForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
-            {
                 return Unauthorized();
-            }
 
             try
             {
@@ -345,7 +244,6 @@ namespace Mandalium.API.Controllers
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
 
@@ -361,9 +259,7 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> UpdateBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
         {
             if (blogEntryForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
-            {
                 return Unauthorized();
-            }
 
             try
             {
@@ -374,7 +270,6 @@ namespace Mandalium.API.Controllers
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
             return StatusCode(500);
@@ -388,33 +283,50 @@ namespace Mandalium.API.Controllers
         [HttpPost]
         public async Task<IActionResult> WriteComment(CommentDtoForCreation commentDtoForCreation)
         {
-
             try
             {
                 var comment = _mapper.Map<Comment>(commentDtoForCreation);
-                if (await _repo.SaveComment(comment) >= 0)
-                {
 
+                if (await _repo.SaveComment(comment) >= 0)
                     return Ok(_mapper.Map<CommentDto>(comment));
-                }
+
                 return BadRequest();
-                // return RedirectToRoute("GetEntry",comment.BlogEntryId);
             }
             catch (System.Exception ex)
             {
-
                 Extensions.ReportError(ex);
             }
 
             return StatusCode(500);
-
         }
 
         #endregion
 
+        private void ConvertPhotoUrl<TEntity>(IEnumerable<TEntity> blogEntries, int height, int commentHeight = 250)
+        {
+            foreach (var blog in blogEntries)
+            {
+                SetPhotoUrl(blog, height);
+                var comments = blog.GetType().GetProperty("Comments").GetValue(blog) as List<CommentDto>;
+                if (comments != null && comments.Any())
+                {
+                    foreach (var comment in comments)
+                    {
+                        SetPhotoUrl( comment, commentHeight);
+                    }
+                }
+            }
+        }
 
-
-
-
+        private void SetPhotoUrl<TEntity>(TEntity entity, int height)
+        {
+            var typePhotoUrl = entity.GetType().GetProperty("PhotoUrl").GetValue(entity) as string;
+            if (typePhotoUrl != null && !typePhotoUrl.EndsWith("webp") && !string.IsNullOrEmpty(typePhotoUrl))
+                entity.GetType().GetProperty("PhotoUrl").SetValue(entity, SetCloudinaryImageForPhotoUrl(typePhotoUrl, height));
+        }
+        private string SetCloudinaryImageForPhotoUrl(string url, int height)
+        {
+            return _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(height).Crop("scale")).BuildUrl(url + ".webp");
+        }
     }
 }

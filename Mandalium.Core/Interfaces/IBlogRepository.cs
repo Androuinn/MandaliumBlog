@@ -29,7 +29,7 @@ namespace Mandalium.Core.Interfaces
         /// </summary>
         /// <param name="writerEntry"></param>
         /// <returns></returns>
-        Task<IEnumerable<T>> GetMostRead(bool writerEntry);
+        Task<IEnumerable<T>> GetMostRead();
 
         /// <summary>
         /// Creates a new blog entry with the given entity.

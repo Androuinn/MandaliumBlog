@@ -74,11 +74,10 @@ namespace Mandalium.Infrastructure.Repositories
             return await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<IEnumerable<BlogEntry>> GetMostRead(bool writerEntry)
+        public async Task<IEnumerable<BlogEntry>> GetMostRead()
         {
 
             List<BlogEntry> Entries = await _context.BlogEntries.FromSqlRaw("Exec GetMostReadEntries").ToListAsync(); 
-
             return Entries;
         }
 

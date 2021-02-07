@@ -1,46 +1,22 @@
+<div class="title-top">
+  <h6 style="font-size: 0.875rem;" class="title-inner">EN ÇOK OKUNANLAR</h6>
+</div>
 
-  <div  class="title-top">
-    <h6 style="font-size: 0.875rem;" class="title-inner">KENDİME DÜŞÜNCELER</h6>
-  </div>
-  
-  <ul>
-    <li class="mb-2" *ngFor="let entry of mostReadPersonalEntries">
-      <a [routerLink]="['/blog', entry.id, entry.headline]">
-        <div class="row">
-          <div class="col-5">
-            <img class="" src={{entry.photoUrl}} alt="{{entry.headline}}">
-          </div>
-          <div class="row col-7 p-2">
-            <h6 class="col-12">{{entry.headline}}</h6>
-            <p class="col-12">{{entry.subHeadline |slice: 0:35}} ...</p>
-            <time class="col-12">{{entry.createdDate | date}}</time>
-          </div>
-        </div>
-      </a>
-      <hr>
-    </li>
-  </ul>
-
-
-  <div  class="title-top">
-    <h6 style="font-size: 0.875rem;" class="title-inner">EN ÇOK OKUNANLAR</h6>
-  </div>
- 
-  <ul>
-
-    <li class="mb-2" *ngFor="let entry of mostReadBlogEntries">
-      <a [routerLink]="['/blog', entry.id, entry.headline]">
-        <div class="row">
-          <div class="col-5">
+<ul>
+  <li class="mb-2" *ngFor="let entry of mostReadBlogEntries">
+    <a [routerLink]="['/blog', entry.id, entry.headline]">
+      <div class="row">
+        <div class="col-5">
           <img class="" src={{entry.photoUrl}} alt="{{entry.headline}}">
-          </div>
-          <div class="row col-7 p-2">
-            <h6 class="col-12">{{entry.headline}}</h6>
-            <p class="col-12">{{entry.subHeadline |slice: 0:35}} ...</p>
-            <time style="position: absolute; bottom: 3%; color: slategrey;" class="col-12">{{entry.createdDate | date}}</time>
-          </div>
         </div>
-      </a>
-      <hr>
-    </li>
-  </ul>
+        <div class="row col-7 p-2">
+          <h6 class="col-12">{{entry.headline}}</h6>
+          <p class="col-12">{{entry.subHeadline |slice: 0:35}} ...</p>
+          <time style="position: absolute; bottom: 3%; color: slategrey;" class="col-12">{{entry.createdDate |
+            date}}</time>
+        </div>
+      </div>
+    </a>
+    <hr>
+  </li>
+</ul>
