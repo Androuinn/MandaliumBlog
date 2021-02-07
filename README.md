@@ -1,10 +1,10 @@
 # MandaliumBlog
 
-A project made with .Net Core 3.1 and Angular 10
+A project made with .Net Core 5 and Angular 10
 
 Used concepts and technologies
 
-Angular Client Side -v 9.1,
+Angular Client Side -v 10,
   other Js libraries
     AlertifyJs, auth0 jwt,, ngx-bootstrap ...
     
@@ -12,9 +12,9 @@ Angular Client Side -v 9.1,
     Service Worker, httpClient, routing, services, locales, guards, resolvers, forms etc.
     
     
-.Net Core 3.1
+.Net Core 5
   .Net libraries
-     Automapper, Ef Core and packages, Identity model tokens, jwt bearer, Newtonsoft.Json etc.
+     Automapper, Ef Core and packages, Nlog, Identity model tokens, jwt bearer, Newtonsoft.Json etc.
      
    Concepts
       Repository Pattern, In Memory caching, DTO,  Pagination etc...
