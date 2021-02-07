@@ -72,10 +72,10 @@ namespace Mandalium.API.Controllers
                 {
                     if (!string.IsNullOrEmpty(item.PhotoUrl))
                     {
-                         item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
+                        item.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(item.PhotoUrl + ".webp");
                     }
                 }
-                
+
                 Response.AddPagination(entries.CurrentPage, entries.PageSize, entries.TotalCount, entries.TotalPages);
 
                 return Ok(returndto);
@@ -125,7 +125,7 @@ namespace Mandalium.API.Controllers
                 {
                     if (!string.IsNullOrEmpty(comment.PhotoUrl))
                     {
-                        comment.PhotoUrl =_cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(comment.PhotoUrl );
+                        comment.PhotoUrl = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(250).Crop("scale")).BuildUrl(comment.PhotoUrl);
                     }
                     else
                     {
@@ -134,7 +134,7 @@ namespace Mandalium.API.Controllers
                 }
 
                 Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
-                 var a = new MethodCallResponse<BlogEntryDto>(){entity= blogEntryDto, Message=null, StatusCode = ReturnCodes.OK};
+                var a = new MethodCallResponse<BlogEntryDto>() { entity = blogEntryDto, Message = null, StatusCode = ReturnCodes.OK };
                 return Ok(a);
             }
             catch (System.Exception ex)
@@ -190,6 +190,14 @@ namespace Mandalium.API.Controllers
             //     return _repo.GetMostRead(false);
 
             // });
+
+            //var a = await _memoryCache.GetOrCreateAsync("mostReadEntries", entry =>
+            //{
+            //    entry.SlidingExpiration = TimeSpan.FromMinutes(5);
+            //    entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(30);
+            //    return new object { Personal = _repo.GetMostRead(true), NonPersonal = _repo.GetMostRead(false) };
+
+            //});
 
             try
             {

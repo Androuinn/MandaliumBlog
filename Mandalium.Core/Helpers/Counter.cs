@@ -12,6 +12,8 @@ namespace Mandalium.API.Helpers
         public int Count { get; set; } = 1;
         public bool WriterEntry { get; set; } = false;
     }
+
+    //DATABASE'E aktarılarak yapıldı. KOD Gereksizleşti.
     public class Counter
     {
 
@@ -22,7 +24,7 @@ namespace Mandalium.API.Helpers
             {
                 WeeklyCounter = new Dictionary<DateTime, List<CountOfEntry>>();
             }
-
+            CreateDirectory();
         }
 
 
@@ -138,7 +140,6 @@ namespace Mandalium.API.Helpers
 
         public static Dictionary<DateTime, List<CountOfEntry>> GetMostRead()
         {
-
             WeeklyCounter = JsonConvert.DeserializeObject<Dictionary<DateTime, List<CountOfEntry>>>(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"weeklyData.json")));
 
 
@@ -153,6 +154,15 @@ namespace Mandalium.API.Helpers
             newWeeklyCounter.Add(DateTime.Now.Date, centry);
             OrganizeData(newWeeklyCounter);
             return newWeeklyCounter;
+        }
+
+        private static void CreateDirectory()
+        {
+            if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, @"weeklyData.json")))
+                Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, @"weeklyData.json"));
+            if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, @"wholeData.json")))
+                Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, @"wholeData.json"));
+
         }
 
 

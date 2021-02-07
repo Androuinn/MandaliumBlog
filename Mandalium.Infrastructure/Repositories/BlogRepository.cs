@@ -48,8 +48,6 @@ namespace Mandalium.Infrastructure.Repositories
                 var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
                 Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
 
-                //Counter.Add(DateTime.Now.Date, blogId, Entry.WriterEntry);
-
                 //TODO userId de eklenebilir.
                 var Id = new SqlParameter("@BlogId", Entry.Id);
                 var writerEntry = new SqlParameter("@WriterEntry", Entry.WriterEntry);
@@ -79,17 +77,7 @@ namespace Mandalium.Infrastructure.Repositories
         public async Task<IEnumerable<BlogEntry>> GetMostRead(bool writerEntry)
         {
 
-            List<BlogEntry> Entries = null;
-
-
-            // TODO burası tek sorguya inebilir. Sp ile getirilebilir?
-            var allEntries = await _context.MostReadEntries.Where(x => x.CreatedOn > DateTime.Now.AddDays(-7) && x.IsWriterEntry == writerEntry).ToListAsync();
-            var groupedEntries = allEntries.GroupBy(x => x.BlogEntryId).Select(x => new { x.Key, Values = x.ToList() }).OrderByDescending(x => x.Values.Count).Take(5);
-
-            if (allEntries.Any())
-                Entries = await _context.BlogEntries.Where(x => (groupedEntries.Select(c => c.Key).Contains(x.Id)) && (x.isDeleted == false)).Take(5).ToListAsync();
-            else
-                Entries = await _context.BlogEntries.OrderByDescending(x => x.TimesRead).Where(x => (x.WriterEntry == writerEntry) && (x.isDeleted == false)).Take(5).ToListAsync();
+            List<BlogEntry> Entries = await _context.BlogEntries.FromSqlRaw("Exec GetMostReadEntries").ToListAsync(); 
 
             return Entries;
         }
