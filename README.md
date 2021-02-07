@@ -12,7 +12,7 @@ Angular Client Side -v 10,
     Service Worker, httpClient, routing, services, locales, guards, resolvers, forms etc.
     
     
-.Net Core 5
+.Net 5
   .Net libraries
      Automapper, Ef Core and packages, Nlog, Identity model tokens, jwt bearer, Newtonsoft.Json etc.
      
