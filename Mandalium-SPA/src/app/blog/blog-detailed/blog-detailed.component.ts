@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { BlogService } from 'src/app/_services/blog.service';
 import { ActivatedRoute } from '@angular/router';
-import { Comment } from 'src/app/_models/Comment';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Pagination, PaginatedResult } from 'src/app/_models/pagination';
-import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Pagination } from 'src/app/_models/pagination';
 import { AuthService } from 'src/app/_services/auth.service';
 import { MetaService } from 'src/app/_services/meta.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-blog-detailed',
@@ -16,14 +14,11 @@ import { MetaService } from 'src/app/_services/meta.service';
 })
 export class BlogDetailedComponent implements OnInit {
   blogEntry: BlogEntry;
-  commentFormGroup: FormGroup;
   pagination: Pagination;
 
   constructor(
     private blogService: BlogService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private alertify: AlertifyService,
     public authService: AuthService,
     private metaService: MetaService
   ) {}
@@ -32,87 +27,12 @@ export class BlogDetailedComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.blogEntry = data.blog;
       if (this.blogEntry.photoUrl == null || this.blogEntry.photoUrl === '') {
-        this.blogEntry.photoUrl =  '../../assets/çzgisiz logo.png';
-      }
-      this.pagination = this.blogEntry.comments.pagination;
-      if (this.authService.loggedIn()) {
-        this.commentFormGroup = this.fb.group({
-          commentString: ['', [Validators.required, Validators.maxLength(500)]],
-          blogEntryId: data.blog.id,
-          userId: this.authService.decodedToken.nameid,
-        });
-      } else {
-        this.commentFormGroup = this.fb.group({
-          commenterName: ['', [Validators.required, Validators.maxLength(100)]],
-          email: [ '', [Validators.required, Validators.email, Validators.maxLength(100)] ],
-          commentString: ['', [Validators.required, Validators.maxLength(500)]],
-          blogEntryId: data.blog.id,
-          userId: Number,
-        });
+        this.blogEntry.photoUrl =  environment.defaultPhotoUrl;
       }
     } );
 
     this.metaService.UpdateTags(this.blogEntry.headline.toString(), this.blogEntry.headline.toString(), 'blog/' +
     this.blogEntry.id.toString() + '/' + this.blogEntry.headline.toString(),
     this.blogEntry.headline.toString(), this.blogEntry.subHeadline.toString(), this.blogEntry.photoUrl.toString() );
-  }
-
-  writeComment() {
-    if (this.commentFormGroup.valid) {
-      this.blogService.saveComment(this.commentFormGroup.value).subscribe(
-        (res: Comment) => {
-          this.alertify.success('Yorum Yazma Başarılı');
-          // this.loadComments();
-          this.loadBlogEntry();
-          if (this.authService.loggedIn()) {
-            this.commentFormGroup.reset({
-              blogEntryId: this.blogEntry.id,
-              userId: this.authService.decodedToken.nameid,
-            });
-          } else {
-            this.commentFormGroup.reset({
-              blogEntryId: this.blogEntry.id,
-              userId: Number,
-            });
-          }
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
-  loadComments() {
-    this.blogService.getComments(this.route.snapshot.params.id, this.pagination.currentPage, this.pagination.itemsPerPage)
-    .subscribe(
-      (comments: PaginatedResult<Comment[]>) => {
-        this.blogEntry.comments.result = comments.result;
-        this.pagination = comments.pagination;
-        this.blogEntry.comments.result.push(null);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-}
-
-  loadBlogEntry() {
-    this.blogService
-      .getBlogEntry( this.route.snapshot.params.id, this.pagination.currentPage, this.pagination.itemsPerPage, true)
-      .subscribe(
-        (blogEntry: BlogEntry) => {
-          this.blogEntry.comments = blogEntry.comments;
-          this.pagination = blogEntry.comments.pagination;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-  }
-
-  pageChanged(event: any): void {
-    this.pagination.currentPage = event.page;
-    this.loadBlogEntry();
   }
 }

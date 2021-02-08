@@ -40,13 +40,10 @@ namespace Mandalium.Infrastructure.Repositories
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<BlogEntry> GetBlogEntry(int blogId, UserParams userParams)
+        public async Task<BlogEntry> GetBlogEntry(int blogId)
         {
-            if (userParams.EntryAlreadyPicked == false)
-            {
+          
                 var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.User).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
-                var comments = _context.Comments.AsNoTracking().Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
-                Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
 
                 //TODO userId de eklenebilir.
                 var Id = new SqlParameter("@BlogId", Entry.Id);
@@ -57,15 +54,7 @@ namespace Mandalium.Infrastructure.Repositories
                 _context.BlogEntries.Update(Entry);
                 await _context.SaveChangesAsync();
                 return Entry;
-            }
-            else
-            {
-                BlogEntry Entry = new BlogEntry();
-                var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntryId == blogId).OrderByDescending(x => x.CreatedDate).AsQueryable();
-                Entry.Comments = await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
-
-                return Entry;
-            }
+           
         }
 
         public async Task<PagedList<Comment>> GetComments(int id, UserParams userParams)

@@ -72,7 +72,7 @@ export class BlogListComponent implements OnInit, AfterViewChecked {
           this.blogEntries = res.result;
           this.blogEntries.forEach(element => {
             if (element.photoUrl == null || element.photoUrl === '') {
-              element.photoUrl = '../../assets/çzgisiz logo.png';
+              element.photoUrl = environment.defaultPhotoUrl;
             }
           });
           this.pagination = res.pagination;

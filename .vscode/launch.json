@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Mandalium.API/bin/Debug/netcoreapp3.1/Mandalium.API.dll",
+            "program": "${workspaceFolder}/Mandalium.API/bin/Debug/net5.0/Mandalium.API.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Mandalium.API",
             "stopAtEntry": false,

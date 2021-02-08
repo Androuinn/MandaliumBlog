@@ -22,10 +22,8 @@ export class BlogService {
   blogPagination: BehaviorSubject<Pagination> = new BehaviorSubject<Pagination>({
     currentPage: 1, itemsPerPage: 7, totalItems: 1, totalPages: 1});
   currentPagination = this.blogPagination.asObservable();
-  // TODO most read entries i düzelt
-  // blogMostReadEntries: BehaviorSubject<BlogEntry[]> = new BehaviorSubject<BlogEntry[]>(null);
-  // currentBlogMostReadEntries = this.blogMostReadEntries.asObservable();
    //#endregion
+
   constructor(private http: HttpClient) {}
 
   changeBlogEntryForCreationOrUpdate(entry: number) {
@@ -77,17 +75,17 @@ export class BlogService {
   getBlogEntry(id, commentPage?, commentsPerPage?, userParams?): Observable<BlogEntry> {
     let blogEntry: BlogEntry;
 
-    let params = new HttpParams();
+    // let params = new HttpParams();
 
-    if (commentPage != null && commentsPerPage != null) {
-      params = params.append('pageNumber', commentPage);
-      params = params.append('pageSize', commentsPerPage);
-    }
-    if (userParams != null) {
-      params = params.append('EntryAlreadyPicked', userParams);
-    }
+    // if (commentPage != null && commentsPerPage != null) {
+    //   params = params.append('pageNumber', commentPage);
+    //   params = params.append('pageSize', commentsPerPage);
+    // }
+    // if (userParams != null) {
+    //   params = params.append('EntryAlreadyPicked', userParams);
+    // }
 
-    return this.http.get<MethodCallResponse<BlogEntry>>(this.baseUrl + '/' + id, {observe: 'response', params}).pipe(
+    return this.http.get<MethodCallResponse<BlogEntry>>(this.baseUrl + '/' + id, {observe: 'response'/*, params*/}).pipe(
       map(response => {
         blogEntry = response.body.entity;
         if (response.headers.get('Pagination') != null) {
@@ -98,8 +96,8 @@ export class BlogService {
     );
   }
 
-  getMostRead(): Observable<BlogEntry> {
-   return this.http.get<BlogEntry>(this.baseUrl + '/getmostread');
+  getMostRead(): Observable<BlogEntry[]> {
+   return this.http.get<BlogEntry[]>(this.baseUrl + '/getmostread');
   }
 
   getTopics(): Observable<Topic[]> {

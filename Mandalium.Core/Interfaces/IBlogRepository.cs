@@ -21,7 +21,7 @@ namespace Mandalium.Core.Interfaces
         /// <param name="blogId"></param>
         /// <param name="userParams"></param>
         /// <returns></returns>
-        Task<T> GetBlogEntry(int blogId, UserParams userParams);
+        Task<T> GetBlogEntry(int blogId);
         Task<PagedList<Comment>> GetComments(int id, UserParams userParams);
 
         /// <summary>

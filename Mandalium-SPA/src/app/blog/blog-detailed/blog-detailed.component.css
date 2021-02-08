@@ -1,12 +1,4 @@
-input {
-  background-color: black;
-  color: white;
-}
 
-textarea {
-  background-color: black;
-  color: white;
-}
 
 img {
   object-fit: contain;
@@ -21,7 +13,7 @@ h1 {
   line-height: 1.16667em;
   font-weight: 700;
   letter-spacing: 0;
-} 
+}
 
 *{
   box-sizing: border-box;
@@ -33,28 +25,3 @@ h5 {
     font-weight: 500;
 }
 
-.comment{
-    padding: 1rem !important;
-    margin-bottom: 0.25rem !important;
-    margin-left: 0;
-    background-color: #151515  !important;
-}
-
-.img-comment{
-    object-fit: contain;
-    background-color: black;
-    height: 100px;
-    width: 100%;
-}
-
-.time-comment{
-    display: block;
-    font-weight: 500;
-    margin-top: 0.75rem !important;
-}
-
-.comment-commenter{
-    border-right: 1px solid #484b52;
-    text-align: center !important;
-    margin-top: 0.50rem;
-}

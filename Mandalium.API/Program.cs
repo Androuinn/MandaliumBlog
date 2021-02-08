@@ -21,16 +21,7 @@ namespace Mandalium.API
             try
             {
                 logger.Debug("init main");
-                var host = CreateHostBuilder(args).Build();
-                using (var scope = host.Services.CreateScope())
-                {
-                    var services = scope.ServiceProvider;
-                    services.GetRequiredService<DataContext>().Database.MigrateAsync(); 
-                }
-
-
-                host.Run();
-
+                CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
             {

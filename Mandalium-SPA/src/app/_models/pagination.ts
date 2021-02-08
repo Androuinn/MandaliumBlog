@@ -8,4 +8,9 @@ export interface Pagination {
 export class PaginatedResult<T> {
     result: T;
     pagination: Pagination;
+
+
+    constructor(){
+      this.pagination = {currentPage :1,itemsPerPage:10,totalItems:1,totalPages:1}
+    }
 }

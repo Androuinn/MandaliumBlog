@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BlogService } from '../_services/blog.service';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -19,6 +20,7 @@ export class NavComponent implements OnInit {
   isHeaderCollapsed = true;
   isCollapsed = true;
   registerForm: FormGroup;
+  defaultPhotoUrl = environment.defaultPhotoUrl;
 
   constructor(
     public authService: AuthService,

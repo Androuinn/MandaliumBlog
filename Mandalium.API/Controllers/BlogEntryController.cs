@@ -66,7 +66,6 @@ namespace Mandalium.API.Controllers
             {
                 Extensions.ReportError(ex);
             }
-
             return StatusCode(500);
 
         }
@@ -77,7 +76,7 @@ namespace Mandalium.API.Controllers
         {
             try
             {
-                var blogEntry = await _repo.GetBlogEntry(id, userParams);
+                var blogEntry = await _repo.GetBlogEntry(id);
 
                 if (blogEntry.isDeleted == true)
                     return BadRequest("Entry Bulunamadı");
@@ -86,7 +85,6 @@ namespace Mandalium.API.Controllers
 
                 ConvertPhotoUrl(new List<BlogEntryDto>() { blogEntryDto }, 500);
 
-                Response.AddPagination(blogEntry.Comments.CurrentPage, blogEntry.Comments.PageSize, blogEntry.Comments.TotalCount, blogEntry.Comments.TotalPages);
                 var a = new MethodCallResponse<BlogEntryDto>() { entity = blogEntryDto, Message = null, StatusCode = ReturnCodes.OK };
                 return Ok(a);
             }
@@ -109,6 +107,8 @@ namespace Mandalium.API.Controllers
                 var comments = await _repo.GetComments(id, userParams);
                 Response.AddPagination(comments.CurrentPage, comments.PageSize, comments.TotalCount, comments.TotalPages);
                 var commentsDto = _mapper.Map<IEnumerable<CommentDto>>(comments);
+                ConvertPhotoUrl<CommentDto>(commentsDto, 250);
+
                 return Ok(commentsDto);
             }
             catch (System.Exception ex)
@@ -302,19 +302,11 @@ namespace Mandalium.API.Controllers
 
         #endregion
 
-        private void ConvertPhotoUrl<TEntity>(IEnumerable<TEntity> blogEntries, int height, int commentHeight = 250)
+        private void ConvertPhotoUrl<TEntity>(IEnumerable<TEntity> list, int height = 250)
         {
-            foreach (var blog in blogEntries)
+            foreach (var listItem in list)
             {
-                SetPhotoUrl(blog, height);
-                var comments = blog.GetType().GetProperty("Comments").GetValue(blog) as List<CommentDto>;
-                if (comments != null && comments.Any())
-                {
-                    foreach (var comment in comments)
-                    {
-                        SetPhotoUrl( comment, commentHeight);
-                    }
-                }
+                SetPhotoUrl(listItem, height);
             }
         }
 
