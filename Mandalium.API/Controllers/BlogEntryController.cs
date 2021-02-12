@@ -15,6 +15,7 @@ using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
 using Mandalium.Core.Helpers.Pagination;
 using Mandalium.Core.Dto;
+using Mandalium.Resources;
 
 namespace Mandalium.API.Controllers
 {
@@ -48,7 +49,7 @@ namespace Mandalium.API.Controllers
 
         #region  get methods
 
-
+       
         [HttpGet(Name = "GetEntries")]
         public async Task<IActionResult> GetEntries([FromQuery] UserParams userParams)
         {

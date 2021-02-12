@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Mandalium.Core.Context;
@@ -17,9 +18,11 @@ namespace Mandalium.API
     {
         public static void Main(string[] args)
         {
+           
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
+                CultureInfo.CurrentCulture = new CultureInfo("tr-TR");
                 logger.Debug("init main");
                 CreateHostBuilder(args).Build().Run();
             }

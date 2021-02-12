@@ -20,6 +20,8 @@ using Mandalium.Core.Context;
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
 using Mandalium.Infrastructure.Repositories;
+using System.Globalization;
+using Mandalium.API.Middlewares;
 
 namespace Mandalium.API
 {
@@ -68,7 +70,7 @@ namespace Mandalium.API
 
             Extensions.FromMail = context.SystemSettings.FirstOrDefault(x => x.Key == "FromMail").Value;
             Extensions.FromMailPassword = context.SystemSettings.FirstOrDefault(x => x.Key == "FromMailPassword").Value;
-
+           
 
             if (env.IsDevelopment())
             {
@@ -87,17 +89,8 @@ namespace Mandalium.API
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
+            app.UseRequestCultureMiddleware();
 
-
-            app.Use(async (httpContext, next) =>
-            {
-                httpContext.Response.Headers.Remove("Server");
-                httpContext.Response.Headers.Remove("X-Powered-By");
-                httpContext.Response.Headers.Add("X-Frame-Options", "DENY");
-                httpContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-                httpContext.Response.Headers.Add("X-Xss-Protection", "1; mode=block");
-                await next();
-            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

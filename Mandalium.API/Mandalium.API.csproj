@@ -30,4 +30,20 @@
     <ProjectReference Include="..\Mandalium.Core\Mandalium.Core.csproj" />
     <ProjectReference Include="..\Mandalium.Infrastructure\Mandalium.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="App_GlobalResources\LanguageResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LanguageResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="App_GlobalResources\LanguageResource.en-US.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="App_GlobalResources\LanguageResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LanguageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -31,6 +31,7 @@ import { environment } from '../environments/environment';
 import { BlogEntriesResolver } from './_resolvers/blogEntries.resolver';
 import { RegisterComponent } from './user/register/register.component';
 import { BlogCommentsComponent } from './blog/blog-comments/blog-comments.component';
+import { HeaderInterceptor } from './_interceptors/header-interceptor';
 
 
 
@@ -82,7 +83,8 @@ export function tokenGetter() {
       BlogEntryResolver,
       BlogEntriesResolver,
       AuthGuard,
-      {provide: LOCALE_ID, useValue: 'tr-TR'}
+      {provide: LOCALE_ID, useValue: 'tr-TR'},
+      {provide: HTTP_INTERCEPTORS, useClass: HeaderInterceptor, multi:true}
    ],
    bootstrap: [
       AppComponent
