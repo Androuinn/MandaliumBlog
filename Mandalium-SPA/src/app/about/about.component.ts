@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
-import { User } from '../_models/Writer';
+import { User } from '../_models/User';
 import { UserService } from '../_services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { MetaService } from '../_services/meta.service';

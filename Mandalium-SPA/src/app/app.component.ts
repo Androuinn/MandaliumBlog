@@ -3,6 +3,7 @@ import { AuthService } from './_services/auth.service';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { Router, RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { MetaService } from './_services/meta.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +14,19 @@ export class AppComponent implements OnInit {
   jwtHelper = new JwtHelperService();
   date = new Date();
   public showOverlay = true;
-  constructor(private authService: AuthService, private router: Router, private metaService: MetaService) {
+  constructor(private authService: AuthService, private router: Router, private metaService: MetaService, public translate: TranslateService) {
     router.events.subscribe((event: RouterEvent) => {
       this.navigationInterceptor(event);
     });
+    translate.addLangs(['tr-TR', 'en-US']);
+    var lang = localStorage.getItem("lang");
+
+    if (lang != null){
+      translate.setDefaultLang(lang);
+    } else{
+      translate.setDefaultLang('tr-TR');
+      localStorage.setItem("lang","tr-TR");
+    }
   }
 
   ngOnInit() {
@@ -42,5 +52,10 @@ export class AppComponent implements OnInit {
     if (event instanceof NavigationError) {
       this.showOverlay = false;
     }
+  }
+
+  switchLang(lang: string) {
+    this.translate.use(lang);
+    localStorage.setItem("lang",lang);
   }
 }

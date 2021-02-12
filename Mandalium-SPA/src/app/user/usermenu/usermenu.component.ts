@@ -6,7 +6,7 @@ import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { BlogEntry } from 'src/app/_models/blogEntry';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { User } from 'src/app/_models/Writer';
+import { User } from 'src/app/_models/User';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';

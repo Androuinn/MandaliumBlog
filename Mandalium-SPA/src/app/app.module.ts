@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -31,7 +31,9 @@ import { environment } from '../environments/environment';
 import { BlogEntriesResolver } from './_resolvers/blogEntries.resolver';
 import { RegisterComponent } from './user/register/register.component';
 import { BlogCommentsComponent } from './blog/blog-comments/blog-comments.component';
-import { HeaderInterceptor } from './_interceptors/header-interceptor';
+import { HttpRequestInterceptor } from './_interceptors/httpRequest-interceptor';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 
 
@@ -77,17 +79,28 @@ export function tokenGetter() {
             blacklistedRoutes: ['localhost:5000/api/auth']
          }
       }),
-      ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+      ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: httpTranslateLoader,
+          deps:[HttpClient]
+        }
+      })
    ],
    providers: [
       BlogEntryResolver,
       BlogEntriesResolver,
       AuthGuard,
       {provide: LOCALE_ID, useValue: 'tr-TR'},
-      {provide: HTTP_INTERCEPTORS, useClass: HeaderInterceptor, multi:true}
+      {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi:true , deps:[TranslateService]}
    ],
    bootstrap: [
       AppComponent
    ]
 })
 export class AppModule { }
+
+export function httpTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

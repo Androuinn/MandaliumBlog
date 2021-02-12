@@ -1,6 +1,21 @@
 <div class="my-overlay" *ngIf="showOverlay">
     <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
   </div>
+
+  <span class="form-inline">
+    <select
+        class="form-control"
+        #selectedLang
+        (change)="switchLang(selectedLang.value)">
+      <option *ngFor="let language of translate.getLangs()"
+        [value]="language"
+        [selected]="language === translate.currentLang">
+        {{ language }}
+      </option>
+    </select>
+  </span>
+
+
 <app-nav></app-nav>
 <!-- Router outlet -->
 <app-home></app-home>
