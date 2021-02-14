@@ -7,6 +7,7 @@ import { AuthService } from "src/app/_services/auth.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AlertifyService } from "src/app/_services/alertify.service";
 import { environment } from "src/environments/environment";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: "app-blog-comments",
@@ -23,7 +24,8 @@ export class BlogCommentsComponent implements OnInit {
     private route: ActivatedRoute,
     public authService: AuthService,
     private fb: FormBuilder,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -66,12 +68,16 @@ export class BlogCommentsComponent implements OnInit {
     if (this.commentFormGroup.valid) {
       this.blogService.saveComment(this.commentFormGroup.value).subscribe(
         (res: Comment) => {
-          this.alertify.success("Yorum Yazma Başarılı");
+          this.alertify.success(this.translate.instant("Successful_Comment"));
 
           res.commenterName = res.commenterName == null ? this.authService.decodedToken?.unique_name : res.commenterName;
           res.photoUrl = this.defaultPhotoUrl;
 
-          this.commentList.result.pop();
+          if (this.commentList.result.length>=10) {
+            this.commentList.result.pop();
+          }
+
+         
           this.commentList.result.unshift(res);
           this.commentList.pagination.totalItems++;
 

@@ -3,6 +3,8 @@ using Mandalium.Core.Context;
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Mandalium.Core.Helpers;
+using System.Linq;
 
 namespace Mandalium.Infrastructure.Repositories
 {
@@ -12,7 +14,7 @@ namespace Mandalium.Infrastructure.Repositories
         public AuthRepository(DataContext context)
         {
             this._context = context;
-
+            Extensions.SystemSettingsAction += SetSystemSettings;
         }
 
         public async Task<User> Login(string username, string password)
@@ -63,6 +65,12 @@ namespace Mandalium.Infrastructure.Repositories
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
+        }
+
+        private void SetSystemSettings()
+        {
+            Extensions.SystemSettingsCache["FromMail"] = _context.SystemSettings.FirstOrDefault(x => x.Key == "FromMail").Value;
+            Extensions.SystemSettingsCache["FromMailPassword"] = _context.SystemSettings.FirstOrDefault(x => x.Key == "FromMailPassword").Value;
         }
 
 

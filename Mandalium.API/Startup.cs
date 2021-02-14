@@ -15,13 +15,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
-using Mandalium.API.Helpers;
 using Mandalium.Core.Context;
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
 using Mandalium.Infrastructure.Repositories;
 using System.Globalization;
 using Mandalium.API.Middlewares;
+using Mandalium.API.Profiles;
 
 namespace Mandalium.API
 {
@@ -68,8 +68,7 @@ namespace Mandalium.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
         {
 
-            Extensions.FromMail = context.SystemSettings.FirstOrDefault(x => x.Key == "FromMail").Value;
-            Extensions.FromMailPassword = context.SystemSettings.FirstOrDefault(x => x.Key == "FromMailPassword").Value;
+           
            
 
             if (env.IsDevelopment())

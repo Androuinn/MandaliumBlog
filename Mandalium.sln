@@ -9,6 +9,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mandalium.Core", "Mandalium
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mandalium.Infrastructure", "Mandalium.Infrastructure\Mandalium.Infrastructure.csproj", "{6D0F207A-C6A5-4A08-9910-317B6767034B}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Mandalium-SPA", "Mandalium-SPA\", "{63DB5A79-BFE5-4074-9BA5-63B5D27FF378}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_62274"
+		Debug.AspNetCompiler.PhysicalPath = "Mandalium-SPA\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62274\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_62274"
+		Release.AspNetCompiler.PhysicalPath = "Mandalium-SPA\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62274\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "62274"
+		SlnRelativePath = "Mandalium-SPA\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +48,10 @@ Global
 		{6D0F207A-C6A5-4A08-9910-317B6767034B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D0F207A-C6A5-4A08-9910-317B6767034B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D0F207A-C6A5-4A08-9910-317B6767034B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63DB5A79-BFE5-4074-9BA5-63B5D27FF378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63DB5A79-BFE5-4074-9BA5-63B5D27FF378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63DB5A79-BFE5-4074-9BA5-63B5D27FF378}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{63DB5A79-BFE5-4074-9BA5-63B5D27FF378}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

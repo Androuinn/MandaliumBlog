@@ -2,7 +2,7 @@ using AutoMapper;
 using Mandalium.Core.Dto;
 using Mandalium.Core.Models;
 
-namespace Mandalium.API.Helpers
+namespace Mandalium.API.Profiles
 {
     public class AutoMapperProfile : Profile
     {
@@ -20,7 +20,9 @@ namespace Mandalium.API.Helpers
             .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic.TopicName));
 
 
-            CreateMap<BlogEntryForCreationDto, BlogEntry>();
+            CreateMap<BlogEntryForCreationDto, BlogEntry>()
+                 .ForPath(dest => dest.User.Id, opt => opt.MapFrom(src => src.UserId))
+                 .ForPath(dest => dest.Topic.Id, opt => opt.MapFrom(src => src.TopicId));
             CreateMap<User,UserDto>();
             CreateMap<User,User>();
             CreateMap<UserDto,User>();
@@ -29,11 +31,12 @@ namespace Mandalium.API.Helpers
 
 
             CreateMap<Comment,CommentDtoForCreation>();
-            CreateMap<CommentDtoForCreation,Comment>();
+            CreateMap<CommentDtoForCreation,Comment>()
+                 .ForPath(dest => dest.User.Id, opt => opt.MapFrom(src => src.userId));
 
             CreateMap<Comment,CommentDto>()
             .ForMember(dest => dest.CommenterName, opt => opt.MapFrom(src => (src.CommenterName == null) ? src.User.Username : src.CommenterName))
-            .ForMember(dest => dest.CommenterId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.CommenterId, opt => opt.MapFrom(src => src.User.Id))
             .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.User.PhotoUrl));
                 
 

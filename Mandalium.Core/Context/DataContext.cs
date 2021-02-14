@@ -1,5 +1,7 @@
+using Mandalium.Core.Configurations;
 using Mandalium.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Mandalium.Core.Context
 {
@@ -22,8 +24,23 @@ namespace Mandalium.Core.Context
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             modelBuilder.Entity<MostReadEntries>().HasNoKey();
             modelBuilder.Entity<MostReadEntries>().Property(x=> x.CreatedOn).ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Photo>().Property(p => p.Id).IsRequired();
+            modelBuilder.Entity<Photo>().Property(p => p.PhotoUrl).IsRequired().HasColumnType("varchar(300)");
+            modelBuilder.Entity<Photo>().Property(p => p.PublicId).IsRequired().HasColumnType("varchar(150)");
+            modelBuilder.Entity<Photo>().HasOne(p => p.User).WithMany(p => p.Photos);
+           
+            modelBuilder.Entity<Topic>().Property(p => p.Id).IsRequired();
+            modelBuilder.Entity<Topic>().Property(p => p.TopicName).IsRequired().HasColumnType("varchar(100)");
+
+
+            modelBuilder.Entity<SystemSetting>().Property(p => p.Id).IsRequired();
+            modelBuilder.Entity<SystemSetting>().Property(p => p.Key).IsRequired().HasColumnType("varchar(200)");
+            modelBuilder.Entity<SystemSetting>().Property(p => p.Value).IsRequired().HasColumnType("varchar(200)");
         }
     }
 }

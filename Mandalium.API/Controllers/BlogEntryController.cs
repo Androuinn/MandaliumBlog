@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Mandalium.API.Helpers;
+using Mandalium.Core.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -79,7 +79,7 @@ namespace Mandalium.API.Controllers
             {
                 var blogEntry = await _repo.GetBlogEntry(id);
 
-                if (blogEntry.isDeleted == true)
+                if (blogEntry.IsDeleted == true)
                     return BadRequest("Entry Bulunamadı");
 
                 var blogEntryDto = _mapper.Map<BlogEntryDto>(blogEntry);

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -7,14 +6,17 @@ using System.Net.Mail;
 using System.Net;
 using Mandalium.Core.Helpers.Pagination;
 using NLog;
+using System.Collections.Generic;
 
-namespace Mandalium.API.Helpers
+namespace Mandalium.Core.Helpers
 {
     public static class Extensions
     {
         public static int ActivationPin { get; set; }
-        public static string FromMail { get; set; }
-        public static string FromMailPassword { get; set; }     
+        public delegate void SystemSettings();
+        public static event SystemSettings SystemSettingsAction;
+
+        public static Dictionary<string, string> SystemSettingsCache { get; set; } = new Dictionary<string, string>();
 
         public static void AddPagination(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
         {
@@ -30,9 +32,12 @@ namespace Mandalium.API.Helpers
             LogManager.GetLogger("Mandalium Nlog").Error(exception, exception.StackTrace);
         }
 
-        public static void SendMail(string mailTo, string mailSubject, string mailBody, bool bodyhtml)
+        public static void SendMail(string mailTo, string mailSubject, string mailBody)
         {
-            var fromAddress = new MailAddress(FromMail, "noreply-mandalium");
+            if (!SystemSettingsCache.ContainsKey("FromMail") || !SystemSettingsCache.ContainsKey("FromMailPassword"))
+                SystemSettingsAction.Invoke();
+
+            var fromAddress = new MailAddress(SystemSettingsCache["FromMail"], "noreply-mandalium");
             var toAddress = new MailAddress(mailTo, mailTo);
            
             var smtp = new SmtpClient
@@ -41,14 +46,14 @@ namespace Mandalium.API.Helpers
                 Port = 587,
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential(fromAddress.Address, FromMailPassword),
+                Credentials = new NetworkCredential(fromAddress.Address, SystemSettingsCache["FromMailPassword"]),
                 Timeout = 20000
             };
             using (var message = new MailMessage(fromAddress, toAddress)
             {
                 Subject = mailSubject,
                 Body = mailBody,
-                IsBodyHtml = bodyhtml
+                IsBodyHtml = true
             })
             {
                 smtp.Send(message);

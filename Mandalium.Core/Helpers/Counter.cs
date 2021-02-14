@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Mandalium.API.Helpers
+namespace Mandalium.Core.Helpers
 {
     public class CountOfEntry
     {

@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
-using Mandalium.API.Helpers;
+using Mandalium.Core.Helpers;
 using Mandalium.Core.Dto;
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
@@ -48,7 +48,7 @@ namespace Mandalium.API.Controllers
                 Extensions.ActivationPin = new Random().Next(10000, 99999);
 
                 Extensions.SendMail(userForRegisterDto.Email, "Mandalium Aktivasyon Pini",
-                "Kayıt doğrulamak için aktivasyon pini:" + Extensions.ActivationPin.ToString(), false);
+                "Kayıt doğrulamak için aktivasyon pini:" + Extensions.ActivationPin.ToString());
 
                 return StatusCode(200);
             }
@@ -76,7 +76,7 @@ namespace Mandalium.API.Controllers
 
                 var text = System.IO.File.ReadAllText( @Environment.CurrentDirectory + "/MailTemplates/UserCreatedTemplate.html");
                
-                Extensions.SendMail(createdWriter.Email, "Kayıt Doğrulama Maili", string.Format(text, createdWriter.Name + " " + createdWriter.Surname), true);
+                Extensions.SendMail(createdWriter.Email, "Kayıt Doğrulama Maili", string.Format(text, createdWriter.Name + " " + createdWriter.Surname));
 
                 return StatusCode(200);
             }

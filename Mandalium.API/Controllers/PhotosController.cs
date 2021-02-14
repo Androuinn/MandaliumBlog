@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Mandalium.API.Helpers;
+using Mandalium.Core.Helpers;
 using Mandalium.Core.Dto;
 using Mandalium.Core.Helpers.Pagination;
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

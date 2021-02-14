@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Mandalium.API.Helpers;
+using Mandalium.Core.Helpers;
 using Mandalium.Core.Context;
 using Mandalium.Core.Helpers.Pagination;
 using Mandalium.Core.Interfaces;
@@ -30,11 +30,11 @@ namespace Mandalium.Infrastructure.Repositories
             IQueryable<BlogEntry> blogEntries;
             if (userParams.UserId >= 1)
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.UserId == userParams.UserId).Where(x => x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.User.Id == userParams.UserId).Where(x => x.IsDeleted == false).OrderByDescending(x => x.CreatedOn).AsQueryable();
             }
             else
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.WriterEntry == userParams.WriterEntry).Where(x => x.isDeleted == false).OrderByDescending(x => x.CreatedDate).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.WriterEntry == userParams.WriterEntry).Where(x => x.IsDeleted == false).OrderByDescending(x => x.CreatedOn).AsQueryable();
             }
 
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
@@ -59,7 +59,7 @@ namespace Mandalium.Infrastructure.Repositories
 
         public async Task<PagedList<Comment>> GetComments(int id, UserParams userParams)
         {
-            var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntryId == id).OrderByDescending(x => x.CreatedDate).AsQueryable();
+            var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntry.Id == id).OrderByDescending(x => x.CreatedDate).AsQueryable();
             return await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -89,7 +89,7 @@ namespace Mandalium.Infrastructure.Repositories
         public async Task<int> DeleteBlogEntry(int id)
         {
             var entry = await _context.BlogEntries.FirstOrDefaultAsync(x => x.Id == id);
-            entry.isDeleted = true;
+            entry.IsDeleted = true;
             _context.BlogEntries.Update(entry);
             return await _context.SaveChangesAsync();
         }

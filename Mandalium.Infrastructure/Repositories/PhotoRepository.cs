@@ -24,7 +24,7 @@ namespace Mandalium.Infrastructure.Repositories
 
         public async Task<PagedList<Photo>> GetPhotos(UserParams userParams)
         {
-            var photos =  _context.Photos.AsNoTracking().Where(x=> x.UserId == userParams.UserId).AsQueryable();
+            var photos =  _context.Photos.AsNoTracking().Where(x=> x.User.Id == userParams.UserId).AsQueryable();
 
             return await PagedList<Photo>.CreateAsync(photos, userParams.PageNumber, userParams.PageSize);
         }
