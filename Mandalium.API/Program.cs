@@ -24,7 +24,13 @@ namespace Mandalium.API
             {
                 CultureInfo.CurrentCulture = new CultureInfo("tr-TR");
                 logger.Debug("init main");
-                CreateHostBuilder(args).Build().Run();
+                var host = CreateHostBuilder(args).Build();
+                using (var scope = host.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    services.GetRequiredService<DataContext>().Database.EnsureCreated();
+                }
+                host.Run();
             }
             catch (Exception ex)
             {
