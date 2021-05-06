@@ -41,7 +41,6 @@ namespace Mandalium.API.Profiles
                 
 
             CreateMap<UserForRegisterDto, User>();
-            CreateMap<PhotoForCreationDto,Photo>();
             CreateMap<Photo,PhotoDto>();
 
            
