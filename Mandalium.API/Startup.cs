@@ -38,6 +38,7 @@ namespace Mandalium.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), m => m.MigrationsAssembly("Mandalium.Core")));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBlogRepository<BlogEntry>, BlogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository<User>, AuthRepository>();

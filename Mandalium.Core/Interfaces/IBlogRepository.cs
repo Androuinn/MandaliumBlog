@@ -32,20 +32,6 @@ namespace Mandalium.Core.Interfaces
         Task<IEnumerable<T>> GetMostRead();
 
         /// <summary>
-        /// Creates a new blog entry with the given entity.
-        /// </summary>
-        /// <param name="blogEntry"></param>
-        /// <returns></returns>
-        Task<int> SaveBlogEntry(BlogEntry blogEntry);
-
-        /// <summary>
-        /// Updates the blog entry specified with the given entity.
-        /// </summary>
-        /// <param name="blogEntry"></param>
-        /// <returns></returns>
-        Task<int> UpdateBlogEntry(BlogEntry blogEntry);
-
-        /// <summary>
         /// Updates the blog entry as deleted in the database with the given id.
         /// </summary>
         /// <param name="id"></param>
@@ -58,7 +44,5 @@ namespace Mandalium.Core.Interfaces
         /// <param name="comment"></param>
         /// <returns></returns>
         Task<int> SaveComment(Comment comment);
-        Task<int> SaveTopic(Topic topic);
-        Task<IEnumerable<Topic>> GetTopics();
     }
 }

@@ -11,16 +11,14 @@ using Mandalium.Core.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-
-//TODO writer ile ilgili olanları user repo ve controller altında topla
 namespace Mandalium.Infrastructure.Repositories
 {
-    public class BlogRepository : IBlogRepository<BlogEntry>
+    public class BlogRepository : GenericRepository<BlogEntry>, IBlogRepository<BlogEntry>
     {
         private readonly DataContext _context;
-        public BlogRepository(DataContext context)
+        public BlogRepository(DataContext context) : base(context)
         {
-            this._context = context;
+            _context = context;
         }
 
         #region  Get methods for blog
@@ -30,11 +28,11 @@ namespace Mandalium.Infrastructure.Repositories
             IQueryable<BlogEntry> blogEntries;
             if (userParams.UserId >= 1)
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.User.Id == userParams.UserId).Where(x => x.IsDeleted == false).OrderByDescending(x => x.CreatedOn).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.User.Id == userParams.UserId).Where(x => !x.IsDeleted).OrderByDescending(x => x.CreatedOn).AsQueryable();
             }
             else
             {
-                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.WriterEntry == userParams.WriterEntry).Where(x => x.IsDeleted == false).OrderByDescending(x => x.CreatedOn).AsQueryable();
+                blogEntries = _context.BlogEntries.AsNoTracking().Include(x => x.Topic).Include(x => x.User).Where(x => x.WriterEntry == userParams.WriterEntry).Where(x => !x.IsDeleted ).OrderByDescending(x => x.CreatedOn).AsQueryable();
             }
 
             return await PagedList<BlogEntry>.CreateAsync(blogEntries, userParams.PageNumber, userParams.PageSize);
@@ -42,19 +40,19 @@ namespace Mandalium.Infrastructure.Repositories
 
         public async Task<BlogEntry> GetBlogEntry(int blogId)
         {
-          
-                var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.User).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
 
-                //TODO userId de eklenebilir.
-                var Id = new SqlParameter("@BlogId", Entry.Id);
-                var writerEntry = new SqlParameter("@WriterEntry", Entry.WriterEntry);
-                await _context.Database.ExecuteSqlRawAsync("EXEC InsertMostRead @BlogId, @WriterEntry", Id, writerEntry);
+            var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.User).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
 
-                Entry.TimesRead += 1;
-                _context.BlogEntries.Update(Entry);
-                await _context.SaveChangesAsync();
-                return Entry;
-           
+            //TODO userId de eklenebilir.
+            var Id = new SqlParameter("@BlogId", Entry.Id);
+            var writerEntry = new SqlParameter("@WriterEntry", Entry.WriterEntry);
+            await _context.Database.ExecuteSqlRawAsync("EXEC InsertMostRead @BlogId, @WriterEntry", Id, writerEntry);
+
+            Entry.TimesRead += 1;
+            _context.BlogEntries.Update(Entry);
+            await _context.SaveChangesAsync();
+            return Entry;
+
         }
 
         public async Task<PagedList<Comment>> GetComments(int id, UserParams userParams)
@@ -65,8 +63,7 @@ namespace Mandalium.Infrastructure.Repositories
 
         public async Task<IEnumerable<BlogEntry>> GetMostRead()
         {
-
-            List<BlogEntry> Entries = await _context.BlogEntries.FromSqlRaw("Exec GetMostReadEntries").ToListAsync(); 
+            List<BlogEntry> Entries = await _context.BlogEntries.FromSqlRaw("Exec GetMostReadEntries").ToListAsync();
             return Entries;
         }
 
@@ -74,17 +71,6 @@ namespace Mandalium.Infrastructure.Repositories
 
 
         #region saving includes Comments
-        public async Task<int> SaveBlogEntry(BlogEntry blogEntry)
-        {
-            await _context.AddAsync(blogEntry);
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task<int> UpdateBlogEntry(BlogEntry blogEntry)
-        {
-            _context.Update(blogEntry);
-            return await _context.SaveChangesAsync();
-        }
 
         public async Task<int> DeleteBlogEntry(int id)
         {
@@ -94,30 +80,11 @@ namespace Mandalium.Infrastructure.Repositories
             return await _context.SaveChangesAsync();
         }
 
-
-
-
         public async Task<int> SaveComment(Comment comment)
         {
             await _context.AddAsync(comment);
             return await _context.SaveChangesAsync();
         }
-
-
-        #endregion
-
-        #region Topics
-        public async Task<IEnumerable<Topic>> GetTopics()
-        {
-            return await _context.Topics.ToListAsync();
-        }
-
-        public async Task<int> SaveTopic(Topic topic)
-        {
-            await _context.AddAsync(topic);
-            return await _context.SaveChangesAsync();
-        }
-
 
         #endregion
     }

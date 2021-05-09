@@ -32,12 +32,14 @@ namespace Mandalium.API.Controllers
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary _cloudinary;
         private readonly IMemoryCache _memoryCache;
-        public BlogEntryController(IBlogRepository<BlogEntry> repo, IUserRepository userRepo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig, IMemoryCache memoryCache)
+        private readonly IUnitOfWork _unitOfWork;
+        public BlogEntryController(IBlogRepository<BlogEntry> repo, IUnitOfWork unitOfWork, IUserRepository userRepo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig, IMemoryCache memoryCache)
         {
             this._memoryCache = memoryCache;
             this.cloudinaryConfig = _cloudinaryConfig;
             this._mapper = mapper;
             this._repo = repo;
+            _unitOfWork = unitOfWork;
             this._userRepo = userRepo;
 
             Account acc = new Account(
@@ -160,7 +162,7 @@ namespace Mandalium.API.Controllers
 
             try
             {
-                var topics = _mapper.Map<IEnumerable<TopicDto>>(await _repo.GetTopics());
+                var topics = _mapper.Map<IEnumerable<TopicDto>>(await _unitOfWork.TopicRepository.GetAll());
                 return Ok(topics);
             }
             catch (System.Exception ex)
@@ -214,11 +216,9 @@ namespace Mandalium.API.Controllers
             try
             {
                 var topic = _mapper.Map<Topic>(topicDto);
-                var number = await _repo.SaveTopic(topic);
-                if (number != 0)
-                {
-                    return StatusCode(200);
-                }
+                await _unitOfWork.TopicRepository.Save(topic);
+                await _unitOfWork.Save();
+                return StatusCode(200);
             }
             catch (System.Exception ex)
             {
@@ -253,11 +253,12 @@ namespace Mandalium.API.Controllers
                     PhotoUrl = request.PhotoUrl,
                     InnerTextHtml = request.innerTextHtml,
                     SubHeadline = request.SubHeadline,
-                    Topic = _repo.GetTopics().Result.FirstOrDefault(x => x.Id == request.TopicId),
+                    Topic = await _unitOfWork.TopicRepository.Get(request.TopicId),
                     User = user
                 };
 
-                await _repo.SaveBlogEntry(blog);
+                await _unitOfWork.BlogEntryRepository.Save(blog);
+                await _unitOfWork.Save();
                 return StatusCode(200);
             }
             catch (System.Exception ex)
@@ -292,12 +293,13 @@ namespace Mandalium.API.Controllers
                     PhotoUrl = request.PhotoUrl,
                     InnerTextHtml = request.innerTextHtml,
                     SubHeadline = request.SubHeadline,
-                    Topic = _repo.GetTopics().Result.FirstOrDefault(x => x.Id == request.TopicId),
+                    Topic = await _unitOfWork.TopicRepository.Get(request.TopicId),
                     User = user,
                     Id = request.Id
                 };
 
-                await _repo.UpdateBlogEntry(blog);
+                await _unitOfWork.BlogEntryRepository.Update(blog);
+                await _unitOfWork.Save();
                 return StatusCode(200);
             }
             catch (System.Exception ex)
