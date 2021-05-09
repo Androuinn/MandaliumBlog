@@ -12,8 +12,5 @@ namespace Mandalium.Core.Interfaces
 
         Task Save();
         IGenericRepository<T> GetRepository<T>() where T : class;
-        IGenericRepository<Topic> TopicRepository { get; }
-        IGenericRepository<Comment> CommentRepository { get;}
-        IGenericRepository<BlogEntry> BlogEntryRepository { get;}
     }
 }

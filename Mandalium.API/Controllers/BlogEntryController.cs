@@ -160,7 +160,7 @@ namespace Mandalium.API.Controllers
 
             try
             {
-                var topics = _mapper.Map<IEnumerable<TopicDto>>(await _unitOfWork.TopicRepository.GetAll());
+                var topics = _mapper.Map<IEnumerable<TopicDto>>(await _unitOfWork.GetRepository<Topic>().GetAll());
                 return Ok(topics);
             }
             catch (System.Exception ex)
@@ -218,7 +218,7 @@ namespace Mandalium.API.Controllers
             try
             {
                 var topic = _mapper.Map<Topic>(topicDto);
-                await _unitOfWork.TopicRepository.Save(topic);
+                await _unitOfWork.GetRepository<Topic>().Save(topic);
                 await _unitOfWork.Save();
                 return StatusCode(200);
             }
@@ -255,11 +255,11 @@ namespace Mandalium.API.Controllers
                     PhotoUrl = request.PhotoUrl,
                     InnerTextHtml = request.innerTextHtml,
                     SubHeadline = request.SubHeadline,
-                    Topic = await _unitOfWork.TopicRepository.Get(request.TopicId),
+                    Topic = await _unitOfWork.GetRepository<Topic>().Get(request.TopicId),
                     User = user
                 };
 
-                await _unitOfWork.BlogEntryRepository.Save(blog);
+                await _unitOfWork.GetRepository<BlogEntry>().Save(blog);
                 await _unitOfWork.Save();
                 return StatusCode(200);
             }
@@ -295,12 +295,12 @@ namespace Mandalium.API.Controllers
                     PhotoUrl = request.PhotoUrl,
                     InnerTextHtml = request.innerTextHtml,
                     SubHeadline = request.SubHeadline,
-                    Topic = await _unitOfWork.TopicRepository.Get(request.TopicId),
+                    Topic = await _unitOfWork.GetRepository<Topic>().Get(request.TopicId),
                     User = user,
                     Id = request.Id
                 };
 
-                await _unitOfWork.BlogEntryRepository.Update(blog);
+                await _unitOfWork.GetRepository<BlogEntry>().Update(blog);
                 await _unitOfWork.Save();
                 return StatusCode(200);
             }

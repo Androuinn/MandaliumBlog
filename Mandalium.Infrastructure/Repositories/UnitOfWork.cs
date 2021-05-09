@@ -13,48 +13,12 @@ namespace Mandalium.Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private DataContext _context;
-        private GenericRepository<Topic> topicRepository;
-        private GenericRepository<Comment> commentRepository;
-        private GenericRepository<BlogEntry> blogEntryRepository;
         private Hashtable _repositories;
 
 
         public UnitOfWork(DataContext context)
         {
             _context = context;
-        }
-
-
-        public IGenericRepository<Topic> TopicRepository
-        {
-            get
-            {
-                if (this.topicRepository == null)
-                    this.topicRepository = new GenericRepository<Topic>(_context);
-
-                return topicRepository;
-            }
-        }
-        public IGenericRepository<Comment> CommentRepository
-        {
-            get
-            {
-                if (this.commentRepository == null)
-                    this.commentRepository = new GenericRepository<Comment>(_context);
-
-                return commentRepository;
-            }
-        }
-
-        public IGenericRepository<BlogEntry> BlogEntryRepository
-        {
-            get
-            {
-                if (this.blogEntryRepository == null)
-                    this.blogEntryRepository = new GenericRepository<BlogEntry>(_context);
-
-                return blogEntryRepository;
-            }
         }
 
         private bool disposed = false;
