@@ -69,23 +69,5 @@ namespace Mandalium.Infrastructure.Repositories
 
         #endregion
 
-
-        #region saving includes Comments
-
-        public async Task<int> DeleteBlogEntry(int id)
-        {
-            var entry = await _context.BlogEntries.FirstOrDefaultAsync(x => x.Id == id);
-            entry.IsDeleted = true;
-            _context.BlogEntries.Update(entry);
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task<int> SaveComment(Comment comment)
-        {
-            await _context.AddAsync(comment);
-            return await _context.SaveChangesAsync();
-        }
-
-        #endregion
     }
 }

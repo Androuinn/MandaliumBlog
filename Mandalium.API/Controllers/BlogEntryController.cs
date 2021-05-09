@@ -27,20 +27,18 @@ namespace Mandalium.API.Controllers
 
         #region field and constructor
         private readonly IBlogRepository<BlogEntry> _repo;
-        private readonly IUserRepository _userRepo;
         private readonly IMapper _mapper;
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary _cloudinary;
         private readonly IMemoryCache _memoryCache;
         private readonly IUnitOfWork _unitOfWork;
-        public BlogEntryController(IBlogRepository<BlogEntry> repo, IUnitOfWork unitOfWork, IUserRepository userRepo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig, IMemoryCache memoryCache)
+        public BlogEntryController(IBlogRepository<BlogEntry> repo, IUnitOfWork unitOfWork, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig, IMemoryCache memoryCache)
         {
             this._memoryCache = memoryCache;
             this.cloudinaryConfig = _cloudinaryConfig;
             this._mapper = mapper;
             this._repo = repo;
             _unitOfWork = unitOfWork;
-            this._userRepo = userRepo;
 
             Account acc = new Account(
                 _cloudinaryConfig.Value.CloudName,
@@ -54,7 +52,7 @@ namespace Mandalium.API.Controllers
 
         #region  get methods
 
-       
+
         [HttpGet(Name = "GetEntries")]
         public async Task<IActionResult> GetEntries([FromQuery] UserParams userParams)
         {
@@ -189,12 +187,16 @@ namespace Mandalium.API.Controllers
             if (User.FindFirst(ClaimTypes.Role).Value != "1")
                 return Unauthorized();
 
+            BlogEntry entry = await _unitOfWork.GetRepository<BlogEntry>().Get(id);
+            if (entry == null)
+                return BadRequest();
+
             try
             {
-                if (await _repo.DeleteBlogEntry(id) != 0)
-                {
-                    return StatusCode(200);
-                }
+                entry.IsDeleted = true;
+                await _unitOfWork.GetRepository<BlogEntry>().Update(entry);
+                await _unitOfWork.Save();
+                return StatusCode(200);
             }
             catch (System.Exception ex)
             {
@@ -240,7 +242,7 @@ namespace Mandalium.API.Controllers
             if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
                 return Unauthorized();
 
-            User user = await _userRepo.GetUser(request.UserId);
+            User user = await _unitOfWork.GetRepository<User>().Get(request.UserId);
             if (user == null)
                 return Unauthorized();
 
@@ -279,8 +281,8 @@ namespace Mandalium.API.Controllers
         {
             if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
                 return Unauthorized();
-           
-            User user = await _userRepo.GetUser(request.UserId);
+
+            User user = await _unitOfWork.GetRepository<User>().Get(request.UserId);
             if (user == null)
                 return Unauthorized();
 
@@ -313,16 +315,23 @@ namespace Mandalium.API.Controllers
 
         [Route("[action]")]
         [HttpPost]
-        public async Task<IActionResult> WriteComment(CommentDtoForCreation commentDtoForCreation)
+        public async Task<IActionResult> WriteComment(CommentCreateRequest request)
         {
             try
             {
-                var comment = _mapper.Map<Comment>(commentDtoForCreation);
+                Comment comment = new Comment
+                {
+                    BlogEntry = await _unitOfWork.GetRepository<BlogEntry>().Get(request.BlogEntryId),
+                    CommenterName = request.CommenterName,
+                    Email = request.Email,
+                    User = request.userId != null ? await _unitOfWork.GetRepository<User>().Get((int)request.userId) : null,
+                    CommentString = request.CommentString,
+                    CreatedDate = DateTime.Now
+                };
 
-                if (await _repo.SaveComment(comment) >= 0)
-                    return Ok(_mapper.Map<CommentDto>(comment));
-
-                return BadRequest();
+                await _unitOfWork.GetRepository<Comment>().Save(comment);
+                await _unitOfWork.Save();
+                return Ok(comment);
             }
             catch (System.Exception ex)
             {

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Mandalium.API.Models;
+using System.Linq;
 
 namespace Mandalium.API.Controllers
 {
@@ -23,17 +24,17 @@ namespace Mandalium.API.Controllers
 
         private readonly IMapper _mapper;
         private readonly IPhotoRepository _repo;
-        private readonly IUserRepository _userRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary _cloudinary;
-        public PhotosController(IOptions<CloudinarySettings> _cloudinaryConfig, IMapper mapper, IPhotoRepository repo, IUserRepository userRepo)
+        public PhotosController(IOptions<CloudinarySettings> _cloudinaryConfig, IUnitOfWork unitOfWork, IMapper mapper, IPhotoRepository repo)
         {
-            this._userRepo = userRepo;
             this._repo = repo;
             this._mapper = mapper;
 
             this.cloudinaryConfig = _cloudinaryConfig;
+            _unitOfWork = unitOfWork;
             Account acc = new Account(
                 _cloudinaryConfig.Value.CloudName,
                 _cloudinaryConfig.Value.ApiKey,
@@ -49,7 +50,7 @@ namespace Mandalium.API.Controllers
             if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
                 return Unauthorized();
 
-            User user = await _userRepo.GetUser(request.UserId);
+            User user = await _unitOfWork.GetRepository<User>().Get(request.UserId);
             if (user == null)
                 return Unauthorized();
 
@@ -121,7 +122,7 @@ namespace Mandalium.API.Controllers
             if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var userProfile = await _userRepo.GetUser(request.UserId);
+            User userProfile = await _unitOfWork.GetRepository<User>().Get(request.UserId);
             if (userProfile == null)
                 return Unauthorized();
 
@@ -161,8 +162,9 @@ namespace Mandalium.API.Controllers
                 request.PhotoUrl = uploadResult.Url.ToString();
                 request.PublicId = uploadResult.PublicId;
 
-                userProfile.PhotoUrl = uploadResult.PublicId;
-                await _userRepo.UpdateUser(userProfile);
+                userProfile.PhotoUrl = uploadResult.PublicId.Split(".webp").First();
+                await _unitOfWork.GetRepository<User>().Update(userProfile);
+                await _unitOfWork.Save();
                 request.PublicId = _cloudinary.Api.UrlImgUp.Secure().Transform(new Transformation().Height(500).Crop("scale")).BuildUrl(uploadResult.PublicId + ".webp");
                 return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(request.PublicId));
             }

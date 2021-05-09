@@ -8,6 +8,11 @@ namespace Mandalium.Core.Helpers.Pagination
 {
     public class PagedList<T> : List<T>
     {
+        public PagedList()
+        {
+
+        }
+
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int PageSize { get; set; }

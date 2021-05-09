@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Mandalium.Core.Dto
+namespace Mandalium.API.Models
 {
-    public class CommentDtoForCreation
+    public class CommentCreateRequest
     {
-       
         public Guid Id { get; set; }
-       
+
         [MaxLength(100)]
         public string CommenterName { get; set; }
-       
+
         [MaxLength(100)]
         public string Email { get; set; }
         [Required]
@@ -20,6 +22,5 @@ namespace Mandalium.Core.Dto
         public int BlogEntryId { get; set; }
 
         public int? userId { get; set; }
-
     }
 }

@@ -2,6 +2,7 @@
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Mandalium.Infrastructure.Repositories
         private GenericRepository<Topic> topicRepository;
         private GenericRepository<Comment> commentRepository;
         private GenericRepository<BlogEntry> blogEntryRepository;
+        private Hashtable _repositories;
 
 
         public UnitOfWork(DataContext context)
@@ -75,6 +77,27 @@ namespace Mandalium.Infrastructure.Repositories
         public async Task Save()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public IGenericRepository<T> GetRepository<T>() where T : class
+        {
+            if (_repositories == null)
+                _repositories = new Hashtable();
+
+            var type = typeof(T).Name;
+
+            if (!_repositories.ContainsKey(type))
+            {
+                var repositoryType = typeof(GenericRepository<T>);
+
+                var repositoryInstance =
+                    Activator.CreateInstance(repositoryType
+                        , _context);
+
+                _repositories.Add(type, repositoryInstance);
+            }
+
+            return (IGenericRepository<T>)_repositories[type];
         }
     }
 }

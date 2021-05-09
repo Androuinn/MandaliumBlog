@@ -31,18 +31,5 @@ namespace Mandalium.Core.Interfaces
         /// <returns></returns>
         Task<IEnumerable<T>> GetMostRead();
 
-        /// <summary>
-        /// Updates the blog entry as deleted in the database with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<int> DeleteBlogEntry(int id);
-
-        /// <summary>
-        /// Saves a comment with the given entity.
-        /// </summary>
-        /// <param name="comment"></param>
-        /// <returns></returns>
-        Task<int> SaveComment(Comment comment);
     }
 }

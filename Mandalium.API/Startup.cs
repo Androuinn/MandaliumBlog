@@ -40,7 +40,6 @@ namespace Mandalium.API
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), m => m.MigrationsAssembly("Mandalium.Core")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBlogRepository<BlogEntry>, BlogRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository<User>, AuthRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
