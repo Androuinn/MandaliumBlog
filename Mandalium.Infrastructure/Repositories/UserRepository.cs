@@ -35,7 +35,7 @@ namespace Mandalium.Infrastructure.Repositories
 
         public async Task<User> GetUser(int id)
         {
-            return await _context.Users.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _context.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
     }
 }

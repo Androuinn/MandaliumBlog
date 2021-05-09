@@ -16,6 +16,7 @@ using Mandalium.Core.Models;
 using Mandalium.Core.Helpers.Pagination;
 using Mandalium.Core.Dto;
 using Mandalium.Resources;
+using Mandalium.API.Models;
 
 namespace Mandalium.API.Controllers
 {
@@ -26,16 +27,18 @@ namespace Mandalium.API.Controllers
 
         #region field and constructor
         private readonly IBlogRepository<BlogEntry> _repo;
+        private readonly IUserRepository _userRepo;
         private readonly IMapper _mapper;
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary _cloudinary;
         private readonly IMemoryCache _memoryCache;
-        public BlogEntryController(IBlogRepository<BlogEntry> repo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig, IMemoryCache memoryCache)
+        public BlogEntryController(IBlogRepository<BlogEntry> repo, IUserRepository userRepo, IMapper mapper, IOptions<CloudinarySettings> _cloudinaryConfig, IMemoryCache memoryCache)
         {
             this._memoryCache = memoryCache;
             this.cloudinaryConfig = _cloudinaryConfig;
             this._mapper = mapper;
             this._repo = repo;
+            this._userRepo = userRepo;
 
             Account acc = new Account(
                 _cloudinaryConfig.Value.CloudName,
@@ -232,15 +235,29 @@ namespace Mandalium.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> SaveBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
+        public async Task<IActionResult> SaveBlogEntry(BlogCreateRequest request)
         {
-            if (blogEntryForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+                return Unauthorized();
+
+            User user = await _userRepo.GetUser(request.UserId);
+            if (user == null)
                 return Unauthorized();
 
             try
             {
-                var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
-                await _repo.SaveBlogEntry(blogEntry);
+                BlogEntry blog = new BlogEntry()
+                {
+                    WriterEntry = request.WriterEntry,
+                    Headline = request.Headline,
+                    PhotoUrl = request.PhotoUrl,
+                    InnerTextHtml = request.innerTextHtml,
+                    SubHeadline = request.SubHeadline,
+                    Topic = _repo.GetTopics().Result.FirstOrDefault(x => x.Id == request.TopicId),
+                    User = user
+                };
+
+                await _repo.SaveBlogEntry(blog);
                 return StatusCode(200);
             }
             catch (System.Exception ex)
@@ -257,16 +274,30 @@ namespace Mandalium.API.Controllers
         [Route("[action]")]
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> UpdateBlogEntry(BlogEntryForCreationDto blogEntryForCreationDto)
+        public async Task<IActionResult> UpdateBlogEntry(BlogCreateRequest request)
         {
-            if (blogEntryForCreationDto.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+            if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
+                return Unauthorized();
+           
+            User user = await _userRepo.GetUser(request.UserId);
+            if (user == null)
                 return Unauthorized();
 
             try
             {
-                var blogEntry = _mapper.Map<BlogEntry>(blogEntryForCreationDto);
-                await _repo.UpdateBlogEntry(blogEntry);
+                BlogEntry blog = new BlogEntry()
+                {
+                    WriterEntry = request.WriterEntry,
+                    Headline = request.Headline,
+                    PhotoUrl = request.PhotoUrl,
+                    InnerTextHtml = request.innerTextHtml,
+                    SubHeadline = request.SubHeadline,
+                    Topic = _repo.GetTopics().Result.FirstOrDefault(x => x.Id == request.TopicId),
+                    User = user,
+                    Id = request.Id
+                };
 
+                await _repo.UpdateBlogEntry(blog);
                 return StatusCode(200);
             }
             catch (System.Exception ex)
@@ -274,8 +305,6 @@ namespace Mandalium.API.Controllers
                 Extensions.ReportError(ex);
             }
             return StatusCode(500);
-
-
         }
 
 

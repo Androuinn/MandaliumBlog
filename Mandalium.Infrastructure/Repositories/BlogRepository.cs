@@ -109,7 +109,7 @@ namespace Mandalium.Infrastructure.Repositories
         #region Topics
         public async Task<IEnumerable<Topic>> GetTopics()
         {
-            return await _context.Topics.AsNoTracking().ToListAsync();
+            return await _context.Topics.ToListAsync();
         }
 
         public async Task<int> SaveTopic(Topic topic)

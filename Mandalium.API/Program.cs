@@ -28,7 +28,7 @@ namespace Mandalium.API
                 using (var scope = host.Services.CreateScope())
                 {
                     var services = scope.ServiceProvider;
-                    services.GetRequiredService<DataContext>().Database.EnsureCreated();
+                    services.GetRequiredService<DataContext>().Database.MigrateAsync();
                 }
                 host.Run();
             }

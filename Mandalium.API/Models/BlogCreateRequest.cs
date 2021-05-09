@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Mandalium.Core.Dto
+namespace Mandalium.API.Models
 {
-    public class BlogEntryForCreationDto
+    public class BlogCreateRequest
     {
         [Required]
         public int Id { get; set; }
@@ -19,14 +23,13 @@ namespace Mandalium.Core.Dto
         [Required]
         [Column(TypeName = "varchar(MAX)")]
         public string innerTextHtml { get; set; }
-       
+
         [Column(TypeName = "varchar(250)")]
         public string PhotoUrl { get; set; }
-        public bool WriterEntry {get; set;}
-
+        public bool WriterEntry { get; set; }
         public int UserId { get; set; }
-       
         public int TopicId { get; set; }
-     
+
+
     }
 }

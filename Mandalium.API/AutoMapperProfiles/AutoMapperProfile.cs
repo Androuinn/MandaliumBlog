@@ -19,10 +19,6 @@ namespace Mandalium.API.Profiles
             .ForMember(dest => dest.WriterSurname, opt => opt.MapFrom(src => src.User.Surname))
             .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic.TopicName));
 
-
-            CreateMap<BlogEntryForCreationDto, BlogEntry>()
-                 .ForPath(dest => dest.User.Id, opt => opt.MapFrom(src => src.UserId))
-                 .ForPath(dest => dest.Topic.Id, opt => opt.MapFrom(src => src.TopicId));
             CreateMap<User,UserDto>();
             CreateMap<User,User>();
             CreateMap<UserDto,User>();

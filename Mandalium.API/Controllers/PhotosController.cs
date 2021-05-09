@@ -44,12 +44,14 @@ namespace Mandalium.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> PostPhoto([FromForm]PhotoCreateRequest request)
+        public async Task<IActionResult> PostPhoto([FromForm] PhotoCreateRequest request)
         {
             if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
-            {
                 return Unauthorized();
-            }
+
+            User user = await _userRepo.GetUser(request.UserId);
+            if (user == null)
+                return Unauthorized();
 
             var uploadResult = new ImageUploadResult();
             if (request.File.Length > 0)
@@ -63,20 +65,20 @@ namespace Mandalium.API.Controllers
                         Folder = "Writers/" + request.UserId
                     };
                     uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
                 }
             }
             try
             {
                 if (uploadResult != null)
                 {
-                    request.UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    request.PhotoUrl = uploadResult.Url.ToString();
-                    request.PublicId = uploadResult.PublicId;
-
-                    await _repo.AddPhoto(new Photo() { PhotoUrl = request.PhotoUrl, PublicId = request.PublicId, User = new User() { Id = request.UserId } });
-
-                    return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(request.PublicId));
+                    var photo = new Photo()
+                    {
+                        PhotoUrl = uploadResult.Url.ToString(),
+                        PublicId = uploadResult.PublicId,
+                        User = user
+                    };
+                    await _repo.AddPhoto(photo);
+                    return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(photo.PublicId));
                 }
             }
             catch (System.Exception ex)
@@ -84,14 +86,14 @@ namespace Mandalium.API.Controllers
                 Extensions.ReportError(ex);
                 throw;
             }
-           
+
             return BadRequest();
         }
 
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetPhoto([FromQuery]UserParams userParams)
+        public async Task<IActionResult> GetPhoto([FromQuery] UserParams userParams)
         {
             if (userParams.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) || User.FindFirst(ClaimTypes.Role).Value != "1")
             {
@@ -117,15 +119,14 @@ namespace Mandalium.API.Controllers
         public async Task<IActionResult> UpdateProfilePhoto([FromForm] PhotoCreateRequest request)
         {
             if (request.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            {
                 return Unauthorized();
-            }
 
             var userProfile = await _userRepo.GetUser(request.UserId);
+            if (userProfile == null)
+                return Unauthorized();
 
             if (userProfile.PhotoUrl != null)
             {
-                
                 var deletionParams = new DeletionParams(userProfile.PhotoUrl)
                 {
                     PublicId = userProfile.PhotoUrl.ToString()
@@ -133,9 +134,8 @@ namespace Mandalium.API.Controllers
 
                 if (deletionParams.PublicId != "" && deletionParams.PublicId != null)
                 {
-                     var deletionResult = _cloudinary.DestroyAsync(deletionParams);
+                    var deletionResult = _cloudinary.DestroyAsync(deletionParams);
                 }
-               
             }
 
 
