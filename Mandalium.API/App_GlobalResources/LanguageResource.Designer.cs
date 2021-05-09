@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Mandalium.Resources {
+namespace Mandalium.API.App_GlobalResources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Mandalium.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mandalium.Resources.LanguageResource", typeof(LanguageResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mandalium.API.App_GlobalResources.LanguageResource", typeof(LanguageResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
