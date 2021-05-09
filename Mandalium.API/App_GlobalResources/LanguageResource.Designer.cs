@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Mandalium.API.App_GlobalResources {
+namespace Mandalium.Resources {
     using System;
     
     
