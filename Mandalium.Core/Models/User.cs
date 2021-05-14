@@ -5,21 +5,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mandalium.Core.Models
 {
-    public class User
+    public class User : BaseEntityWithId
     {
-        public int Id { get; set; }
 
         [MinLength(5)]
         public string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
         public DateTime? BirthDate { get; set; }
         public string Background { get; set; }
         public string PhotoUrl { get; set; }
+        public int? ActivationPin { get; set; }
+        public bool IsActivated { get; set; }
         public DateTime CreatedOn { get; set; }
 
         public bool Role { get; set; } = false;

@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mandalium.Core.Models
 {
-    public class Photo
+    public class Photo : BaseEntityWithId
     {
-        public int Id { get; set; } 
         public string PhotoUrl { get; set; }
         public string PublicId { get; set; }
         public User  User { get; set; }

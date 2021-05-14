@@ -11,6 +11,7 @@ using Mandalium.Core.Helpers;
 using Mandalium.Core.Dto;
 using Mandalium.Core.Interfaces;
 using Mandalium.Core.Models;
+using Mandalium.API.Models;
 
 namespace Mandalium.API.Controllers
 {
@@ -89,7 +90,7 @@ namespace Mandalium.API.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
+        public async Task<IActionResult> Login([FromBody] LoginRequest userForLoginDto)
         {
             var writerFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 

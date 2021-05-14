@@ -10,30 +10,39 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mandalium.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201002213314_AddedSystemSettings")]
-    partial class AddedSystemSettings
+    [Migration("20210514214305_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.3")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.2");
 
-            modelBuilder.Entity("Mandalium.API.Models.BlogEntry", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.BlogEntry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("Headline")
                         .IsRequired()
                         .HasColumnType("varchar(200)");
+
+                    b.Property<string>("InnerTextHtml")
+                        .IsRequired()
+                        .HasColumnType("varchar(MAX)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("varchar(250)");
@@ -54,13 +63,6 @@ namespace Mandalium.Core.Migrations
                     b.Property<bool>("WriterEntry")
                         .HasColumnType("bit");
 
-                    b.Property<string>("innerTextHtml")
-                        .IsRequired()
-                        .HasColumnType("varchar(MAX)");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TopicId");
@@ -70,11 +72,12 @@ namespace Mandalium.Core.Migrations
                     b.ToTable("BlogEntries");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.Comment", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.Comment", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<int>("BlogEntryId")
                         .HasColumnType("int");
@@ -86,8 +89,10 @@ namespace Mandalium.Core.Migrations
                     b.Property<string>("CommenterName")
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("Email")
                         .HasColumnType("varchar(100)");
@@ -104,12 +109,27 @@ namespace Mandalium.Core.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.Photo", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.MostReadEntries", b =>
+                {
+                    b.Property<int>("BlogEntryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsWriterEntry")
+                        .HasColumnType("bit");
+
+                    b.ToTable("MostReadEntries");
+                });
+
+            modelBuilder.Entity("Mandalium.Core.Models.Photo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("PhotoUrl")
                         .IsRequired()
@@ -129,12 +149,12 @@ namespace Mandalium.Core.Migrations
                     b.ToTable("Photos");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.SystemSetting", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.SystemSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -149,29 +169,31 @@ namespace Mandalium.Core.Migrations
                     b.ToTable("SystemSettings");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.Topic", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.Topic", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("TopicName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Topics");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.User", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("ActivationPin")
+                        .HasColumnType("int");
 
                     b.Property<string>("Background")
                         .HasColumnType("nvarchar(max)");
@@ -179,9 +201,19 @@ namespace Mandalium.Core.Migrations
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsActivated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -212,35 +244,59 @@ namespace Mandalium.Core.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.BlogEntry", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.BlogEntry", b =>
                 {
-                    b.HasOne("Mandalium.API.Models.Topic", "Topic")
+                    b.HasOne("Mandalium.Core.Models.Topic", "Topic")
                         .WithMany()
                         .HasForeignKey("TopicId");
 
-                    b.HasOne("Mandalium.API.Models.User", "User")
+                    b.HasOne("Mandalium.Core.Models.User", "User")
                         .WithMany("BlogEntries")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Topic");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.Comment", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.Comment", b =>
                 {
-                    b.HasOne("Mandalium.API.Models.BlogEntry", "BlogEntry")
+                    b.HasOne("Mandalium.Core.Models.BlogEntry", "BlogEntry")
                         .WithMany("Comments")
                         .HasForeignKey("BlogEntryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mandalium.API.Models.User", "User")
+                    b.HasOne("Mandalium.Core.Models.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("BlogEntry");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Mandalium.API.Models.Photo", b =>
+            modelBuilder.Entity("Mandalium.Core.Models.Photo", b =>
                 {
-                    b.HasOne("Mandalium.API.Models.User", "User")
+                    b.HasOne("Mandalium.Core.Models.User", "User")
                         .WithMany("Photos")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Mandalium.Core.Models.BlogEntry", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("Mandalium.Core.Models.User", b =>
+                {
+                    b.Navigation("BlogEntries");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

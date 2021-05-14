@@ -21,7 +21,7 @@ namespace Mandalium.Core.Configurations
 
             builder.HasOne(p => p.BlogEntry).WithMany(p => p.Comments).IsRequired();
             builder.HasOne(p => p.User).WithMany(p => p.Comments);
-            builder.Property(x => x.CreatedDate).ValueGeneratedOnAdd();
+            builder.Property(x => x.CreatedOn).ValueGeneratedOnAdd().HasDefaultValue(DateTime.Now);
         }
     }
 }

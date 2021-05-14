@@ -19,11 +19,12 @@ namespace Mandalium.Core.Configurations
             builder.Property(p => p.Surname).IsRequired().HasColumnType("varchar(50)");
             builder.Property(p => p.Email).IsRequired().HasColumnType("varchar(100)");
             builder.Property(p => p.PhotoUrl).HasColumnType("varchar(300)");
+            builder.Property(p => p.IsActivated).IsRequired().HasDefaultValue(default(bool));
 
             builder.HasMany(p => p.Comments).WithOne(p => p.User);
             builder.HasMany(p => p.Photos).WithOne(p => p.User);
             builder.HasMany(p => p.BlogEntries).WithOne(p=> p.User);
-            builder.Property(x => x.CreatedOn).ValueGeneratedOnAdd().HasDefaultValueSql("GetDate()");
+            builder.Property(x => x.CreatedOn).ValueGeneratedOnAdd().HasDefaultValue(DateTime.Now);
         }
     }
 }

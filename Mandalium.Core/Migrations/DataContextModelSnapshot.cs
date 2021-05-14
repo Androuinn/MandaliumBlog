@@ -72,9 +72,10 @@ namespace Mandalium.Core.Migrations
 
             modelBuilder.Entity("Mandalium.Core.Models.Comment", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<int>("BlogEntryId")
                         .HasColumnType("int");
@@ -86,9 +87,10 @@ namespace Mandalium.Core.Migrations
                     b.Property<string>("CommenterName")
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("Email")
                         .HasColumnType("varchar(100)");
@@ -188,6 +190,9 @@ namespace Mandalium.Core.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<int?>("ActivationPin")
+                        .HasColumnType("int");
+
                     b.Property<string>("Background")
                         .HasColumnType("nvarchar(max)");
 
@@ -202,6 +207,11 @@ namespace Mandalium.Core.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsActivated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()

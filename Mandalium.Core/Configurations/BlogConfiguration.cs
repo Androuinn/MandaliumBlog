@@ -22,7 +22,7 @@ namespace Mandalium.Core.Configurations
             builder.HasMany(p => p.Comments).WithOne(p=> p.BlogEntry);
             builder.HasOne(p => p.User).WithMany(p=> p.BlogEntries);
             builder.HasOne(p => p.Topic);
-            builder.Property(x => x.CreatedOn).ValueGeneratedOnAdd().HasDefaultValueSql("GetDate()");
+            builder.Property(x => x.CreatedOn).ValueGeneratedOnAdd().HasDefaultValue(DateTime.Now);
            
 
         }

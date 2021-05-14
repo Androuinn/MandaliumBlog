@@ -326,7 +326,7 @@ namespace Mandalium.API.Controllers
                     Email = request.Email,
                     User = request.userId != null ? await _unitOfWork.GetRepository<User>().Get((int)request.userId) : null,
                     CommentString = request.CommentString,
-                    CreatedDate = DateTime.Now
+                    CreatedOn = DateTime.Now
                 };
 
                 await _unitOfWork.GetRepository<Comment>().Save(comment);

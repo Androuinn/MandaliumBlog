@@ -15,7 +15,6 @@ namespace Mandalium.Infrastructure.Repositories
 {
     public class BlogRepository : GenericRepository<BlogEntry>, IBlogRepository<BlogEntry>
     {
-        private readonly DataContext _context;
         public BlogRepository(DataContext context) : base(context)
         {
             _context = context;
@@ -40,30 +39,28 @@ namespace Mandalium.Infrastructure.Repositories
 
         public async Task<BlogEntry> GetBlogEntry(int blogId)
         {
-
             var Entry = await _context.BlogEntries.AsNoTracking().Include(x => x.User).Include(x => x.Topic).FirstOrDefaultAsync(x => x.Id == blogId);
 
             //TODO userId de eklenebilir.
             var Id = new SqlParameter("@BlogId", Entry.Id);
             var writerEntry = new SqlParameter("@WriterEntry", Entry.WriterEntry);
-            await _context.Database.ExecuteSqlRawAsync("EXEC InsertMostRead @BlogId, @WriterEntry", Id, writerEntry);
+            await _context.Database.ExecuteSqlRawAsync(StoredProcedures.InsertMostRead, Id, writerEntry);
 
             Entry.TimesRead += 1;
             _context.BlogEntries.Update(Entry);
             await _context.SaveChangesAsync();
             return Entry;
-
         }
 
         public async Task<PagedList<Comment>> GetComments(int id, UserParams userParams)
         {
-            var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntry.Id == id).OrderByDescending(x => x.CreatedDate).AsQueryable();
+            var comments = _context.Comments.AsNoTracking().Include(x => x.User).Where(x => x.BlogEntry.Id == id).OrderByDescending(x => x.CreatedOn).AsQueryable();
             return await PagedList<Comment>.CreateAsync(comments, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<IEnumerable<BlogEntry>> GetMostRead()
         {
-            List<BlogEntry> Entries = await _context.BlogEntries.FromSqlRaw("Exec GetMostReadEntries").ToListAsync();
+            List<BlogEntry> Entries = await _context.BlogEntries.FromSqlRaw(StoredProcedures.GetMostReadEntries).ToListAsync();
             return Entries;
         }
 

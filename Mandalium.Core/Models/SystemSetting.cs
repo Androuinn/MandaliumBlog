@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mandalium.Core.Models
 {
-    public class SystemSetting
+    public class SystemSetting : BaseEntityWithId
     {
-        public int Id { get; set; }
         public string Key { get; set; }
         public string Value { get; set; }
     }

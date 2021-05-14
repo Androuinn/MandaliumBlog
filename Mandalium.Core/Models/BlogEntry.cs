@@ -3,10 +3,8 @@ using System;
 
 namespace Mandalium.Core.Models
 {
-    public class BlogEntry
+    public class BlogEntry: BaseEntityWithId
     {
-
-        public int Id { get; set; }
         public string Headline { get; set; }
         public string SubHeadline { get; set; }
         public string InnerTextHtml { get; set; }
