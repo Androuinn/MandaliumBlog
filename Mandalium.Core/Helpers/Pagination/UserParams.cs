@@ -12,7 +12,6 @@ namespace Mandalium.Core.Helpers.Pagination
         }
 
         public bool WriterEntry { get; set; } = false;
-        public bool EntryAlreadyPicked { get; set; } = false;
         public int? UserId { get; set; } = 0;
 
     }

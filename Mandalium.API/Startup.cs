@@ -60,6 +60,7 @@ namespace Mandalium.API
                     ValidateAudience = false,
                 };
             });
+            services.AddSwaggerGen();
             services.AddCors();
         }
 
@@ -75,6 +76,13 @@ namespace Mandalium.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mandalium API");
+            });
+
 
             app.UseHttpsRedirection();
 
