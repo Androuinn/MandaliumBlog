@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
     return this.authService.register(a).subscribe(() => {
     this.loginModel.password = password;
     this.loginModel.username = username;
-    // this.login();
+    this.login();
     this.registerposted = true;
     }, error => {
       this.alertify.error('Kullanıcı Mevcut');

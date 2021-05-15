@@ -19,7 +19,6 @@ namespace Mandalium.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        static UserForRegisterDto newUser { get; set; }
         private readonly IAuthRepository<User> _repo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
@@ -44,40 +43,12 @@ namespace Mandalium.API.Controllers
 
             try
             {
-                newUser = userForRegisterDto;
+                var writerToCreate = _mapper.Map<User>(userForRegisterDto);
+                writerToCreate.ActivationPin = new Random().Next(10000, 99999);
+                var createdWriter = await _repo.Register(writerToCreate, userForRegisterDto.Password);
 
-                Extensions.ActivationPin = new Random().Next(10000, 99999);
-
-                Extensions.SendMail(userForRegisterDto.Email, "Mandalium Aktivasyon Pini",
-                "Kayıt doğrulamak için aktivasyon pini:" + Extensions.ActivationPin.ToString());
-
-                return StatusCode(200);
-            }
-            catch (System.Exception ex)
-            {
-                Extensions.ReportError(ex);
-                return StatusCode(500);
-            }
-        }
-
-
-        [HttpPost("confirm")]
-        public async Task<IActionResult> ConfirmRegister([FromBody] string activationPin)
-        {
-            if (int.Parse(activationPin) != Extensions.ActivationPin)
-            {
-                return BadRequest("Pin Uyuşmuyor");
-            }
-
-            try
-            {
-                var writerToCreate = _mapper.Map<User>(newUser);
-                var createdWriter = await _repo.Register(writerToCreate, newUser.Password);
-                newUser = null;
-
-                var text = System.IO.File.ReadAllText( @Environment.CurrentDirectory + "/MailTemplates/UserCreatedTemplate.html");
-               
-                Extensions.SendMail(createdWriter.Email, "Kayıt Doğrulama Maili", string.Format(text, createdWriter.Name + " " + createdWriter.Surname));
+                //Extensions.SendMail(userForRegisterDto.Email, "Mandalium Aktivasyon Pini",
+                //"Kayıt doğrulamak için aktivasyon pini:" + createdWriter.ActivationPin.ToString());
 
                 return StatusCode(200);
             }
@@ -87,6 +58,34 @@ namespace Mandalium.API.Controllers
                 return StatusCode(500);
             }
         }
+
+
+        //[HttpPost("confirm")]
+        //public async Task<IActionResult> ConfirmRegister([FromBody] string activationPin)
+        //{
+        //    if (int.Parse(activationPin) != Extensions.ActivationPin)
+        //    {
+        //        return BadRequest("Pin Uyuşmuyor");
+        //    }
+
+        //    try
+        //    {
+        //        var writerToCreate = _mapper.Map<User>(newUser);
+        //        var createdWriter = await _repo.Register(writerToCreate, newUser.Password);
+        //        newUser = null;
+
+        //        var text = System.IO.File.ReadAllText(@Environment.CurrentDirectory + "/MailTemplates/UserCreatedTemplate.html");
+
+        //        Extensions.SendMail(createdWriter.Email, "Kayıt Doğrulama Maili", string.Format(text, createdWriter.Name + " " + createdWriter.Surname));
+
+        //        return StatusCode(200);
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        Extensions.ReportError(ex);
+        //        return StatusCode(500);
+        //    }
+        //}
 
 
         [HttpPost("login")]

@@ -12,7 +12,6 @@ namespace Mandalium.Core.Helpers
 {
     public static class Extensions
     {
-        public static int ActivationPin { get; set; }
         public delegate void SystemSettings();
         public static event SystemSettings SystemSettingsAction;
 

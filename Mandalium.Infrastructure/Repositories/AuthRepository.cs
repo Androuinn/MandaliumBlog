@@ -15,6 +15,7 @@ namespace Mandalium.Infrastructure.Repositories
         {
             this._context = context;
             Extensions.SystemSettingsAction += SetSystemSettings;
+            SetSystemSettings();
         }
 
         public async Task<User> Login(string username, string password)
